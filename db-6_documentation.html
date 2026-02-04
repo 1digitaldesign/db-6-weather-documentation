@@ -550,7 +550,7 @@
         }
         
         
-        /* Copy button for code blocks */
+        /* Copy button for code blocks and JSON blocks */
         .copy-button {
             position: absolute;
             top: 0.5rem;
@@ -565,9 +565,11 @@
             opacity: 0;
             transition: opacity 0.2s;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            z-index: 10;
         }
         
-        .code-block:hover .copy-button {
+        .code-block:hover .copy-button,
+        .json-block:hover .copy-button {
             opacity: 1;
         }
         
@@ -578,6 +580,15 @@
         .copy-button.copied {
             background: rgba(76, 175, 80, 0.3);
             border-color: rgba(76, 175, 80, 0.5);
+        }
+        
+        /* JSON block needs relative positioning for absolute copy button */
+        .json-block {
+            position: relative;
+        }
+        
+        .json-content {
+            position: relative;
         }
         
         /* Query Cards */
@@ -13436,13 +13447,16 @@ LIMIT 50000;</code></pre>
             fetch('db-6_deliverable.json')
                 .then(response => response.text())
                 .then(jsonText => {
-                    // Store original text for copying
+                    // Store original text for copying (before highlighting)
                     codeElement.setAttribute('data-original-text', jsonText);
                     codeElement.textContent = jsonText;
                     highlightJsonElement(codeElement);
                 })
                 .catch(err => {
                     console.log('Fetch failed, JSON file may not be accessible');
+                    // Store current text for copying
+                    const currentText = codeElement.textContent || codeElement.innerText;
+                    codeElement.setAttribute('data-original-text', currentText);
                     // Highlight existing content
                     highlightJsonElement(codeElement);
                 });
@@ -13666,19 +13680,78 @@ LIMIT 50000;</code></pre>
             }
         });
         
-        // Add copy buttons to code blocks
+        // Add copy buttons to code blocks (SQL)
         document.querySelectorAll('.code-block').forEach(block => {
             const button = document.createElement('button');
             button.className = 'copy-button';
             button.textContent = 'Copy';
-            button.setAttribute('aria-label', 'Copy code');
+            button.setAttribute('aria-label', 'Copy SQL code');
             
-            button.addEventListener('click', async function() {
+            button.addEventListener('click', async function(e) {
+                e.stopPropagation(); // Prevent any parent click handlers
                 // Get plain text (removes HTML highlighting spans)
                 const codeElement = block.querySelector('code');
                 const code = codeElement.textContent || codeElement.innerText;
+                await copyToClipboard(code, button);
+            });
+            
+            block.appendChild(button);
+        });
+        
+        // Add copy buttons to JSON blocks
+        document.querySelectorAll('.json-block').forEach(block => {
+            const button = document.createElement('button');
+            button.className = 'copy-button';
+            button.textContent = 'Copy';
+            button.setAttribute('aria-label', 'Copy JSON');
+            
+            button.addEventListener('click', async function(e) {
+                e.stopPropagation(); // Prevent accordion toggle
+                // Get plain text from JSON content
+                const jsonContent = block.querySelector('.json-content');
+                const codeElement = jsonContent ? jsonContent.querySelector('code') : null;
+                
+                let code = '';
+                if (codeElement) {
+                    // Get original text if stored, otherwise extract from highlighted content
+                    const originalText = codeElement.getAttribute('data-original-text');
+                    if (originalText) {
+                        code = originalText;
+                    } else {
+                        code = codeElement.textContent || codeElement.innerText;
+                    }
+                } else {
+                    // Fallback: get all text from JSON content
+                    code = jsonContent ? jsonContent.textContent || jsonContent.innerText : '';
+                }
+                
+                await copyToClipboard(code, button);
+            });
+            
+            block.appendChild(button);
+        });
+        
+        // Shared copy to clipboard function
+        async function copyToClipboard(text, button) {
+            try {
+                await navigator.clipboard.writeText(text);
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.textContent = 'Copy';
+                    button.classList.remove('copied');
+                }, 2000);
+            } catch (err) {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                textArea.style.position = 'fixed';
+                textArea.style.opacity = '0';
+                textArea.style.left = '-9999px';
+                document.body.appendChild(textArea);
+                textArea.select();
                 try {
-                    await navigator.clipboard.writeText(code);
+                    document.execCommand('copy');
                     button.textContent = 'Copied!';
                     button.classList.add('copied');
                     setTimeout(() => {
@@ -13686,30 +13759,14 @@ LIMIT 50000;</code></pre>
                         button.classList.remove('copied');
                     }, 2000);
                 } catch (err) {
-                    // Fallback for older browsers
-                    const textArea = document.createElement('textarea');
-                    textArea.value = code;
-                    textArea.style.position = 'fixed';
-                    textArea.style.opacity = '0';
-                    document.body.appendChild(textArea);
-                    textArea.select();
-                    try {
-                        document.execCommand('copy');
-                        button.textContent = 'Copied!';
-                        button.classList.add('copied');
-                        setTimeout(() => {
-                            button.textContent = 'Copy';
-                            button.classList.remove('copied');
-                        }, 2000);
-                    } catch (err) {
-                        button.textContent = 'Failed';
-                    }
-                    document.body.removeChild(textArea);
+                    button.textContent = 'Failed';
+                    setTimeout(() => {
+                        button.textContent = 'Copy';
+                    }, 2000);
                 }
-            });
-            
-            block.appendChild(button);
-        });
+                document.body.removeChild(textArea);
+            }
+        }
     </script>
 </body>
 </html>
