@@ -13436,6 +13436,8 @@ LIMIT 50000;</code></pre>
             fetch('db-6_deliverable.json')
                 .then(response => response.text())
                 .then(jsonText => {
+                    // Store original text for copying
+                    codeElement.setAttribute('data-original-text', jsonText);
                     codeElement.textContent = jsonText;
                     highlightJsonElement(codeElement);
                 })
