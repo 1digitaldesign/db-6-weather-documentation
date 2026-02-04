@@ -617,28 +617,26 @@
             color: rgba(16, 185, 129, 0.9);
         }
         
-        /* JSON block copy button positioning */
+        /* JSON block copy button positioning - OpenAI style */
         .json-block {
             position: relative;
         }
         
-        .json-block .copy-button {
-            top: 0.625rem;
-            right: 0.625rem;
-        }
-        
-        /* JSON content copy button - positioned relative to content area */
+        /* Copy button in JSON content area - properly aligned */
         .json-content {
             position: relative;
         }
         
         .json-content .copy-button {
-            position: sticky;
+            position: absolute;
             top: 0.75rem;
             right: 0.75rem;
-            float: right;
-            margin-bottom: 0.5rem;
-            margin-left: auto;
+            z-index: 15;
+        }
+        
+        /* Ensure copy button stays visible when scrolling */
+        .json-content.expanded {
+            position: relative;
         }
         
         /* Query Cards */
