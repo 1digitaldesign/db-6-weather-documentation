@@ -13630,15 +13630,27 @@ LIMIT 50000;</code></pre>
         
         // Highlight JSON element using Prism.js
         function highlightJsonElement(codeElement) {
+            if (!codeElement) return;
+            
             // Ensure code element has language class
             if (!codeElement.classList.contains('language-json')) {
                 codeElement.classList.add('language-json');
             }
-            // Use Prism to highlight JSON
-            Prism.highlightElement(codeElement);
             
-            // Post-process to highlight SQL within JSON "sql" field values
-            highlightSQLInJSON(codeElement);
+            // Store original text if not already stored
+            if (!codeElement.hasAttribute('data-original-text')) {
+                const originalText = codeElement.textContent || codeElement.innerText;
+                if (originalText) {
+                    codeElement.setAttribute('data-original-text', originalText);
+                }
+            }
+            
+            // Use Prism to highlight JSON (only if available)
+            if (typeof Prism !== 'undefined') {
+                Prism.highlightElement(codeElement);
+                // Post-process to highlight SQL within JSON "sql" field values
+                highlightSQLInJSON(codeElement);
+            }
         }
         
         // Apply SQL highlighting to all code blocks using Prism.js
