@@ -13463,14 +13463,44 @@ LIMIT 50000;</code></pre>
             // Escape HTML
             text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
             
+            // Detect and highlight SQL within JSON "sql" field values BEFORE line processing
+            // This handles multi-line SQL strings in JSON
+            text = text.replace(/"sql"\s*:\s*"((?:[^"\\]|\\.|\\n)*)"/g, (match, sqlContent) => {
+                // Unescape JSON string (handle \n, \t, \", \\)
+                const unescapedSQL = sqlContent
+                    .replace(/\\n/g, '\n')
+                    .replace(/\\t/g, '\t')
+                    .replace(/\\"/g, '"')
+                    .replace(/\\\\/g, '\\');
+                
+                // Apply SQL highlighting
+                const highlightedSQL = highlightSQL(unescapedSQL);
+                
+                // Re-escape for HTML display
+                const reEscaped = highlightedSQL
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;');
+                
+                return '<span class="json-key">"sql"</span><span class="json-punctuation">:</span> <span class="json-string">"' + reEscaped + '"</span>';
+            });
+            
             // Split into lines for better processing
             const lines = text.split('\n');
             const highlighted = lines.map(line => {
                 // Skip empty lines
                 if (!line.trim()) return line;
                 
-                // Highlight keys (quoted strings followed by colon)
-                line = line.replace(/"([^"]+)":/g, '<span class="json-key">"$1"</span><span class="json-punctuation">:</span>');
+                // Skip if already processed as SQL (contains SQL highlighting spans)
+                if (line.includes('sql-keyword') || line.includes('sql-function') || line.includes('sql-string')) {
+                    return line;
+                }
+                
+                // Highlight keys (quoted strings followed by colon) - but skip "sql" as it's already done
+                line = line.replace(/"([^"]+)":/g, (match, key) => {
+                    if (key === 'sql') return match; // Already processed above
+                    return '<span class="json-key">"' + key + '"</span><span class="json-punctuation">:</span>';
+                });
                 
                 // Highlight string values (standalone quoted strings after colon)
                 line = line.replace(/(:\s+)"([^"]*)"/g, '$1<span class="json-string">"$2"</span>');
