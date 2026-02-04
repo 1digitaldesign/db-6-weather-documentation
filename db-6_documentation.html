@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather Consulting Database - Documentation</title>
+    <!-- Prism.js Syntax Highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -13491,219 +13496,148 @@ LIMIT 50000;</code></pre>
                     // Store original text for copying (before highlighting)
                     codeElement.setAttribute('data-original-text', jsonText);
                     codeElement.textContent = jsonText;
-                    // Apply highlighting
-                    highlightJsonElement(codeElement);
-                    // Also ensure SQL within JSON is highlighted
-                    highlightAllSQL();
+                    // Ensure language class is set
+                    codeElement.classList.add('language-json');
+                    // Apply Prism highlighting
+                    Prism.highlightElement(codeElement);
+                    // Also highlight SQL within JSON strings (post-process)
+                    highlightSQLInJSON(codeElement);
                 })
                 .catch(err => {
                     console.log('Fetch failed, JSON file may not be accessible');
                     // Store current text for copying
                     const currentText = codeElement.textContent || codeElement.innerText;
                     codeElement.setAttribute('data-original-text', currentText);
+                    // Ensure language class is set
+                    codeElement.classList.add('language-json');
                     // Highlight existing content
-                    highlightJsonElement(codeElement);
-                    // Also ensure SQL within JSON is highlighted
-                    highlightAllSQL();
+                    Prism.highlightElement(codeElement);
+                    // Also highlight SQL within JSON strings
+                    highlightSQLInJSON(codeElement);
                 });
         }
         
-        // Highlight JSON element
-        function highlightJsonElement(codeElement) {
-            const jsonText = codeElement.textContent || codeElement.innerText;
-            const highlighted = highlightJson(jsonText);
-            codeElement.innerHTML = highlighted;
-        }
-        
-        // JSON syntax highlighting
-        function highlightJson(json) {
-            // First unescape HTML entities if present
-            let text = json.replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+        // Post-process JSON to highlight SQL within "sql" field values
+        function highlightSQLInJSON(codeElement) {
+            // Get the original text (before Prism highlighting)
+            const originalText = codeElement.getAttribute('data-original-text') || 
+                                (codeElement.textContent || codeElement.innerText);
             
-            // Escape HTML
-            text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            if (!originalText || !originalText.includes('"sql"')) {
+                return; // No SQL to highlight
+            }
             
-            // Detect and highlight SQL within JSON "sql" field values BEFORE line processing
-            // This handles multi-line SQL strings in JSON
-            text = text.replace(/"sql"\s*:\s*"((?:[^"\\]|\\.|\\n)*)"/g, (match, sqlContent) => {
-                // Unescape JSON string (handle \n, \t, \", \\)
+            // Find all "sql" field values in the original text
+            const sqlPattern = /"sql"\s*:\s*"((?:[^"\\]|\\.|\\n)*)"/g;
+            const sqlMatches = [];
+            let match;
+            
+            while ((match = sqlPattern.exec(originalText)) !== null) {
+                const sqlContent = match[1];
+                // Unescape JSON string
                 const unescapedSQL = sqlContent
                     .replace(/\\n/g, '\n')
                     .replace(/\\t/g, '\t')
                     .replace(/\\"/g, '"')
                     .replace(/\\\\/g, '\\');
                 
-                // Apply SQL highlighting
-                const highlightedSQL = highlightSQL(unescapedSQL);
+                // Create temporary element for SQL highlighting
+                const tempCode = document.createElement('code');
+                tempCode.className = 'language-sql';
+                tempCode.textContent = unescapedSQL;
+                Prism.highlightElement(tempCode);
                 
-                // Re-escape for HTML display
-                const reEscaped = highlightedSQL
+                // Escape the highlighted SQL for JSON string context
+                const highlightedSQL = tempCode.innerHTML
                     .replace(/&/g, '&amp;')
                     .replace(/</g, '&lt;')
-                    .replace(/>/g, '&gt;');
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;');
                 
-                return '<span class="json-key">"sql"</span><span class="json-punctuation">:</span> <span class="json-string">"' + reEscaped + '"</span>';
-            });
-            
-            // Split into lines for better processing
-            const lines = text.split('\n');
-            const highlighted = lines.map(line => {
-                // Skip empty lines
-                if (!line.trim()) return line;
-                
-                // Skip if already processed as SQL (contains SQL highlighting spans)
-                if (line.includes('sql-keyword') || line.includes('sql-function') || line.includes('sql-string')) {
-                    return line;
-                }
-                
-                // Highlight keys (quoted strings followed by colon) - but skip "sql" as it's already done
-                line = line.replace(/"([^"]+)":/g, (match, key) => {
-                    if (key === 'sql') return match; // Already processed above
-                    return '<span class="json-key">"' + key + '"</span><span class="json-punctuation">:</span>';
+                sqlMatches.push({
+                    originalValue: sqlContent,
+                    highlightedValue: highlightedSQL
                 });
-                
-                // Highlight string values (standalone quoted strings after colon)
-                line = line.replace(/(:\s+)"([^"]*)"/g, '$1<span class="json-string">"$2"</span>');
-                
-                // Highlight numbers
-                line = line.replace(/(:\s+)(\d+\.?\d*)/g, '$1<span class="json-number">$2</span>');
-                
-                // Highlight booleans
-                line = line.replace(/(:\s+)(true|false)\b/g, '$1<span class="json-boolean">$2</span>');
-                
-                // Highlight null
-                line = line.replace(/(:\s+)(null)\b/g, '$1<span class="json-null">$2</span>');
-                
-                // Highlight punctuation (braces, brackets, commas)
-                line = line.replace(/([{}\[\]])/g, '<span class="json-punctuation">$1</span>');
-                line = line.replace(/(,)/g, '<span class="json-punctuation">$1</span>');
-                
-                return line;
-            });
+            }
             
-            return highlighted.join('\n');
+            // Apply replacements to the Prism-highlighted HTML
+            if (sqlMatches.length > 0) {
+                let html = codeElement.innerHTML;
+                sqlMatches.forEach((sqlMatch, index) => {
+                    // Find "sql" key-value pairs in the HTML and replace the value
+                    // Prism.js wraps JSON strings in <span class="token string">...</span>
+                    const escapedOriginalValue = sqlMatch.originalValue
+                        .replace(/&/g, '&amp;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;')
+                        .replace(/"/g, '&quot;');
+                    
+                    // Try to find and replace the SQL value within the JSON string token
+                    const stringTokenPattern = new RegExp(
+                        '("sql"[^"]*"\\s*:\\s*"[^"]*?)' + 
+                        escapedOriginalValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + 
+                        '([^"]*")',
+                        'g'
+                    );
+                    
+                    html = html.replace(stringTokenPattern, (fullMatch, prefix, suffix) => {
+                        return prefix + sqlMatch.highlightedValue + suffix;
+                    });
+                });
+                codeElement.innerHTML = html;
+            }
         }
         
-        // SQL Syntax Highlighting Function
-        function highlightSQL(sql) {
-            if (!sql) return '';
+        // Highlight JSON element using Prism.js
+        function highlightJsonElement(codeElement) {
+            // Ensure code element has language class
+            if (!codeElement.classList.contains('language-json')) {
+                codeElement.classList.add('language-json');
+            }
+            // Use Prism to highlight JSON
+            Prism.highlightElement(codeElement);
             
-            // Unescape HTML entities first
-            let code = sql
-                .replace(/&lt;/g, '<')
-                .replace(/&gt;/g, '>')
-                .replace(/&amp;/g, '&')
-                .replace(/&quot;/g, '"')
-                .replace(/&#x27;/g, "'")
-                .replace(/&#x60;/g, '`');
-            
-            // SQL Keywords (case-insensitive)
-            const keywords = [
-                'SELECT', 'FROM', 'WHERE', 'JOIN', 'INNER', 'LEFT', 'RIGHT', 'FULL', 'OUTER',
-                'ON', 'AS', 'AND', 'OR', 'NOT', 'IN', 'EXISTS', 'LIKE', 'BETWEEN', 'IS', 'NULL',
-                'GROUP BY', 'ORDER BY', 'HAVING', 'DISTINCT', 'UNION', 'ALL', 'INTERSECT', 'EXCEPT',
-                'INSERT', 'UPDATE', 'DELETE', 'CREATE', 'DROP', 'ALTER', 'TABLE', 'INDEX', 'VIEW',
-                'WITH', 'RECURSIVE', 'CASE', 'WHEN', 'THEN', 'ELSE', 'END', 'IF', 'ELSEIF',
-                'CAST', 'CONVERT', 'COUNT', 'SUM', 'AVG', 'MAX', 'MIN', 'ROW_NUMBER', 'RANK',
-                'DENSE_RANK', 'LEAD', 'LAG', 'FIRST_VALUE', 'LAST_VALUE', 'NTILE', 'PARTITION BY',
-                'OVER', 'WINDOW', 'ROWS', 'RANGE', 'PRECEDING', 'FOLLOWING', 'CURRENT ROW',
-                'UNBOUNDED', 'ASC', 'DESC', 'LIMIT', 'OFFSET', 'TOP', 'FETCH', 'NEXT',
-                'TRUNCATE', 'GRANT', 'REVOKE', 'COMMIT', 'ROLLBACK', 'BEGIN', 'TRANSACTION',
-                'SAVEPOINT', 'RELEASE', 'SET', 'DECLARE', 'VARIABLE', 'VAR', 'CONST',
-                'INT', 'INTEGER', 'BIGINT', 'SMALLINT', 'TINYINT', 'DECIMAL', 'NUMERIC',
-                'FLOAT', 'REAL', 'DOUBLE', 'CHAR', 'VARCHAR', 'TEXT', 'NCHAR', 'NVARCHAR',
-                'DATE', 'TIME', 'DATETIME', 'TIMESTAMP', 'YEAR', 'MONTH', 'DAY', 'HOUR',
-                'MINUTE', 'SECOND', 'BOOLEAN', 'BIT', 'BINARY', 'VARBINARY', 'BLOB',
-                'JSON', 'JSONB', 'ARRAY', 'OBJECT', 'STRUCT', 'MAP'
-            ];
-            
-            // SQL Functions
-            const functions = [
-                'ABS', 'ACOS', 'ASIN', 'ATAN', 'ATAN2', 'CEIL', 'CEILING', 'COS', 'COT',
-                'DEGREES', 'EXP', 'FLOOR', 'LOG', 'LOG10', 'MOD', 'PI', 'POWER', 'RADIANS',
-                'RAND', 'ROUND', 'SIGN', 'SIN', 'SQRT', 'SQUARE', 'TAN', 'TRUNCATE',
-                'ASCII', 'CHAR', 'CHARINDEX', 'CONCAT', 'CONCAT_WS', 'LEFT', 'LENGTH',
-                'LOWER', 'LTRIM', 'POSITION', 'REPLACE', 'REVERSE', 'RIGHT', 'RTRIM',
-                'SPACE', 'SUBSTRING', 'SUBSTR', 'TRIM', 'UPPER', 'CAST', 'CONVERT',
-                'COALESCE', 'IFNULL', 'ISNULL', 'NULLIF', 'GREATEST', 'LEAST',
-                'CURRENT_DATE', 'CURRENT_TIME', 'CURRENT_TIMESTAMP', 'NOW', 'SYSDATE',
-                'DATEADD', 'DATEDIFF', 'DATEPART', 'DATE_TRUNC', 'EXTRACT', 'YEAR',
-                'MONTH', 'DAY', 'HOUR', 'MINUTE', 'SECOND', 'DAYOFWEEK', 'DAYOFYEAR',
-                'WEEK', 'QUARTER', 'FORMAT', 'STR_TO_DATE', 'TO_DATE', 'TO_TIMESTAMP',
-                'AVG', 'COUNT', 'MAX', 'MIN', 'SUM', 'STDDEV', 'VARIANCE', 'STDDEV_POP',
-                'STDDEV_SAMP', 'VAR_POP', 'VAR_SAMP', 'CORR', 'COVAR_POP', 'COVAR_SAMP',
-                'ROW_NUMBER', 'RANK', 'DENSE_RANK', 'PERCENT_RANK', 'CUME_DIST',
-                'LEAD', 'LAG', 'FIRST_VALUE', 'LAST_VALUE', 'NTH_VALUE', 'NTILE'
-            ];
-            
-            // SQL Operators
-            const operators = ['=', '!=', '<>', '<', '>', '<=', '>=', '+', '-', '*', '/', '%', '||'];
-            
-            // Build regex patterns - escape special regex characters
-            const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-            
-            // Highlight comments first (single-line and multi-line)
-            code = code.replace(/--.*$/gm, '<span class="sql-comment">$&</span>');
-            code = code.replace(/\/\*[\s\S]*?\*\//g, '<span class="sql-comment">$&</span>');
-            
-            // Highlight string literals (single and double quotes) - handle escaped quotes
-            code = code.replace(/'([^'\\]|\\.)*'/g, '<span class="sql-string">$&</span>');
-            code = code.replace(/"([^"\\]|\\.)*"/g, '<span class="sql-string">$&</span>');
-            
-            // Highlight numbers (integers and decimals) - but not inside strings
-            code = code.replace(/\b(\d+\.?\d*)\b/g, '<span class="sql-number">$1</span>');
-            
-            // Highlight functions (before keywords to avoid conflicts)
-            const functionPattern = new RegExp(`\\b(${functions.join('|')})\\s*\\(`, 'gi');
-            code = code.replace(functionPattern, '<span class="sql-function">$1</span>(');
-            
-            // Highlight keywords (case-insensitive, whole words only)
-            // Sort by length descending to match longer keywords first (e.g., "GROUP BY" before "GROUP")
-            const sortedKeywords = keywords.sort((a, b) => b.length - a.length);
-            const keywordPattern = new RegExp(`\\b(${sortedKeywords.map(escapeRegex).join('|')})\\b`, 'gi');
-            code = code.replace(keywordPattern, '<span class="sql-keyword">$1</span>');
-            
-            // Highlight operators (but avoid double-highlighting)
-            const operatorPattern = new RegExp(`(${operators.map(escapeRegex).join('|')})`, 'g');
-            code = code.replace(operatorPattern, (match, offset, string) => {
-                // Skip if already inside a highlighted span
-                const beforeMatch = string.substring(Math.max(0, offset - 50), offset);
-                if (beforeMatch.includes('<span')) return match;
-                return `<span class="sql-operator">${match}</span>`;
-            });
-            
-            return code;
+            // Post-process to highlight SQL within JSON "sql" field values
+            highlightSQLInJSON(codeElement);
         }
         
-        // Apply SQL highlighting to all code blocks
+        // Apply SQL highlighting to all code blocks using Prism.js
         function highlightAllSQL() {
             const codeBlocks = document.querySelectorAll('.code-block code');
             codeBlocks.forEach(codeElement => {
                 const text = codeElement.textContent || codeElement.innerText;
-                // Highlight all code blocks that contain SQL-like syntax
-                // Check for SQL keywords, functions, or SQL-like patterns
-                if (text.match(/\b(SELECT|FROM|WHERE|JOIN|WITH|INSERT|UPDATE|CREATE|ALTER|DELETE|DROP|WITH|CASE|WHEN|THEN|GROUP BY|ORDER BY|HAVING|UNION|EXCEPT|INTERSECT|CTE|RECURSIVE)\b/i) ||
+                // Check if it's SQL
+                if (text.match(/\b(SELECT|FROM|WHERE|JOIN|WITH|INSERT|UPDATE|CREATE|ALTER|DELETE|DROP|CASE|WHEN|THEN|GROUP BY|ORDER BY|HAVING|UNION|EXCEPT|INTERSECT|CTE|RECURSIVE)\b/i) ||
                     text.match(/\b(COUNT|SUM|AVG|MAX|MIN|DATE_TRUNC|EXTRACT|ST_|CAST|CONVERT)\s*\(/i) ||
                     text.match(/--.*$|\/\*[\s\S]*?\*\//m)) {
-                    const highlighted = highlightSQL(text);
-                    if (highlighted !== text) {
-                        codeElement.innerHTML = highlighted;
+                    // Store original text for copying (before highlighting)
+                    if (!codeElement.getAttribute('data-original-text')) {
+                        codeElement.setAttribute('data-original-text', text);
                     }
+                    // Ensure language class is set
+                    if (!codeElement.classList.contains('language-sql')) {
+                        codeElement.classList.add('language-sql');
+                    }
+                    // Use Prism to highlight
+                    Prism.highlightElement(codeElement);
                 }
             });
         }
         
-        // Apply JSON highlighting to all JSON blocks (including dynamically loaded)
+        // Apply JSON highlighting to all JSON blocks using Prism.js
         function highlightAllJSON() {
             const jsonBlocks = document.querySelectorAll('.json-block .json-content code');
             jsonBlocks.forEach(codeElement => {
-                // Skip if already highlighted
-                if (codeElement.innerHTML.includes('json-key') || codeElement.innerHTML.includes('json-string')) {
-                    return;
-                }
                 const text = codeElement.textContent || codeElement.innerText;
+                // Store original text for copying (before highlighting)
+                if (!codeElement.getAttribute('data-original-text')) {
+                    codeElement.setAttribute('data-original-text', text);
+                }
                 // Check if it's JSON (starts with { or [)
                 if (text.trim().match(/^[\s\n]*(?:\{|\[)/)) {
+                    if (!codeElement.classList.contains('language-json')) {
+                        codeElement.classList.add('language-json');
+                    }
                     highlightJsonElement(codeElement);
                 }
             });
@@ -13733,6 +13667,18 @@ LIMIT 50000;</code></pre>
         
         // Initialize highlighting on page load and when content changes
         document.addEventListener('DOMContentLoaded', function() {
+            // Wait for Prism.js to load
+            if (typeof Prism === 'undefined') {
+                console.warn('Prism.js not loaded yet, waiting...');
+                setTimeout(() => {
+                    initializeHighlighting();
+                }, 500);
+            } else {
+                initializeHighlighting();
+            }
+        });
+        
+        function initializeHighlighting() {
             // Initialize SQL highlighting for all code blocks
             highlightAllSQL();
             
@@ -13745,7 +13691,9 @@ LIMIT 50000;</code></pre>
             // Highlight initial JSON preview
             const jsonCode = document.getElementById('json-code');
             if (jsonCode) {
-                highlightJsonElement(jsonCode);
+                jsonCode.classList.add('language-json');
+                Prism.highlightElement(jsonCode);
+                highlightSQLInJSON(jsonCode);
             }
             
             // Re-highlight when JSON accordion expands (for dynamically loaded content)
@@ -13759,7 +13707,7 @@ LIMIT 50000;</code></pre>
                 });
             });
             
-            // Use MutationObserver to highlight dynamically added content
+            // Use MutationObserver to highlight dynamically added content with Prism.js
             const observer = new MutationObserver(function(mutations) {
                 mutations.forEach(function(mutation) {
                     if (mutation.addedNodes.length) {
@@ -13770,18 +13718,20 @@ LIMIT 50000;</code></pre>
                                 codeBlocks.forEach(codeElement => {
                                     const text = codeElement.textContent || codeElement.innerText;
                                     if (text.match(/\b(SELECT|FROM|WHERE|JOIN|WITH|INSERT|UPDATE|CREATE|ALTER|DELETE|DROP)\b/i)) {
-                                        const highlighted = highlightSQL(text);
-                                        if (highlighted !== text) {
-                                            codeElement.innerHTML = highlighted;
+                                        if (!codeElement.classList.contains('language-sql')) {
+                                            codeElement.classList.add('language-sql');
                                         }
+                                        Prism.highlightElement(codeElement);
                                     }
                                 });
                                 
                                 // Check for new JSON blocks
                                 const jsonCodes = node.querySelectorAll ? node.querySelectorAll('.json-content code') : [];
                                 jsonCodes.forEach(codeElement => {
-                                    if (!codeElement.innerHTML.includes('json-key')) {
-                                        highlightJsonElement(codeElement);
+                                    if (!codeElement.classList.contains('language-json')) {
+                                        codeElement.classList.add('language-json');
+                                        Prism.highlightElement(codeElement);
+                                        highlightSQLInJSON(codeElement);
                                     }
                                 });
                             }
@@ -13795,7 +13745,7 @@ LIMIT 50000;</code></pre>
                 childList: true,
                 subtree: true
             });
-        });
+        }
         
         // Add copy buttons to code blocks (SQL)
         document.querySelectorAll('.code-block').forEach(block => {
