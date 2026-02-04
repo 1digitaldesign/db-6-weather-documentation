@@ -13491,7 +13491,10 @@ LIMIT 50000;</code></pre>
                     // Store original text for copying (before highlighting)
                     codeElement.setAttribute('data-original-text', jsonText);
                     codeElement.textContent = jsonText;
+                    // Apply highlighting
                     highlightJsonElement(codeElement);
+                    // Also ensure SQL within JSON is highlighted
+                    highlightAllSQL();
                 })
                 .catch(err => {
                     console.log('Fetch failed, JSON file may not be accessible');
@@ -13500,6 +13503,8 @@ LIMIT 50000;</code></pre>
                     codeElement.setAttribute('data-original-text', currentText);
                     // Highlight existing content
                     highlightJsonElement(codeElement);
+                    // Also ensure SQL within JSON is highlighted
+                    highlightAllSQL();
                 });
         }
         
@@ -13675,12 +13680,31 @@ LIMIT 50000;</code></pre>
             const codeBlocks = document.querySelectorAll('.code-block code');
             codeBlocks.forEach(codeElement => {
                 const text = codeElement.textContent || codeElement.innerText;
-                // Only highlight if it looks like SQL (contains SQL keywords)
-                if (text.match(/\b(SELECT|FROM|WHERE|JOIN|WITH|INSERT|UPDATE|CREATE|ALTER|DELETE|DROP)\b/i)) {
+                // Highlight all code blocks that contain SQL-like syntax
+                // Check for SQL keywords, functions, or SQL-like patterns
+                if (text.match(/\b(SELECT|FROM|WHERE|JOIN|WITH|INSERT|UPDATE|CREATE|ALTER|DELETE|DROP|WITH|CASE|WHEN|THEN|GROUP BY|ORDER BY|HAVING|UNION|EXCEPT|INTERSECT|CTE|RECURSIVE)\b/i) ||
+                    text.match(/\b(COUNT|SUM|AVG|MAX|MIN|DATE_TRUNC|EXTRACT|ST_|CAST|CONVERT)\s*\(/i) ||
+                    text.match(/--.*$|\/\*[\s\S]*?\*\//m)) {
                     const highlighted = highlightSQL(text);
                     if (highlighted !== text) {
                         codeElement.innerHTML = highlighted;
                     }
+                }
+            });
+        }
+        
+        // Apply JSON highlighting to all JSON blocks (including dynamically loaded)
+        function highlightAllJSON() {
+            const jsonBlocks = document.querySelectorAll('.json-block .json-content code');
+            jsonBlocks.forEach(codeElement => {
+                // Skip if already highlighted
+                if (codeElement.innerHTML.includes('json-key') || codeElement.innerHTML.includes('json-string')) {
+                    return;
+                }
+                const text = codeElement.textContent || codeElement.innerText;
+                // Check if it's JSON (starts with { or [)
+                if (text.trim().match(/^[\s\n]*(?:\{|\[)/)) {
+                    highlightJsonElement(codeElement);
                 }
             });
         }
@@ -13707,18 +13731,70 @@ LIMIT 50000;</code></pre>
             });
         }
         
-        // Initialize JSON highlighting on page load
+        // Initialize highlighting on page load and when content changes
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize SQL highlighting first
+            // Initialize SQL highlighting for all code blocks
             highlightAllSQL();
+            
+            // Initialize JSON highlighting for all JSON blocks
+            highlightAllJSON();
             
             // Initialize all JSON accordions
             initAllJsonAccordions();
             
+            // Highlight initial JSON preview
             const jsonCode = document.getElementById('json-code');
             if (jsonCode) {
                 highlightJsonElement(jsonCode);
             }
+            
+            // Re-highlight when JSON accordion expands (for dynamically loaded content)
+            const jsonHeaders = document.querySelectorAll('.json-header');
+            jsonHeaders.forEach(header => {
+                header.addEventListener('click', function() {
+                    setTimeout(() => {
+                        highlightAllJSON();
+                        highlightAllSQL();
+                    }, 100);
+                });
+            });
+            
+            // Use MutationObserver to highlight dynamically added content
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.addedNodes.length) {
+                        // Check for new code blocks
+                        mutation.addedNodes.forEach(function(node) {
+                            if (node.nodeType === 1) { // Element node
+                                const codeBlocks = node.querySelectorAll ? node.querySelectorAll('.code-block code') : [];
+                                codeBlocks.forEach(codeElement => {
+                                    const text = codeElement.textContent || codeElement.innerText;
+                                    if (text.match(/\b(SELECT|FROM|WHERE|JOIN|WITH|INSERT|UPDATE|CREATE|ALTER|DELETE|DROP)\b/i)) {
+                                        const highlighted = highlightSQL(text);
+                                        if (highlighted !== text) {
+                                            codeElement.innerHTML = highlighted;
+                                        }
+                                    }
+                                });
+                                
+                                // Check for new JSON blocks
+                                const jsonCodes = node.querySelectorAll ? node.querySelectorAll('.json-content code') : [];
+                                jsonCodes.forEach(codeElement => {
+                                    if (!codeElement.innerHTML.includes('json-key')) {
+                                        highlightJsonElement(codeElement);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+            
+            // Observe the document body for changes
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
         });
         
         // Add copy buttons to code blocks (SQL)
