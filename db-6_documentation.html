@@ -13739,8 +13739,11 @@ LIMIT 50000;</code></pre>
             block.appendChild(button);
         });
         
-        // Add copy buttons to JSON blocks
+        // Add copy buttons to JSON blocks (in content area, not header)
         document.querySelectorAll('.json-block').forEach(block => {
+            const jsonContent = block.querySelector('.json-content');
+            if (!jsonContent) return;
+            
             const button = document.createElement('button');
             button.className = 'copy-button';
             button.textContent = 'Copy';
@@ -13749,8 +13752,7 @@ LIMIT 50000;</code></pre>
             button.addEventListener('click', async function(e) {
                 e.stopPropagation(); // Prevent accordion toggle
                 // Get plain text from JSON content
-                const jsonContent = block.querySelector('.json-content');
-                const codeElement = jsonContent ? jsonContent.querySelector('code') : null;
+                const codeElement = jsonContent.querySelector('code');
                 
                 let code = '';
                 if (codeElement) {
@@ -13763,13 +13765,14 @@ LIMIT 50000;</code></pre>
                     }
                 } else {
                     // Fallback: get all text from JSON content
-                    code = jsonContent ? jsonContent.textContent || jsonContent.innerText : '';
+                    code = jsonContent.textContent || jsonContent.innerText;
                 }
                 
                 await copyToClipboard(code, button);
             });
             
-            block.appendChild(button);
+            // Add button to content area, not the block itself
+            jsonContent.appendChild(button);
         });
         
         // Shared copy to clipboard function
