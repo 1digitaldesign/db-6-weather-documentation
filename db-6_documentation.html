@@ -53,22 +53,45 @@
         }
         
         .sidebar-header {
-            padding: 0 1.25rem 1rem;
+            padding: 1.25rem 1.25rem 1rem;
             border-bottom: 1px solid var(--border);
             margin-bottom: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .afterquery-logo-link {
+            display: inline-block;
+            transition: opacity 0.2s ease;
+            text-decoration: none;
+        }
+        
+        .afterquery-logo-link:hover {
+            opacity: 0.8;
+        }
+        
+        .afterquery-logo {
+            height: 28px;
+            width: auto;
+            display: block;
+            filter: brightness(0) invert(0);
+            transition: opacity 0.2s ease;
         }
         
         .sidebar-header h1 {
-            font-size: 1rem;
-            font-weight: 600;
+            font-size: 0.875rem;
+            font-weight: 500;
             color: var(--text-primary);
             margin: 0;
             line-height: 1.4;
+            letter-spacing: -0.01em;
         }
         
         .sidebar-header p {
-            font-size: 0.875rem;
+            font-size: 0.75rem;
             color: var(--text-secondary);
+            margin: 0;
         }
         
         .nav-section {
@@ -867,11 +890,9 @@
     <!-- Sidebar Navigation -->
     <nav class="sidebar">
         <div class="sidebar-header">
-            <div class="sidebar-header-logo">
-                <a href="https://www.afterquery.com/" class="afterquery-logo" target="_blank" rel="noopener noreferrer">
-                    AfterQuery<span class="afterquery-logo-symbol">∞</span>
-                </a>
-            </div>
+            <a href="https://www.afterquery.com/" target="_blank" rel="noopener noreferrer" class="afterquery-logo-link">
+                <img src="afterquery-logo.png" alt="AfterQuery" class="afterquery-logo" />
+            </a>
             <h1>Database Documentation</h1>
         </div>
         
@@ -1342,13 +1363,14 @@
     <main class="main-content">
         <header id="overview">
             <div class="header-brand">
-                <a href="https://www.afterquery.com/" class="header-brand-logo" target="_blank" rel="noopener noreferrer">
-                    AfterQuery<span class="header-brand-logo-symbol">∞</span>
+                <a href="https://www.afterquery.com/" target="_blank" rel="noopener noreferrer" class="afterquery-logo-link-header">
+                    <img src="afterquery-logo.png" alt="AfterQuery" class="afterquery-logo-header" />
                 </a>
-                <span class="header-brand-tagline">Be limitless ∞ as you explore the edges of AI</span>
+                <div class="header-text">
+                    <h1>Weather Consulting Database</h1>
+                    <p>Comprehensive documentation for database db-6, including complete schema documentation, all SQL queries with business context, and usage instructions. This database and its queries are sourced from production systems used by businesses with <strong>$1M+ Annual Recurring Revenue (ARR)</strong>, representing real-world enterprise implementations.</p>
+                </div>
             </div>
-            <h1>Weather Consulting Database</h1>
-            <p>Comprehensive documentation for database db-6, including complete schema documentation, all SQL queries with business context, and usage instructions. This database and its queries are sourced from production systems used by businesses with <strong>$1M+ Annual Recurring Revenue (ARR)</strong>, representing real-world enterprise implementations.</p>
         </header>
         
         <div class="intro-box">
