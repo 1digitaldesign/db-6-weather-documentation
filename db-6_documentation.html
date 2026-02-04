@@ -13474,6 +13474,8 @@ LIMIT 50000;</code></pre>
         // JSON expand/collapse functionality (accordion style)
         function toggleJson(header) {
             const content = header.nextElementSibling;
+            if (!content) return;
+            
             const codeElement = content.querySelector('code');
             const isExpanded = content.classList.contains('expanded');
             
@@ -13481,18 +13483,26 @@ LIMIT 50000;</code></pre>
                 // Collapse
                 content.classList.remove('expanded');
                 header.classList.remove('active');
+                // Clear inline styles to allow CSS to handle collapse
+                content.style.maxHeight = '';
+                content.style.padding = '';
             } else {
                 // Expand
                 content.classList.add('expanded');
                 header.classList.add('active');
+                // Clear any inline styles that might prevent expansion
+                content.style.maxHeight = '';
+                content.style.padding = '';
                 
                 // Load full JSON if only preview is shown
-                const currentText = codeElement.textContent || codeElement.innerText;
-                if (currentText.includes('...') || currentText.length < 2000) {
-                    loadFullJson(codeElement);
-                } else {
-                    // Re-highlight existing content
-                    highlightJsonElement(codeElement);
+                if (codeElement) {
+                    const currentText = codeElement.textContent || codeElement.innerText;
+                    if (currentText && (currentText.includes('...') || currentText.length < 2000)) {
+                        loadFullJson(codeElement);
+                    } else {
+                        // Re-highlight existing content
+                        highlightJsonElement(codeElement);
+                    }
                 }
             }
         }
@@ -13688,9 +13698,11 @@ LIMIT 50000;</code></pre>
                 }
                 
                 // Ensure content starts collapsed if not expanded
+                // Don't set inline styles - let CSS handle it to avoid conflicts
                 if (content && !content.classList.contains('expanded')) {
-                    content.style.maxHeight = '0';
-                    content.style.padding = '0';
+                    // Remove any inline styles that might interfere
+                    content.style.maxHeight = '';
+                    content.style.padding = '';
                 }
             });
         }
@@ -13718,12 +13730,20 @@ LIMIT 50000;</code></pre>
             // Initialize all JSON accordions
             initAllJsonAccordions();
             
-            // Highlight initial JSON preview
+            // Highlight initial JSON preview and ensure it's ready
             const jsonCode = document.getElementById('json-code');
             if (jsonCode) {
+                // Store original text for copying
+                const originalText = jsonCode.textContent || jsonCode.innerText;
+                if (originalText && !jsonCode.hasAttribute('data-original-text')) {
+                    jsonCode.setAttribute('data-original-text', originalText);
+                }
                 jsonCode.classList.add('language-json');
-                Prism.highlightElement(jsonCode);
-                highlightSQLInJSON(jsonCode);
+                // Only highlight if Prism is available
+                if (typeof Prism !== 'undefined') {
+                    Prism.highlightElement(jsonCode);
+                    highlightSQLInJSON(jsonCode);
+                }
             }
             
             // Re-highlight when JSON accordion expands (for dynamically loaded content)
