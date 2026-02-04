@@ -181,6 +181,7 @@
             border-left: 2px solid transparent;
             line-height: 1.5;
             letter-spacing: -0.01em;
+            letter-spacing: -0.01em;
         }
         
         .nav-link:hover {
@@ -435,14 +436,14 @@
             background: var(--code-bg);
             color: var(--code-text);
             border: 1px solid var(--code-border);
-            border-radius: 6px;
+            border-radius: 8px;
             margin: var(--spacing-md) 0;
             overflow: hidden;
             font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
             font-size: 0.8125rem;
             line-height: 1.6;
             position: relative;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
         
         .json-header {
@@ -494,11 +495,23 @@
         }
         
         .json-content.expanded {
-            max-height: 600px;
-            padding: var(--spacing-md);
-            transition: max-height 0.5s ease-in, padding 0.3s ease-in;
+            max-height: 600px !important;
+            padding: var(--spacing-md) !important;
+            transition: max-height 0.5s ease-in, padding 0.3s ease-in !important;
             overflow-y: auto;
             overflow-x: auto;
+        }
+        
+        /* Ensure expanded state always overrides any inline styles */
+        .json-content.expanded[style] {
+            max-height: 600px !important;
+            padding: var(--spacing-md) !important;
+        }
+        
+        /* Force removal of inline styles when expanded */
+        .json-content.expanded {
+            max-height: 600px !important;
+            padding: var(--spacing-md) !important;
         }
         
         .json-content.expanded::-webkit-scrollbar {
@@ -594,19 +607,20 @@
             position: absolute;
             top: var(--spacing-md);
             right: var(--spacing-md);
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
             color: var(--code-text);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: var(--spacing-sm) var(--spacing-md);
-            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: 6px;
             font-size: 0.75rem;
             font-weight: 500;
             cursor: pointer;
             opacity: 0;
             transition: all 0.2s ease;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            letter-spacing: -0.01em;
             z-index: 20;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(8px);
             letter-spacing: -0.01em;
         }
         
@@ -732,14 +746,17 @@
             background: var(--bg-secondary);
             border-left: 2px solid var(--bg-dark);
             padding: var(--spacing-xl);
-            border-radius: 6px;
+            border-radius: 8px;
             margin-bottom: var(--spacing-xl);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
         }
         
         .intro-box p {
-            margin-bottom: 0.5rem;
-            color: #4a5568;
+            margin-bottom: 0.75rem;
+            color: var(--text-secondary);
             font-size: 0.875rem;
+            line-height: 1.65;
+            letter-spacing: -0.01em;
         }
         
         .intro-box p:last-child {
@@ -1357,7 +1374,7 @@
         
         <!-- JSON Deliverable Preview -->
         <div class="json-block">
-            <div class="json-header" onclick="toggleJson(this)">
+            <div class="json-header" data-json-toggle="true">
                 <span class="json-title">db-6_deliverable.json</span>
                 <span class="json-toggle">▼</span>
             </div>
@@ -13472,159 +13489,225 @@ LIMIT 50000;</code></pre>
         });
         
         // JSON expand/collapse functionality (accordion style)
-        function toggleJson(header) {
-            const content = header.nextElementSibling;
-            if (!content) return;
-            
-            const codeElement = content.querySelector('code');
-            const isExpanded = content.classList.contains('expanded');
-            
-            if (isExpanded) {
-                // Collapse
-                content.classList.remove('expanded');
-                header.classList.remove('active');
-                // Clear inline styles to allow CSS to handle collapse
-                content.style.maxHeight = '';
-                content.style.padding = '';
-            } else {
-                // Expand
-                content.classList.add('expanded');
-                header.classList.add('active');
-                // Clear any inline styles that might prevent expansion
-                content.style.maxHeight = '';
-                content.style.padding = '';
+        // Make globally accessible for onclick handlers and event listeners
+        window.toggleJson = function(header) {
+            try {
+                const content = header.nextElementSibling;
+                if (!content) {
+                    console.warn('toggleJson: No content element found');
+                    return;
+                }
                 
-                // Load full JSON if only preview is shown
-                if (codeElement) {
-                    const currentText = codeElement.textContent || codeElement.innerText;
-                    if (currentText && (currentText.includes('...') || currentText.length < 2000)) {
-                        loadFullJson(codeElement);
+                const codeElement = content.querySelector('code');
+                const isExpanded = content.classList.contains('expanded');
+                
+                if (isExpanded) {
+                    // Collapse
+                    content.classList.remove('expanded');
+                    header.classList.remove('active');
+                    // Clear inline styles to allow CSS to handle collapse
+                    // Use requestAnimationFrame to ensure CSS transition works
+                    requestAnimationFrame(() => {
+                        content.style.maxHeight = '';
+                        content.style.padding = '';
+                    });
+                } else {
+                    // Expand
+                    // Clear any inline styles first, then add expanded class
+                    content.style.maxHeight = '';
+                    content.style.padding = '';
+                    // Use requestAnimationFrame to ensure CSS transition works
+                    requestAnimationFrame(() => {
+                        content.classList.add('expanded');
+                        header.classList.add('active');
+                    });
+                    
+                    // Load full JSON if only preview is shown
+                    if (codeElement) {
+                        const currentText = codeElement.textContent || codeElement.innerText;
+                        if (currentText && (currentText.includes('...') || currentText.length < 2000)) {
+                            loadFullJson(codeElement);
+                        } else {
+                            // Re-highlight existing content
+                            highlightJsonElement(codeElement);
+                        }
+                        // Ensure all highlighting is refreshed after expansion
+                        setTimeout(() => {
+                            if (typeof highlightAllJSON === 'function') highlightAllJSON();
+                            if (typeof highlightAllSQL === 'function') highlightAllSQL();
+                        }, 150);
+                    }
+                }
+            } catch (error) {
+                console.error('Error in toggleJson:', error);
+            }
+        };
+        
+        // Load full JSON content
+        function loadFullJson(codeElement) {
+            if (!codeElement) {
+                console.error('loadFullJson: codeElement is null');
+                return;
+            }
+            
+            try {
+                // First, try to get the embedded JSON content (it's already in the HTML)
+                // textContent automatically decodes HTML entities
+                const currentText = codeElement.textContent || codeElement.innerText;
+                
+                // If we have embedded content that looks complete, use it
+                if (currentText && currentText.length > 100 && !currentText.includes('...')) {
+                    // Store original text for copying (before highlighting)
+                    if (!codeElement.hasAttribute('data-original-text')) {
+                        codeElement.setAttribute('data-original-text', currentText);
+                    }
+                    // Ensure language class is set
+                    codeElement.classList.add('language-json');
+                    
+                    // Apply Prism highlighting if available
+                    if (typeof Prism !== 'undefined') {
+                        Prism.highlightElement(codeElement);
+                        // Also highlight SQL within JSON strings (post-process)
+                        highlightSQLInJSON(codeElement);
                     } else {
-                        // Re-highlight existing content
-                        highlightJsonElement(codeElement);
+                        console.warn('Prism.js not available for JSON highlighting');
+                    }
+                    return;
+                }
+                
+                // Otherwise, try to fetch JSON file (fallback)
+                fetch('./db-6_deliverable.json')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.text();
+                    })
+                    .then(jsonText => {
+                        // Store original text for copying (before highlighting)
+                        codeElement.setAttribute('data-original-text', jsonText);
+                        codeElement.textContent = jsonText;
+                        // Ensure language class is set
+                        codeElement.classList.add('language-json');
+                        
+                        // Apply Prism highlighting if available
+                        if (typeof Prism !== 'undefined') {
+                            Prism.highlightElement(codeElement);
+                            // Also highlight SQL within JSON strings (post-process)
+                            highlightSQLInJSON(codeElement);
+                        }
+                    })
+                    .catch(err => {
+                        console.log('Fetch failed, using embedded JSON content:', err);
+                        // Use embedded content as fallback
+                        const embeddedText = codeElement.textContent || codeElement.innerText;
+                        if (embeddedText) {
+                            codeElement.setAttribute('data-original-text', embeddedText);
+                            codeElement.classList.add('language-json');
+                            if (typeof Prism !== 'undefined') {
+                                Prism.highlightElement(codeElement);
+                                highlightSQLInJSON(codeElement);
+                            }
+                        }
+                    });
+            } catch (error) {
+                console.error('Error in loadFullJson:', error);
+                // Fallback: try to highlight whatever content we have
+                const fallbackText = codeElement.textContent || codeElement.innerText;
+                if (fallbackText) {
+                    codeElement.setAttribute('data-original-text', fallbackText);
+                    codeElement.classList.add('language-json');
+                    if (typeof Prism !== 'undefined') {
+                        Prism.highlightElement(codeElement);
                     }
                 }
             }
         }
         
-        // Load full JSON content
-        function loadFullJson(codeElement) {
-            // First, try to get the embedded JSON content (it's already in the HTML)
-            const currentText = codeElement.textContent || codeElement.innerText;
-            
-            // If we have embedded content that looks complete, use it
-            if (currentText && currentText.length > 100 && !currentText.includes('...')) {
-                // Store original text for copying (before highlighting)
-                codeElement.setAttribute('data-original-text', currentText);
-                // Ensure language class is set
-                codeElement.classList.add('language-json');
-                // Apply Prism highlighting
-                Prism.highlightElement(codeElement);
-                // Also highlight SQL within JSON strings (post-process)
-                highlightSQLInJSON(codeElement);
+        // Post-process JSON to highlight SQL within "sql" field values
+        function highlightSQLInJSON(codeElement) {
+            if (!codeElement) {
                 return;
             }
             
-            // Otherwise, try to fetch JSON file (fallback)
-            fetch('./db-6_deliverable.json')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.text();
-                })
-                .then(jsonText => {
-                    // Store original text for copying (before highlighting)
-                    codeElement.setAttribute('data-original-text', jsonText);
-                    codeElement.textContent = jsonText;
-                    // Ensure language class is set
-                    codeElement.classList.add('language-json');
-                    // Apply Prism highlighting
-                    Prism.highlightElement(codeElement);
-                    // Also highlight SQL within JSON strings (post-process)
-                    highlightSQLInJSON(codeElement);
-                })
-                .catch(err => {
-                    console.log('Fetch failed, using embedded JSON content:', err);
-                    // Use embedded content as fallback
-                    const embeddedText = codeElement.textContent || codeElement.innerText;
-                    if (embeddedText) {
-                        codeElement.setAttribute('data-original-text', embeddedText);
-                        codeElement.classList.add('language-json');
-                        Prism.highlightElement(codeElement);
-                        highlightSQLInJSON(codeElement);
-                    }
-                });
-        }
-        
-        // Post-process JSON to highlight SQL within "sql" field values
-        function highlightSQLInJSON(codeElement) {
-            // Get the original text (before Prism highlighting)
-            const originalText = codeElement.getAttribute('data-original-text') || 
-                                (codeElement.textContent || codeElement.innerText);
-            
-            if (!originalText || !originalText.includes('"sql"')) {
-                return; // No SQL to highlight
+            // Check if Prism.js is available
+            if (typeof Prism === 'undefined') {
+                console.warn('Prism.js not available for SQL highlighting in JSON');
+                return;
             }
             
-            // Find all "sql" field values in the original text
-            const sqlPattern = /"sql"\s*:\s*"((?:[^"\\]|\\.|\\n)*)"/g;
-            const sqlMatches = [];
-            let match;
-            
-            while ((match = sqlPattern.exec(originalText)) !== null) {
-                const sqlContent = match[1];
-                // Unescape JSON string
-                const unescapedSQL = sqlContent
-                    .replace(/\\n/g, '\n')
-                    .replace(/\\t/g, '\t')
-                    .replace(/\\"/g, '"')
-                    .replace(/\\\\/g, '\\');
+            try {
+                // Get the original text (before Prism highlighting)
+                const originalText = codeElement.getAttribute('data-original-text') || 
+                                    (codeElement.textContent || codeElement.innerText);
                 
-                // Create temporary element for SQL highlighting
-                const tempCode = document.createElement('code');
-                tempCode.className = 'language-sql';
-                tempCode.textContent = unescapedSQL;
-                Prism.highlightElement(tempCode);
+                if (!originalText || !originalText.includes('"sql"')) {
+                    return; // No SQL to highlight
+                }
                 
-                // Escape the highlighted SQL for JSON string context
-                const highlightedSQL = tempCode.innerHTML
-                    .replace(/&/g, '&amp;')
-                    .replace(/</g, '&lt;')
-                    .replace(/>/g, '&gt;')
-                    .replace(/"/g, '&quot;');
+                // Find all "sql" field values in the original text
+                const sqlPattern = /"sql"\s*:\s*"((?:[^"\\]|\\.|\\n)*)"/g;
+                const sqlMatches = [];
+                let match;
                 
-                sqlMatches.push({
-                    originalValue: sqlContent,
-                    highlightedValue: highlightedSQL
-                });
-            }
-            
-            // Apply replacements to the Prism-highlighted HTML
-            if (sqlMatches.length > 0) {
-                let html = codeElement.innerHTML;
-                sqlMatches.forEach((sqlMatch, index) => {
-                    // Find "sql" key-value pairs in the HTML and replace the value
-                    // Prism.js wraps JSON strings in <span class="token string">...</span>
-                    const escapedOriginalValue = sqlMatch.originalValue
+                while ((match = sqlPattern.exec(originalText)) !== null) {
+                    const sqlContent = match[1];
+                    // Unescape JSON string
+                    const unescapedSQL = sqlContent
+                        .replace(/\\n/g, '\n')
+                        .replace(/\\t/g, '\t')
+                        .replace(/\\"/g, '"')
+                        .replace(/\\\\/g, '\\');
+                    
+                    // Create temporary element for SQL highlighting
+                    const tempCode = document.createElement('code');
+                    tempCode.className = 'language-sql';
+                    tempCode.textContent = unescapedSQL;
+                    
+                    // Highlight SQL using Prism
+                    Prism.highlightElement(tempCode);
+                    
+                    // Escape the highlighted SQL for JSON string context
+                    const highlightedSQL = tempCode.innerHTML
                         .replace(/&/g, '&amp;')
                         .replace(/</g, '&lt;')
                         .replace(/>/g, '&gt;')
                         .replace(/"/g, '&quot;');
                     
-                    // Try to find and replace the SQL value within the JSON string token
-                    const stringTokenPattern = new RegExp(
-                        '("sql"[^"]*"\\s*:\\s*"[^"]*?)' + 
-                        escapedOriginalValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + 
-                        '([^"]*")',
-                        'g'
-                    );
-                    
-                    html = html.replace(stringTokenPattern, (fullMatch, prefix, suffix) => {
-                        return prefix + sqlMatch.highlightedValue + suffix;
+                    sqlMatches.push({
+                        originalValue: sqlContent,
+                        highlightedValue: highlightedSQL
                     });
-                });
-                codeElement.innerHTML = html;
+                }
+                
+                // Apply replacements to the Prism-highlighted HTML
+                if (sqlMatches.length > 0) {
+                    let html = codeElement.innerHTML;
+                    sqlMatches.forEach((sqlMatch) => {
+                        // Find "sql" key-value pairs in the HTML and replace the value
+                        // Prism.js wraps JSON strings in <span class="token string">...</span>
+                        const escapedOriginalValue = sqlMatch.originalValue
+                            .replace(/&/g, '&amp;')
+                            .replace(/</g, '&lt;')
+                            .replace(/>/g, '&gt;')
+                            .replace(/"/g, '&quot;');
+                        
+                        // Try to find and replace the SQL value within the JSON string token
+                        const stringTokenPattern = new RegExp(
+                            '("sql"[^"]*"\\s*:\\s*"[^"]*?)' + 
+                            escapedOriginalValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + 
+                            '([^"]*")',
+                            'g'
+                        );
+                        
+                        html = html.replace(stringTokenPattern, (fullMatch, prefix, suffix) => {
+                            return prefix + sqlMatch.highlightedValue + suffix;
+                        });
+                    });
+                    codeElement.innerHTML = html;
+                }
+            } catch (error) {
+                console.error('Error in highlightSQLInJSON:', error);
             }
         }
         
@@ -13697,18 +13780,28 @@ LIMIT 50000;</code></pre>
         
         // Make all JSON blocks accordion-style
         function initAllJsonAccordions() {
-            // Find all JSON blocks that don't already have accordion functionality
-            const jsonBlocks = document.querySelectorAll('.json-block');
-            jsonBlocks.forEach(block => {
-                const header = block.querySelector('.json-header');
-                const content = block.querySelector('.json-content');
+            // Find all JSON blocks and attach event listeners
+            const jsonHeaders = document.querySelectorAll('.json-header[data-json-toggle="true"], .json-header');
+            jsonHeaders.forEach(header => {
+                // Remove any existing onclick handlers
+                header.removeAttribute('onclick');
+                header.style.cursor = 'pointer';
                 
-                // If header doesn't have onclick, add it
-                if (header && !header.hasAttribute('onclick')) {
-                    header.setAttribute('onclick', 'toggleJson(this)');
-                    header.style.cursor = 'pointer';
+                // Attach event listener if not already attached
+                if (!header.hasAttribute('data-listener-attached')) {
+                    header.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (typeof window.toggleJson === 'function') {
+                            window.toggleJson(this);
+                        } else {
+                            console.error('toggleJson function not available');
+                        }
+                    });
+                    header.setAttribute('data-listener-attached', 'true');
                 }
                 
+                const content = header.nextElementSibling;
                 // Ensure content starts collapsed if not expanded
                 // Don't set inline styles - let CSS handle it to avoid conflicts
                 if (content && !content.classList.contains('expanded')) {
@@ -13759,15 +13852,7 @@ LIMIT 50000;</code></pre>
             }
             
             // Re-highlight when JSON accordion expands (for dynamically loaded content)
-            const jsonHeaders = document.querySelectorAll('.json-header');
-            jsonHeaders.forEach(header => {
-                header.addEventListener('click', function() {
-                    setTimeout(() => {
-                        highlightAllJSON();
-                        highlightAllSQL();
-                    }, 100);
-                });
-            });
+            // Note: This is handled within toggleJson function, so no separate listener needed
             
             // Use MutationObserver to highlight dynamically added content with Prism.js
             const observer = new MutationObserver(function(mutations) {
