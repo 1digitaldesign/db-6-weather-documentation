@@ -18,33 +18,40 @@
         
         :root {
             --bg-primary: #ffffff;
-            --bg-secondary: #f8f9fa;
-            --bg-dark: #1a1a1a;
-            --text-primary: #1a1a1a;
+            --bg-secondary: #fafafa;
+            --bg-dark: #000000;
+            --text-primary: #000000;
             --text-secondary: #6b7280;
             --text-light: #9ca3af;
             --border: #e5e7eb;
-            --accent: #1a1a1a;
-            --code-bg: #1a1a1a;
-            --code-text: #f8f9fa;
-            --code-border: #333;
+            --accent: #000000;
+            --code-bg: #000000;
+            --code-text: #ffffff;
+            --code-border: #333333;
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --spacing-2xl: 3rem;
         }
         
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            line-height: 1.6;
+            line-height: 1.65;
             color: var(--text-primary);
             background: var(--bg-primary);
             display: flex;
             min-height: 100vh;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            letter-spacing: -0.01em;
         }
         
-        /* Sidebar Navigation */
+        /* Sidebar Navigation - OpenAI style */
         .sidebar {
-            width: 260px;
+            width: 280px;
             background: var(--bg-primary);
             border-right: 1px solid var(--border);
             height: 100vh;
@@ -52,22 +59,23 @@
             left: 0;
             top: 0;
             overflow-y: auto;
-            padding: 1.5rem 0;
+            padding: var(--spacing-xl) 0;
             z-index: 100;
         }
         
         .sidebar-header {
-            padding: 0 1.25rem 1rem;
+            padding: 0 var(--spacing-lg) var(--spacing-md);
             border-bottom: 1px solid var(--border);
-            margin-bottom: 0.75rem;
+            margin-bottom: var(--spacing-md);
         }
         
         .sidebar-header h1 {
-            font-size: 1rem;
+            font-size: 0.9375rem;
             font-weight: 600;
             color: var(--text-primary);
             margin: 0;
-            line-height: 1.4;
+            line-height: 1.5;
+            letter-spacing: -0.02em;
         }
         
         .sidebar-header p {
@@ -165,13 +173,14 @@
         
         .nav-link {
             display: block;
-            padding: 0.375rem 1.25rem 0.375rem 2rem;
+            padding: var(--spacing-sm) var(--spacing-lg) var(--spacing-sm) 2rem;
             color: var(--text-secondary);
             text-decoration: none;
             font-size: 0.8125rem;
-            transition: all 0.15s;
+            transition: all 0.2s ease;
             border-left: 2px solid transparent;
-            line-height: 1.4;
+            line-height: 1.5;
+            letter-spacing: -0.01em;
         }
         
         .nav-link:hover {
@@ -187,13 +196,13 @@
             font-weight: 500;
         }
         
-        /* Main Content */
+        /* Main Content - OpenAI style with generous spacing */
         .main-content {
             flex: 1;
-            margin-left: 260px;
-            padding: 2.5rem 3rem;
+            margin-left: 280px;
+            padding: var(--spacing-2xl) var(--spacing-2xl);
             max-width: none;
-            width: calc(100% - 260px);
+            width: calc(100% - 280px);
         }
         
         /* Wide screen optimization for 34" monitors and larger */
@@ -421,27 +430,27 @@
             -ms-user-select: text;
         }
         
-        /* JSON Blocks - Compact and Expandable Accordion */
+        /* JSON Blocks - Compact and Expandable Accordion - OpenAI style */
         .json-block {
             background: var(--code-bg);
             color: var(--code-text);
             border: 1px solid var(--code-border);
-            border-radius: 8px;
-            margin: 0.75rem 0;
+            border-radius: 6px;
+            margin: var(--spacing-md) 0;
             overflow: hidden;
             font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
             font-size: 0.8125rem;
-            line-height: 1.5;
+            line-height: 1.6;
             position: relative;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
         }
         
         .json-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.75rem 1rem;
-            background: rgba(255, 255, 255, 0.03);
+            padding: var(--spacing-md) var(--spacing-lg);
+            background: rgba(255, 255, 255, 0.02);
             border-bottom: 1px solid var(--code-border);
             cursor: pointer;
             user-select: none;
@@ -449,11 +458,11 @@
         }
         
         .json-header:hover {
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.06);
         }
         
         .json-header.active {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
         }
         
         .json-title {
@@ -486,7 +495,7 @@
         
         .json-content.expanded {
             max-height: 600px;
-            padding: 0.75rem;
+            padding: var(--spacing-md);
             transition: max-height 0.5s ease-in, padding 0.3s ease-in;
             overflow-y: auto;
             overflow-x: auto;
@@ -583,13 +592,13 @@
         /* Copy button for code blocks and JSON blocks - OpenAI style */
         .copy-button {
             position: absolute;
-            top: 0.75rem;
-            right: 0.75rem;
-            background: rgba(255, 255, 255, 0.08);
+            top: var(--spacing-md);
+            right: var(--spacing-md);
+            background: rgba(255, 255, 255, 0.1);
             color: var(--code-text);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 0.375rem 0.75rem;
-            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: 4px;
             font-size: 0.75rem;
             font-weight: 500;
             cursor: pointer;
@@ -597,7 +606,8 @@
             transition: all 0.2s ease;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             z-index: 20;
-            backdrop-filter: blur(8px);
+            backdrop-filter: blur(10px);
+            letter-spacing: -0.01em;
         }
         
         .code-block:hover .copy-button,
@@ -633,17 +643,17 @@
         
         /* Copy button for JSON content area */
         .json-content .copy-button {
-            top: 0.5rem;
-            right: 0.5rem;
+            top: var(--spacing-sm);
+            right: var(--spacing-sm);
         }
         
-        /* Query Cards */
+        /* Query Cards - OpenAI style */
         .query-card {
             background: var(--bg-primary);
             border: 1px solid var(--border);
             border-radius: 6px;
-            padding: 1.25rem;
-            margin-bottom: 1.5rem;
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
         }
         
         .query-header {
@@ -717,13 +727,13 @@
             color: #388e3c;
         }
         
-        /* Intro Box */
+        /* Intro Box - OpenAI style */
         .intro-box {
             background: var(--bg-secondary);
-            border-left: 3px solid var(--bg-dark);
-            padding: 1.25rem;
+            border-left: 2px solid var(--bg-dark);
+            padding: var(--spacing-xl);
             border-radius: 6px;
-            margin-bottom: 1.5rem;
+            margin-bottom: var(--spacing-xl);
         }
         
         .intro-box p {
@@ -13489,9 +13499,30 @@ LIMIT 50000;</code></pre>
         
         // Load full JSON content
         function loadFullJson(codeElement) {
-            // Try to fetch JSON file
-            fetch('db-6_deliverable.json')
-                .then(response => response.text())
+            // First, try to get the embedded JSON content (it's already in the HTML)
+            const currentText = codeElement.textContent || codeElement.innerText;
+            
+            // If we have embedded content that looks complete, use it
+            if (currentText && currentText.length > 100 && !currentText.includes('...')) {
+                // Store original text for copying (before highlighting)
+                codeElement.setAttribute('data-original-text', currentText);
+                // Ensure language class is set
+                codeElement.classList.add('language-json');
+                // Apply Prism highlighting
+                Prism.highlightElement(codeElement);
+                // Also highlight SQL within JSON strings (post-process)
+                highlightSQLInJSON(codeElement);
+                return;
+            }
+            
+            // Otherwise, try to fetch JSON file (fallback)
+            fetch('./db-6_deliverable.json')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text();
+                })
                 .then(jsonText => {
                     // Store original text for copying (before highlighting)
                     codeElement.setAttribute('data-original-text', jsonText);
@@ -13504,16 +13535,15 @@ LIMIT 50000;</code></pre>
                     highlightSQLInJSON(codeElement);
                 })
                 .catch(err => {
-                    console.log('Fetch failed, JSON file may not be accessible');
-                    // Store current text for copying
-                    const currentText = codeElement.textContent || codeElement.innerText;
-                    codeElement.setAttribute('data-original-text', currentText);
-                    // Ensure language class is set
-                    codeElement.classList.add('language-json');
-                    // Highlight existing content
-                    Prism.highlightElement(codeElement);
-                    // Also highlight SQL within JSON strings
-                    highlightSQLInJSON(codeElement);
+                    console.log('Fetch failed, using embedded JSON content:', err);
+                    // Use embedded content as fallback
+                    const embeddedText = codeElement.textContent || codeElement.innerText;
+                    if (embeddedText) {
+                        codeElement.setAttribute('data-original-text', embeddedText);
+                        codeElement.classList.add('language-json');
+                        Prism.highlightElement(codeElement);
+                        highlightSQLInJSON(codeElement);
+                    }
                 });
         }
         
