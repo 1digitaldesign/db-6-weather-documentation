@@ -2,6 +2,7 @@
 .DS_Store
 .AppleDouble
 .LSOverride
+Thumbs.db
 
 # IDE
 .vscode/
@@ -21,7 +22,48 @@ venv/
 ENV/
 .venv
 
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+test_outputs/
+
 # Temporary files
 *.tmp
 *.log
 *.bak
+
+# Environment
+.env
+
+# Large data files (1GB+ per database)
+*.dump
+*.sql.gz
+*.zip
+db-*/data/data_synthetic_batch_*.sql
+db-*/data/data_synthetic_final.sql
+db-*/data/data_gov_extract*.sql
+db-*/data/data.sql
+db-*/data/data_large.sql
+db-*/data/data_large_postgresql.sql
+db-*/data/database_dump.sql
+db-*/data/full_dump.sql
+db-*/deliverable/*/data/data_large.sql
+db-*/deliverable/*/data/data_large_postgresql.sql
+
+# Extracted data files (research)
+db-*/research/extracted_data/
+db-*/research/*.csv
+
+# Notebook backups
+*.ipynb.colab_fix_backup
+*.ipynb.colab_pg_backup
+
+# Stale source database folders
+db-*/DATABASE/
+db-*/DATABASE\ */
+db-*/DOCUMENTATION/
+db-*/QUERIES/
+
+# Client data mirror (85GB+)
+client/
