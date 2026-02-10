@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Execution testing script for db-16 queries - PostgreSQL Only
-Extends the existing test_queries_postgres_snowflake.py functionality
+Extends the existing test_queries_postgres.py functionality
 """
 
 import os
@@ -10,10 +10,10 @@ import json
 from pathlib import Path
 from datetime import datetime
 
-# Add parent directory to path to import test_queries_postgres_snowflake
+# Add parent directory to path to import test_queries_postgres
 root_dir = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(root_dir))
-from test_queries_postgres_snowflake import QueryParser, DatabaseTester
+from test_queries_postgres import QueryParser, DatabaseTester
 
 def main():
     """Main execution testing function - PostgreSQL only"""
@@ -55,7 +55,7 @@ def main():
     print(f"  Database: {os.environ.get('POSTGRES_DB')}")
 
     # Test queries - PostgreSQL only
-    # DatabaseTester will automatically skip Snowflake if credentials not available
+    # DatabaseTester will automatically skip Databricks if credentials not available
     tester = DatabaseTester('db-16', 16)
     tester.test_all_queries(queries)
     tester.save_results(results_file)

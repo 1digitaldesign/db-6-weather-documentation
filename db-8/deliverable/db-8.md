@@ -251,8 +251,6 @@ This database implements a comprehensive Job Market Intelligence and Targeted Ap
 - **Predictive Analytics**: Market forecasting and skill demand projections
 
 - **PostgreSQL**: Full support with UUID types, arrays, JSONB, and PostGIS for spatial data
-- **Databricks**: Compatible with Delta Lake format
-- **Snowflake**: Full support with VARIANT types
 
 - **USAJobs.gov API**: Federal job listings (requires API key)
 - **BLS Public Data API**: Employment statistics and wage data
@@ -542,17 +540,17 @@ active_job_postings AS (
         c.industry,
         c.company_size,
         c.company_rating,
-        DATE_PART('day', CURRENT_TIMESTAMP() - jp.posted_date) AS days_since_posted,
+        DATE_PART('day', CURRENT_TIMESTAMP - jp.posted_date) AS days_since_posted,
         CASE
-            WHEN jp.posted_date >= CURRENT_TIMESTAMP() - INTERVAL '7 days' THEN 1.2
-            WHEN jp.posted_date >= CURRENT_TIMESTAMP() - INTERVAL '14 days' THEN 1.1
-            WHEN jp.posted_date >= CURRENT_TIMESTAMP() - INTERVAL '30 days' THEN 1.0
+            WHEN jp.posted_date >= CURRENT_TIMESTAMP - INTERVAL '7 days' THEN 1.2
+            WHEN jp.posted_date >= CURRENT_TIMESTAMP - INTERVAL '14 days' THEN 1.1
+            WHEN jp.posted_date >= CURRENT_TIMESTAMP - INTERVAL '30 days' THEN 1.0
             ELSE 0.9
         END AS recency_multiplier
     FROM job_postings jp
     INNER JOIN companies c ON jp.company_id = c.company_id
     WHERE jp.is_active = TRUE
-        AND (jp.expiration_date IS NULL OR jp.expiration_date > CURRENT_TIMESTAMP())
+        AND (jp.expiration_date IS NULL OR jp.expiration_date > CURRENT_TIMESTAMP)
 ),
 job_skills_aggregated AS (
     -- Fourth CTE: Aggregate required and preferred skills for each job
@@ -1359,9 +1357,9 @@ conversion_funnel AS (
         ROUND((ca.pending_applications::NUMERIC / NULLIF(ca.total_applications, 0)) * 100, 2) AS pending_rate_pct,
         -- Time metrics
         ROUND(ca.avg_days_to_update, 2) AS avg_days_to_update,
-        ROUND(ca.median_days_to_update, 2) AS median_days_to_update,
+        ROUND((ca.median_days_to_update)::NUMERIC, 2) AS median_days_to_update,
         ROUND(ca.avg_days_to_success, 2) AS avg_days_to_success,
-        ROUND(ca.median_days_to_success, 2) AS median_days_to_success,
+        ROUND((ca.median_days_to_success)::NUMERIC, 2) AS median_days_to_success,
         ROUND(ca.avg_days_to_rejection, 2) AS avg_days_to_rejection
     FROM cohort_aggregations ca
 ),
@@ -2692,8 +2690,8 @@ SELECT
             ppa.pay_plan,
             JSON_OBJECT(
                 'total_jobs', ppa.total_jobs,
-                'avg_salary', ROUND(ppa.avg_salary_midpoint, 0),
-                'median_salary', ROUND(ppa.median_salary, 0)
+                'avg_salary', ROUND((ppa.avg_salary_midpoint)::NUMERIC, 0),
+                'median_salary', ROUND((ppa.median_salary)::NUMERIC, 0)
             )
         )
         FROM pay_plan_analysis ppa
@@ -4819,7 +4817,7 @@ optimal_timing_recommendations AS (
         tsa.successful_applications,
         tsa.success_rate_pct,
         ROUND(tsa.avg_days_after_posting, 1) AS avg_days_after_posting,
-        ROUND(tsa.median_days_after_posting, 1) AS median_days_after_posting,
+        ROUND((tsa.median_days_after_posting)::NUMERIC, 1) AS median_days_after_posting,
         -- Timing score
         ROUND(
             (
@@ -6213,16 +6211,14 @@ psql -d db_8_validation -f data/data.sql
 All queries in this database are designed to work across multiple database platforms:
 
 - **PostgreSQL**: Full support with standard SQL features
-- **Databricks**: Compatible with Delta Lake and Spark SQL
-- **Snowflake**: Full support with Snowflake SQL syntax
 
-Queries use standard SQL syntax and avoid platform-specific features to ensure cross-platform compatibility.
+Queries use standard SQL syntax and avoid platform-specific features to ensure compatibility.
 
 ---
 
 **Document Information:**
 
-- **Generated**: 20260204-2125
+- **Generated**: 20260210-0115
 - **Database**: db-8
 - **Type**: Job Market Intelligence Database
 - **Queries**: 30 production queries

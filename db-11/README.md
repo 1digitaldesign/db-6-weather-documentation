@@ -111,7 +111,7 @@ See `queries/queries.md` for SQL queries covering:
 See `research/etl_elt_pipeline.ipynb` for:
 - Data extraction from government sources
 - Data transformation and cleaning
-- Data loading into PostgreSQL and Databricks
+- Data loading into PostgreSQL
 - Data quality validation
 - Pipeline execution monitoring
 
@@ -119,8 +119,8 @@ See `research/etl_elt_pipeline.ipynb` for:
 
 All queries are designed to work across:
 - PostgreSQL (with PostGIS for spatial data)
-- Databricks (Delta Lake)
-- Snowflake
+ (Delta Lake)
+
 
 ## Data Collection Strategy
 

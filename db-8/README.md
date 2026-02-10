@@ -83,8 +83,8 @@ python3 scripts/generate_final_report.py
 
 All queries are designed to work across:
 - PostgreSQL
-- Databricks (Delta Lake)
-- Snowflake
+ (Delta Lake)
+
 
 ## Features
 

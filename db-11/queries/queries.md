@@ -55,7 +55,7 @@ Stores data source tracking and extraction metadata
 
 ---
 
-This file contains 30 extremely complex SQL queries focused on parking marketing intelligence analysis for client deliverables. All queries are designed to work across PostgreSQL, Databricks, and Snowflake.
+This file contains 30 extremely complex SQL queries focused on parking marketing intelligence analysis for client deliverables. All queries are designed to work across PostgreSQL.
 
 ## Query 1: Multi-Dimensional Market Demand Analysis with Geographic Segmentation and Temporal Patterns
 
@@ -284,9 +284,9 @@ WITH facility_location_clusters AS (
             SELECT COUNT(*)
             FROM parking_facilities pf2
             WHERE pf2.city_id = pf.city_id
-            AND ST_DISTANCE(
-                ST_POINT(pf.longitude, pf.latitude),
-                ST_POINT(pf2.longitude, pf2.latitude)
+            AND ST_Distance(
+                ST_SetSRID(ST_MakePoint(pf.longitude, pf.latitude), 4326)::geography,
+                ST_SetSRID(ST_MakePoint(pf2.longitude, pf2.latitude), 4326)::geography
             ) < 1000
         ) AS nearby_facilities_count
     FROM parking_facilities pf
@@ -297,6 +297,7 @@ pricing_analysis AS (
     SELECT
         pp.pricing_id,
         pp.facility_id,
+        flc.facility_name,
         pp.pricing_type,
         pp.base_rate_hourly,
         pp.base_rate_daily,
@@ -332,55 +333,49 @@ competitive_clusters AS (
         pa1.base_rate_hourly AS facility_rate,
         pa1.total_spaces AS facility_spaces,
         pa1.facility_type,
-        -- Find competitors within 500 meters
-        ARRAY_AGG(
-            DISTINCT pa2.facility_id
-            ORDER BY ST_DISTANCE(
-                ST_POINT(pa1.longitude, pa1.latitude),
-                ST_POINT(pa2.longitude, pa2.latitude)
-            )
-        ) FILTER (
+        -- Find competitors within 500 meters (ARRAY_AGG without DISTINCT for PostgreSQL compatibility)
+        ARRAY_AGG(pa2.facility_id) FILTER (
             WHERE pa2.facility_id != pa1.facility_id
-            AND ST_DISTANCE(
-                ST_POINT(pa1.longitude, pa1.latitude),
-                ST_POINT(pa2.longitude, pa2.latitude)
+            AND ST_Distance(
+                ST_SetSRID(ST_MakePoint(pa1.longitude, pa1.latitude), 4326)::geography,
+                ST_SetSRID(ST_MakePoint(pa2.longitude, pa2.latitude), 4326)::geography
             ) < 500
         ) AS competitor_facility_ids,
         COUNT(DISTINCT pa2.facility_id) FILTER (
             WHERE pa2.facility_id != pa1.facility_id
-            AND ST_DISTANCE(
-                ST_POINT(pa1.longitude, pa1.latitude),
-                ST_POINT(pa2.longitude, pa2.latitude)
+            AND ST_Distance(
+                ST_SetSRID(ST_MakePoint(pa1.longitude, pa1.latitude), 4326)::geography,
+                ST_SetSRID(ST_MakePoint(pa2.longitude, pa2.latitude), 4326)::geography
             ) < 500
         ) AS competitor_count,
         AVG(pa2.base_rate_hourly) FILTER (
             WHERE pa2.facility_id != pa1.facility_id
-            AND ST_DISTANCE(
-                ST_POINT(pa1.longitude, pa1.latitude),
-                ST_POINT(pa2.longitude, pa2.latitude)
+            AND ST_Distance(
+                ST_SetSRID(ST_MakePoint(pa1.longitude, pa1.latitude), 4326)::geography,
+                ST_SetSRID(ST_MakePoint(pa2.longitude, pa2.latitude), 4326)::geography
             ) < 500
         ) AS avg_competitor_rate,
         MIN(pa2.base_rate_hourly) FILTER (
             WHERE pa2.facility_id != pa1.facility_id
-            AND ST_DISTANCE(
-                ST_POINT(pa1.longitude, pa1.latitude),
-                ST_POINT(pa2.longitude, pa2.latitude)
+            AND ST_Distance(
+                ST_SetSRID(ST_MakePoint(pa1.longitude, pa1.latitude), 4326)::geography,
+                ST_SetSRID(ST_MakePoint(pa2.longitude, pa2.latitude), 4326)::geography
             ) < 500
         ) AS min_competitor_rate,
         MAX(pa2.base_rate_hourly) FILTER (
             WHERE pa2.facility_id != pa1.facility_id
-            AND ST_DISTANCE(
-                ST_POINT(pa1.longitude, pa1.latitude),
-                ST_POINT(pa2.longitude, pa2.latitude)
+            AND ST_Distance(
+                ST_SetSRID(ST_MakePoint(pa1.longitude, pa1.latitude), 4326)::geography,
+                ST_SetSRID(ST_MakePoint(pa2.longitude, pa2.latitude), 4326)::geography
             ) < 500
         ) AS max_competitor_rate,
         PERCENTILE_CONT(0.5) WITHIN GROUP (
             ORDER BY pa2.base_rate_hourly
         ) FILTER (
             WHERE pa2.facility_id != pa1.facility_id
-            AND ST_DISTANCE(
-                ST_POINT(pa1.longitude, pa1.latitude),
-                ST_POINT(pa2.longitude, pa2.latitude)
+            AND ST_Distance(
+                ST_SetSRID(ST_MakePoint(pa1.longitude, pa1.latitude), 4326)::geography,
+                ST_SetSRID(ST_MakePoint(pa2.longitude, pa2.latitude), 4326)::geography
             ) < 500
         ) AS median_competitor_rate
     FROM pricing_analysis pa1
@@ -455,12 +450,12 @@ market_share_calculation AS (
                         WHERE pf2.facility_id = ANY(cc.competitor_facility_ids)
                         OR (
                             pf2.city_id = cc.city_id
-                            AND ST_DISTANCE(
-                                ST_POINT(
-                                    (SELECT latitude FROM parking_facilities WHERE facility_id = cc.facility_id),
-                                    (SELECT longitude FROM parking_facilities WHERE facility_id = cc.facility_id)
-                                ),
-                                ST_POINT(pf2.longitude, pf2.latitude)
+                            AND ST_Distance(
+                                ST_SetSRID(ST_MakePoint(
+                                    (SELECT longitude FROM parking_facilities WHERE facility_id = cc.facility_id),
+                                    (SELECT latitude FROM parking_facilities WHERE facility_id = cc.facility_id)
+                                ), 4326)::geography,
+                                ST_SetSRID(ST_MakePoint(pf2.longitude, pf2.latitude), 4326)::geography
                             ) < 500
                         )
                     ),
@@ -598,17 +593,17 @@ venue_parking_analysis AS (
         SUM(pf.total_spaces) AS total_nearby_spaces,
         AVG(
             CASE
-                WHEN ST_DISTANCE(
-                    ST_POINT(sv.longitude, sv.latitude),
-                    ST_POINT(pf.longitude, pf.latitude)
+                WHEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(sv.longitude, sv.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(pf.longitude, pf.latitude), 4326)::geography
                 ) < 1000 THEN pf.total_spaces
                 ELSE NULL
             END
         ) AS avg_spaces_per_facility,
         AVG(pp.base_rate_hourly) FILTER (
-            WHERE ST_DISTANCE(
-                ST_POINT(sv.longitude, sv.latitude),
-                ST_POINT(pf.longitude, pf.latitude)
+            WHERE ST_Distance(
+                ST_SetSRID(ST_MakePoint(sv.longitude, sv.latitude), 4326)::geography,
+                ST_SetSRID(ST_MakePoint(pf.longitude, pf.latitude), 4326)::geography
             ) < 1000
         ) AS avg_nearby_rate
     FROM stadiums_venues sv
@@ -772,9 +767,9 @@ airport_parking_facilities AS (
         pf.total_spaces,
         pf.facility_type,
         pf.operator_type,
-        pf.is_long_term_parking,
-        pf.is_short_term_parking,
-        pf.is_valet_available,
+        a.long_term_parking,
+        a.short_term_parking,
+        a.valet_available,
         pp.base_rate_hourly,
         pp.base_rate_daily,
         pp.max_daily_rate,
@@ -834,6 +829,8 @@ passenger_correlation_analysis AS (
         spa.airport_id,
         spa.airport_name,
         spa.annual_passengers,
+        apv.city_name,
+        apv.state_code,
         apv.base_monthly_passengers,
         spa.utilization_month,
         spa.avg_occupancy_rate,
@@ -944,7 +941,7 @@ WITH traffic_monitoring_locations AS (
         tv.data_year,
         c.city_name,
         c.state_code,
-        ST_POINT(tv.longitude, tv.latitude) AS traffic_point
+        ST_SetSRID(ST_MakePoint(tv.longitude, tv.latitude), 4326)::geography AS traffic_point
     FROM traffic_volume_data tv
     INNER JOIN cities c ON tv.city_id = c.city_id
     WHERE tv.data_year = EXTRACT(YEAR FROM CURRENT_DATE)
@@ -960,16 +957,16 @@ nearby_parking_facilities AS (
         pf.total_spaces,
         pf.latitude,
         pf.longitude,
-        ST_DISTANCE(
+        ST_Distance(
             tml.traffic_point,
-            ST_POINT(pf.longitude, pf.latitude)
+            ST_SetSRID(ST_MakePoint(pf.longitude, pf.latitude), 4326)::geography
         ) AS distance_meters,
-        ST_POINT(pf.longitude, pf.latitude) AS facility_point
+        ST_SetSRID(ST_MakePoint(pf.longitude, pf.latitude), 4326)::geography AS facility_point
     FROM traffic_monitoring_locations tml
     INNER JOIN parking_facilities pf ON tml.city_id = pf.city_id
-    WHERE ST_DISTANCE(
+    WHERE ST_Distance(
         tml.traffic_point,
-        ST_POINT(pf.longitude, pf.latitude)
+        ST_SetSRID(ST_MakePoint(pf.longitude, pf.latitude), 4326)::geography
     ) < 500  -- Within 500 meters
 ),
 hourly_utilization_by_facility AS (
@@ -1706,12 +1703,12 @@ competitive_landscape AS (
         PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY pa2.avg_hourly_rate) AS median_competitor_rate,
         AVG(
             CASE
-                WHEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
-                ) < 500 THEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
+                WHEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
+                ) < 500 THEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
                 )
                 ELSE NULL
             END
@@ -1719,9 +1716,9 @@ competitive_landscape AS (
     FROM facility_base_data fbd1
     LEFT JOIN facility_base_data fbd2 ON fbd1.city_id = fbd2.city_id
         AND fbd2.facility_id != fbd1.facility_id
-        AND ST_DISTANCE(
-            ST_POINT(fbd1.longitude, fbd1.latitude),
-            ST_POINT(fbd2.longitude, fbd2.latitude)
+        AND ST_Distance(
+            ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+            ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
         ) < 1000
     LEFT JOIN pricing_analysis pa2 ON fbd2.facility_id = pa2.facility_id
     GROUP BY fbd1.facility_id, fbd1.city_id, fbd1.latitude, fbd1.longitude
@@ -1956,12 +1953,12 @@ competitive_landscape AS (
         PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY pa2.avg_hourly_rate) AS median_competitor_rate,
         AVG(
             CASE
-                WHEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
-                ) < 500 THEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
+                WHEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
+                ) < 500 THEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
                 )
                 ELSE NULL
             END
@@ -1969,9 +1966,9 @@ competitive_landscape AS (
     FROM facility_base_data fbd1
     LEFT JOIN facility_base_data fbd2 ON fbd1.city_id = fbd2.city_id
         AND fbd2.facility_id != fbd1.facility_id
-        AND ST_DISTANCE(
-            ST_POINT(fbd1.longitude, fbd1.latitude),
-            ST_POINT(fbd2.longitude, fbd2.latitude)
+        AND ST_Distance(
+            ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+            ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
         ) < 1000
     LEFT JOIN pricing_analysis pa2 ON fbd2.facility_id = pa2.facility_id
     GROUP BY fbd1.facility_id, fbd1.city_id, fbd1.latitude, fbd1.longitude
@@ -2206,12 +2203,12 @@ competitive_landscape AS (
         PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY pa2.avg_hourly_rate) AS median_competitor_rate,
         AVG(
             CASE
-                WHEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
-                ) < 500 THEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
+                WHEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
+                ) < 500 THEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
                 )
                 ELSE NULL
             END
@@ -2219,9 +2216,9 @@ competitive_landscape AS (
     FROM facility_base_data fbd1
     LEFT JOIN facility_base_data fbd2 ON fbd1.city_id = fbd2.city_id
         AND fbd2.facility_id != fbd1.facility_id
-        AND ST_DISTANCE(
-            ST_POINT(fbd1.longitude, fbd1.latitude),
-            ST_POINT(fbd2.longitude, fbd2.latitude)
+        AND ST_Distance(
+            ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+            ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
         ) < 1000
     LEFT JOIN pricing_analysis pa2 ON fbd2.facility_id = pa2.facility_id
     GROUP BY fbd1.facility_id, fbd1.city_id, fbd1.latitude, fbd1.longitude
@@ -2456,12 +2453,12 @@ competitive_landscape AS (
         PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY pa2.avg_hourly_rate) AS median_competitor_rate,
         AVG(
             CASE
-                WHEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
-                ) < 500 THEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
+                WHEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
+                ) < 500 THEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
                 )
                 ELSE NULL
             END
@@ -2469,9 +2466,9 @@ competitive_landscape AS (
     FROM facility_base_data fbd1
     LEFT JOIN facility_base_data fbd2 ON fbd1.city_id = fbd2.city_id
         AND fbd2.facility_id != fbd1.facility_id
-        AND ST_DISTANCE(
-            ST_POINT(fbd1.longitude, fbd1.latitude),
-            ST_POINT(fbd2.longitude, fbd2.latitude)
+        AND ST_Distance(
+            ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+            ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
         ) < 1000
     LEFT JOIN pricing_analysis pa2 ON fbd2.facility_id = pa2.facility_id
     GROUP BY fbd1.facility_id, fbd1.city_id, fbd1.latitude, fbd1.longitude
@@ -2706,12 +2703,12 @@ competitive_landscape AS (
         PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY pa2.avg_hourly_rate) AS median_competitor_rate,
         AVG(
             CASE
-                WHEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
-                ) < 500 THEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
+                WHEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
+                ) < 500 THEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
                 )
                 ELSE NULL
             END
@@ -2719,9 +2716,9 @@ competitive_landscape AS (
     FROM facility_base_data fbd1
     LEFT JOIN facility_base_data fbd2 ON fbd1.city_id = fbd2.city_id
         AND fbd2.facility_id != fbd1.facility_id
-        AND ST_DISTANCE(
-            ST_POINT(fbd1.longitude, fbd1.latitude),
-            ST_POINT(fbd2.longitude, fbd2.latitude)
+        AND ST_Distance(
+            ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+            ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
         ) < 1000
     LEFT JOIN pricing_analysis pa2 ON fbd2.facility_id = pa2.facility_id
     GROUP BY fbd1.facility_id, fbd1.city_id, fbd1.latitude, fbd1.longitude
@@ -2956,12 +2953,12 @@ competitive_landscape AS (
         PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY pa2.avg_hourly_rate) AS median_competitor_rate,
         AVG(
             CASE
-                WHEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
-                ) < 500 THEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
+                WHEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
+                ) < 500 THEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
                 )
                 ELSE NULL
             END
@@ -2969,9 +2966,9 @@ competitive_landscape AS (
     FROM facility_base_data fbd1
     LEFT JOIN facility_base_data fbd2 ON fbd1.city_id = fbd2.city_id
         AND fbd2.facility_id != fbd1.facility_id
-        AND ST_DISTANCE(
-            ST_POINT(fbd1.longitude, fbd1.latitude),
-            ST_POINT(fbd2.longitude, fbd2.latitude)
+        AND ST_Distance(
+            ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+            ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
         ) < 1000
     LEFT JOIN pricing_analysis pa2 ON fbd2.facility_id = pa2.facility_id
     GROUP BY fbd1.facility_id, fbd1.city_id, fbd1.latitude, fbd1.longitude
@@ -3206,12 +3203,12 @@ competitive_landscape AS (
         PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY pa2.avg_hourly_rate) AS median_competitor_rate,
         AVG(
             CASE
-                WHEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
-                ) < 500 THEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
+                WHEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
+                ) < 500 THEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
                 )
                 ELSE NULL
             END
@@ -3219,9 +3216,9 @@ competitive_landscape AS (
     FROM facility_base_data fbd1
     LEFT JOIN facility_base_data fbd2 ON fbd1.city_id = fbd2.city_id
         AND fbd2.facility_id != fbd1.facility_id
-        AND ST_DISTANCE(
-            ST_POINT(fbd1.longitude, fbd1.latitude),
-            ST_POINT(fbd2.longitude, fbd2.latitude)
+        AND ST_Distance(
+            ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+            ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
         ) < 1000
     LEFT JOIN pricing_analysis pa2 ON fbd2.facility_id = pa2.facility_id
     GROUP BY fbd1.facility_id, fbd1.city_id, fbd1.latitude, fbd1.longitude
@@ -3456,12 +3453,12 @@ competitive_landscape AS (
         PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY pa2.avg_hourly_rate) AS median_competitor_rate,
         AVG(
             CASE
-                WHEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
-                ) < 500 THEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
+                WHEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
+                ) < 500 THEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
                 )
                 ELSE NULL
             END
@@ -3469,9 +3466,9 @@ competitive_landscape AS (
     FROM facility_base_data fbd1
     LEFT JOIN facility_base_data fbd2 ON fbd1.city_id = fbd2.city_id
         AND fbd2.facility_id != fbd1.facility_id
-        AND ST_DISTANCE(
-            ST_POINT(fbd1.longitude, fbd1.latitude),
-            ST_POINT(fbd2.longitude, fbd2.latitude)
+        AND ST_Distance(
+            ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+            ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
         ) < 1000
     LEFT JOIN pricing_analysis pa2 ON fbd2.facility_id = pa2.facility_id
     GROUP BY fbd1.facility_id, fbd1.city_id, fbd1.latitude, fbd1.longitude
@@ -3706,12 +3703,12 @@ competitive_landscape AS (
         PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY pa2.avg_hourly_rate) AS median_competitor_rate,
         AVG(
             CASE
-                WHEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
-                ) < 500 THEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
+                WHEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
+                ) < 500 THEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
                 )
                 ELSE NULL
             END
@@ -3719,9 +3716,9 @@ competitive_landscape AS (
     FROM facility_base_data fbd1
     LEFT JOIN facility_base_data fbd2 ON fbd1.city_id = fbd2.city_id
         AND fbd2.facility_id != fbd1.facility_id
-        AND ST_DISTANCE(
-            ST_POINT(fbd1.longitude, fbd1.latitude),
-            ST_POINT(fbd2.longitude, fbd2.latitude)
+        AND ST_Distance(
+            ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+            ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
         ) < 1000
     LEFT JOIN pricing_analysis pa2 ON fbd2.facility_id = pa2.facility_id
     GROUP BY fbd1.facility_id, fbd1.city_id, fbd1.latitude, fbd1.longitude
@@ -3956,12 +3953,12 @@ competitive_landscape AS (
         PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY pa2.avg_hourly_rate) AS median_competitor_rate,
         AVG(
             CASE
-                WHEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
-                ) < 500 THEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
+                WHEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
+                ) < 500 THEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
                 )
                 ELSE NULL
             END
@@ -3969,9 +3966,9 @@ competitive_landscape AS (
     FROM facility_base_data fbd1
     LEFT JOIN facility_base_data fbd2 ON fbd1.city_id = fbd2.city_id
         AND fbd2.facility_id != fbd1.facility_id
-        AND ST_DISTANCE(
-            ST_POINT(fbd1.longitude, fbd1.latitude),
-            ST_POINT(fbd2.longitude, fbd2.latitude)
+        AND ST_Distance(
+            ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+            ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
         ) < 1000
     LEFT JOIN pricing_analysis pa2 ON fbd2.facility_id = pa2.facility_id
     GROUP BY fbd1.facility_id, fbd1.city_id, fbd1.latitude, fbd1.longitude
@@ -4206,12 +4203,12 @@ competitive_landscape AS (
         PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY pa2.avg_hourly_rate) AS median_competitor_rate,
         AVG(
             CASE
-                WHEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
-                ) < 500 THEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
+                WHEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
+                ) < 500 THEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
                 )
                 ELSE NULL
             END
@@ -4219,9 +4216,9 @@ competitive_landscape AS (
     FROM facility_base_data fbd1
     LEFT JOIN facility_base_data fbd2 ON fbd1.city_id = fbd2.city_id
         AND fbd2.facility_id != fbd1.facility_id
-        AND ST_DISTANCE(
-            ST_POINT(fbd1.longitude, fbd1.latitude),
-            ST_POINT(fbd2.longitude, fbd2.latitude)
+        AND ST_Distance(
+            ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+            ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
         ) < 1000
     LEFT JOIN pricing_analysis pa2 ON fbd2.facility_id = pa2.facility_id
     GROUP BY fbd1.facility_id, fbd1.city_id, fbd1.latitude, fbd1.longitude
@@ -4456,12 +4453,12 @@ competitive_landscape AS (
         PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY pa2.avg_hourly_rate) AS median_competitor_rate,
         AVG(
             CASE
-                WHEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
-                ) < 500 THEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
+                WHEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
+                ) < 500 THEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
                 )
                 ELSE NULL
             END
@@ -4469,9 +4466,9 @@ competitive_landscape AS (
     FROM facility_base_data fbd1
     LEFT JOIN facility_base_data fbd2 ON fbd1.city_id = fbd2.city_id
         AND fbd2.facility_id != fbd1.facility_id
-        AND ST_DISTANCE(
-            ST_POINT(fbd1.longitude, fbd1.latitude),
-            ST_POINT(fbd2.longitude, fbd2.latitude)
+        AND ST_Distance(
+            ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+            ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
         ) < 1000
     LEFT JOIN pricing_analysis pa2 ON fbd2.facility_id = pa2.facility_id
     GROUP BY fbd1.facility_id, fbd1.city_id, fbd1.latitude, fbd1.longitude
@@ -4706,12 +4703,12 @@ competitive_landscape AS (
         PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY pa2.avg_hourly_rate) AS median_competitor_rate,
         AVG(
             CASE
-                WHEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
-                ) < 500 THEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
+                WHEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
+                ) < 500 THEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
                 )
                 ELSE NULL
             END
@@ -4719,9 +4716,9 @@ competitive_landscape AS (
     FROM facility_base_data fbd1
     LEFT JOIN facility_base_data fbd2 ON fbd1.city_id = fbd2.city_id
         AND fbd2.facility_id != fbd1.facility_id
-        AND ST_DISTANCE(
-            ST_POINT(fbd1.longitude, fbd1.latitude),
-            ST_POINT(fbd2.longitude, fbd2.latitude)
+        AND ST_Distance(
+            ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+            ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
         ) < 1000
     LEFT JOIN pricing_analysis pa2 ON fbd2.facility_id = pa2.facility_id
     GROUP BY fbd1.facility_id, fbd1.city_id, fbd1.latitude, fbd1.longitude
@@ -4956,12 +4953,12 @@ competitive_landscape AS (
         PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY pa2.avg_hourly_rate) AS median_competitor_rate,
         AVG(
             CASE
-                WHEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
-                ) < 500 THEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
+                WHEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
+                ) < 500 THEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
                 )
                 ELSE NULL
             END
@@ -4969,9 +4966,9 @@ competitive_landscape AS (
     FROM facility_base_data fbd1
     LEFT JOIN facility_base_data fbd2 ON fbd1.city_id = fbd2.city_id
         AND fbd2.facility_id != fbd1.facility_id
-        AND ST_DISTANCE(
-            ST_POINT(fbd1.longitude, fbd1.latitude),
-            ST_POINT(fbd2.longitude, fbd2.latitude)
+        AND ST_Distance(
+            ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+            ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
         ) < 1000
     LEFT JOIN pricing_analysis pa2 ON fbd2.facility_id = pa2.facility_id
     GROUP BY fbd1.facility_id, fbd1.city_id, fbd1.latitude, fbd1.longitude
@@ -5206,12 +5203,12 @@ competitive_landscape AS (
         PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY pa2.avg_hourly_rate) AS median_competitor_rate,
         AVG(
             CASE
-                WHEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
-                ) < 500 THEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
+                WHEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
+                ) < 500 THEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
                 )
                 ELSE NULL
             END
@@ -5219,9 +5216,9 @@ competitive_landscape AS (
     FROM facility_base_data fbd1
     LEFT JOIN facility_base_data fbd2 ON fbd1.city_id = fbd2.city_id
         AND fbd2.facility_id != fbd1.facility_id
-        AND ST_DISTANCE(
-            ST_POINT(fbd1.longitude, fbd1.latitude),
-            ST_POINT(fbd2.longitude, fbd2.latitude)
+        AND ST_Distance(
+            ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+            ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
         ) < 1000
     LEFT JOIN pricing_analysis pa2 ON fbd2.facility_id = pa2.facility_id
     GROUP BY fbd1.facility_id, fbd1.city_id, fbd1.latitude, fbd1.longitude
@@ -5456,12 +5453,12 @@ competitive_landscape AS (
         PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY pa2.avg_hourly_rate) AS median_competitor_rate,
         AVG(
             CASE
-                WHEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
-                ) < 500 THEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
+                WHEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
+                ) < 500 THEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
                 )
                 ELSE NULL
             END
@@ -5469,9 +5466,9 @@ competitive_landscape AS (
     FROM facility_base_data fbd1
     LEFT JOIN facility_base_data fbd2 ON fbd1.city_id = fbd2.city_id
         AND fbd2.facility_id != fbd1.facility_id
-        AND ST_DISTANCE(
-            ST_POINT(fbd1.longitude, fbd1.latitude),
-            ST_POINT(fbd2.longitude, fbd2.latitude)
+        AND ST_Distance(
+            ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+            ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
         ) < 1000
     LEFT JOIN pricing_analysis pa2 ON fbd2.facility_id = pa2.facility_id
     GROUP BY fbd1.facility_id, fbd1.city_id, fbd1.latitude, fbd1.longitude
@@ -5706,12 +5703,12 @@ competitive_landscape AS (
         PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY pa2.avg_hourly_rate) AS median_competitor_rate,
         AVG(
             CASE
-                WHEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
-                ) < 500 THEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
+                WHEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
+                ) < 500 THEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
                 )
                 ELSE NULL
             END
@@ -5719,9 +5716,9 @@ competitive_landscape AS (
     FROM facility_base_data fbd1
     LEFT JOIN facility_base_data fbd2 ON fbd1.city_id = fbd2.city_id
         AND fbd2.facility_id != fbd1.facility_id
-        AND ST_DISTANCE(
-            ST_POINT(fbd1.longitude, fbd1.latitude),
-            ST_POINT(fbd2.longitude, fbd2.latitude)
+        AND ST_Distance(
+            ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+            ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
         ) < 1000
     LEFT JOIN pricing_analysis pa2 ON fbd2.facility_id = pa2.facility_id
     GROUP BY fbd1.facility_id, fbd1.city_id, fbd1.latitude, fbd1.longitude
@@ -5956,12 +5953,12 @@ competitive_landscape AS (
         PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY pa2.avg_hourly_rate) AS median_competitor_rate,
         AVG(
             CASE
-                WHEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
-                ) < 500 THEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
+                WHEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
+                ) < 500 THEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
                 )
                 ELSE NULL
             END
@@ -5969,9 +5966,9 @@ competitive_landscape AS (
     FROM facility_base_data fbd1
     LEFT JOIN facility_base_data fbd2 ON fbd1.city_id = fbd2.city_id
         AND fbd2.facility_id != fbd1.facility_id
-        AND ST_DISTANCE(
-            ST_POINT(fbd1.longitude, fbd1.latitude),
-            ST_POINT(fbd2.longitude, fbd2.latitude)
+        AND ST_Distance(
+            ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+            ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
         ) < 1000
     LEFT JOIN pricing_analysis pa2 ON fbd2.facility_id = pa2.facility_id
     GROUP BY fbd1.facility_id, fbd1.city_id, fbd1.latitude, fbd1.longitude
@@ -6206,12 +6203,12 @@ competitive_landscape AS (
         PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY pa2.avg_hourly_rate) AS median_competitor_rate,
         AVG(
             CASE
-                WHEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
-                ) < 500 THEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
+                WHEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
+                ) < 500 THEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
                 )
                 ELSE NULL
             END
@@ -6219,9 +6216,9 @@ competitive_landscape AS (
     FROM facility_base_data fbd1
     LEFT JOIN facility_base_data fbd2 ON fbd1.city_id = fbd2.city_id
         AND fbd2.facility_id != fbd1.facility_id
-        AND ST_DISTANCE(
-            ST_POINT(fbd1.longitude, fbd1.latitude),
-            ST_POINT(fbd2.longitude, fbd2.latitude)
+        AND ST_Distance(
+            ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+            ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
         ) < 1000
     LEFT JOIN pricing_analysis pa2 ON fbd2.facility_id = pa2.facility_id
     GROUP BY fbd1.facility_id, fbd1.city_id, fbd1.latitude, fbd1.longitude
@@ -6456,12 +6453,12 @@ competitive_landscape AS (
         PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY pa2.avg_hourly_rate) AS median_competitor_rate,
         AVG(
             CASE
-                WHEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
-                ) < 500 THEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
+                WHEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
+                ) < 500 THEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
                 )
                 ELSE NULL
             END
@@ -6469,9 +6466,9 @@ competitive_landscape AS (
     FROM facility_base_data fbd1
     LEFT JOIN facility_base_data fbd2 ON fbd1.city_id = fbd2.city_id
         AND fbd2.facility_id != fbd1.facility_id
-        AND ST_DISTANCE(
-            ST_POINT(fbd1.longitude, fbd1.latitude),
-            ST_POINT(fbd2.longitude, fbd2.latitude)
+        AND ST_Distance(
+            ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+            ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
         ) < 1000
     LEFT JOIN pricing_analysis pa2 ON fbd2.facility_id = pa2.facility_id
     GROUP BY fbd1.facility_id, fbd1.city_id, fbd1.latitude, fbd1.longitude
@@ -6621,7 +6618,7 @@ LIMIT 200;```
 
 **Description:** Analyzes cross-database performance using CTEs for query efficiency metrics, optimization recommendations, and performance benchmarking.
 
-**Use Case:** Optimize query performance across PostgreSQL, Databricks, and Snowflake.
+**Use Case:** Optimize query performance across PostgreSQL.
 
 **Business Value:** Performance optimization report with efficiency metrics and optimization recommendations.
 
@@ -6706,12 +6703,12 @@ competitive_landscape AS (
         PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY pa2.avg_hourly_rate) AS median_competitor_rate,
         AVG(
             CASE
-                WHEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
-                ) < 500 THEN ST_DISTANCE(
-                    ST_POINT(fbd1.longitude, fbd1.latitude),
-                    ST_POINT(fbd2.longitude, fbd2.latitude)
+                WHEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
+                ) < 500 THEN ST_Distance(
+                    ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+                    ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
                 )
                 ELSE NULL
             END
@@ -6719,9 +6716,9 @@ competitive_landscape AS (
     FROM facility_base_data fbd1
     LEFT JOIN facility_base_data fbd2 ON fbd1.city_id = fbd2.city_id
         AND fbd2.facility_id != fbd1.facility_id
-        AND ST_DISTANCE(
-            ST_POINT(fbd1.longitude, fbd1.latitude),
-            ST_POINT(fbd2.longitude, fbd2.latitude)
+        AND ST_Distance(
+            ST_SetSRID(ST_MakePoint(fbd1.longitude, fbd1.latitude), 4326)::geography,
+            ST_SetSRID(ST_MakePoint(fbd2.longitude, fbd2.latitude), 4326)::geography
         ) < 1000
     LEFT JOIN pricing_analysis pa2 ON fbd2.facility_id = pa2.facility_id
     GROUP BY fbd1.facility_id, fbd1.city_id, fbd1.latitude, fbd1.longitude

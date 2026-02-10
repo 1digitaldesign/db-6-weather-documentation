@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Execution testing script for db-10 queries
-Extends the existing test_queries_postgres_snowflake.py functionality
+Extends the existing test_queries_postgres.py functionality
 """
 
 import os
@@ -10,19 +10,19 @@ import sys
 from pathlib import Path
 from datetime import datetime
 
-# Add db-1 scripts to path for test_queries_postgres_snowflake
+# Add db-1 scripts to path for test_queries_postgres
 script_dir = Path(__file__).parent
 root_dir = script_dir.parent.parent
 db1_scripts = root_dir / 'db-1' / 'scripts'
 sys.path.insert(0, str(db1_scripts))
 
 try:
-    from test_queries_postgres_snowflake import QueryExtractor, DatabaseTester
+    from test_queries_postgres import QueryExtractor, DatabaseTester
 except ImportError:
     # Fallback: try root scripts/testing directory
     root_scripts_testing = root_dir / 'scripts' / 'testing'
     sys.path.insert(0, str(root_scripts_testing))
-    from test_queries_postgres_snowflake import QueryExtractor, DatabaseTester
+    from test_queries_postgres import QueryExtractor, DatabaseTester
 
 def main():
     """Main execution testing function"""
@@ -64,7 +64,7 @@ def main():
 
     # Check if configs are available
     if not all([sf_config.get('user'), sf_config.get('password'), sf_config.get('account')]):
-        print("\n⚠️  Snowflake credentials not found. Skipping Snowflake execution testing.")
+        print("\n⚠️  Databricks credentials not found. Skipping Databricks execution testing.")
         sf_config = None
 
     # Test queries

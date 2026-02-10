@@ -55,7 +55,7 @@ Stores carrier performance metrics and KPIs
 
 ---
 
-This file contains 30 extremely complex SQL queries focused on maritime shipping intelligence use cases. All queries are designed to work across PostgreSQL, Databricks, and Snowflake.
+This file contains 30 extremely complex SQL queries focused on maritime shipping intelligence use cases. All queries are designed to work across PostgreSQL.
 
 ## Query 1: Production-Grade Vessel Position Tracking Analysis with Multi-Level CTE Nesting and Temporal Analytics
 

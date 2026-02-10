@@ -1,6 +1,61 @@
-# SQL Queries for db-9 - Shipping Intelligence Database
+# Database 9 - Shipping Intelligence - Extremely Complex SQL Queries
 
-This file contains 30 extremely complex SQL queries for the shipping intelligence database system. All queries are designed to work across PostgreSQL, Databricks, and Snowflake.
+# Database Schema: DB9
+
+**Description:** Shipping Intelligence and Multi-Carrier Rate Comparison System
+**Created:** 2026-02-04
+
+## Overview
+
+This database contains shipping intelligence data for multi-carrier rate comparison, zone analysis, tracking analytics, and cost optimization. The database supports Pirate Ship-style functionality including carrier rate comparison (USPS, UPS, FedEx), dimensional weight calculations, zone-based pricing, shipment tracking, and address validation from USPS Address API.
+
+## Tables
+
+### `shipping_carriers`
+Stores carrier information including USPS, UPS, FedEx, and other shipping carriers
+
+### `shipping_zones`
+Stores zone information for rate calculations based on origin and destination ZIP codes
+
+### `shipping_service_types`
+Stores available service types for each carrier (Priority Mail, Ground, Express, etc.)
+
+### `shipping_rates`
+Stores historical and current shipping rates for carriers, services, zones, and weights
+
+### `packages`
+Stores package information including dimensions, weight, and package type
+
+### `shipments`
+Stores shipment records with origin and destination
+
+### `tracking_events`
+Stores tracking events for shipments
+
+### `rate_comparison_results`
+Stores rate comparison results across carriers
+
+### `address_validation_results`
+Stores address validation results from USPS Address API
+
+### `shipping_adjustments`
+Stores shipping adjustments and discrepancies
+
+### `shipping_analytics`
+Stores aggregated shipping analytics and metrics
+
+### `international_customs`
+Stores customs information for international shipments
+
+### `api_rate_request_log`
+Stores API rate request logs for monitoring
+
+### `bulk_shipping_presets`
+Stores preset configurations for bulk shipping
+
+---
+
+This file contains 30 extremely complex SQL queries focused on shipping intelligence and multi-carrier rate comparison. All queries are designed to work across PostgreSQL.
 
 ## Query 1: Multi-Carrier Rate Comparison with Zone Analysis and Cost Optimization
 

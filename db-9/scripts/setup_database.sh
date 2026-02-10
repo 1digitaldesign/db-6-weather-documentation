@@ -1,6 +1,6 @@
 #!/bin/bash
 # Setup script for db-9 shipping intelligence database
-# Compatible with PostgreSQL, Databricks, and Snowflake
+# Compatible with PostgreSQL
 
 set -e
 

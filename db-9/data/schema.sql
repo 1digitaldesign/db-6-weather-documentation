@@ -1,5 +1,5 @@
 -- Shipping Intelligence Database Schema
--- Compatible with PostgreSQL, Databricks, and Snowflake
+-- Compatible with PostgreSQL
 -- Production schema for shipping intelligence and rate comparison system
 
 -- Shipping Carriers Table
@@ -163,7 +163,7 @@ CREATE TABLE tracking_events (
     event_country VARCHAR(2),
     event_description VARCHAR(1000),
     carrier_status_code VARCHAR(50),
-    raw_event_data VARIANT,  -- JSON data from carrier API
+    raw_event_data JSONB,  -- JSON data from carrier API (PostgreSQL; use JSONB)
     created_at TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP(),
     FOREIGN KEY (shipment_id) REFERENCES shipments(shipment_id)
 );
@@ -183,7 +183,7 @@ CREATE TABLE rate_comparison_results (
     fastest_service_id VARCHAR(255),
     fastest_transit_days INTEGER,
     total_options_count INTEGER,
-    comparison_metadata VARIANT,  -- JSON with all rate options
+    comparison_metadata JSONB,  -- JSON with all rate options (PostgreSQL; use JSONB)
     created_at TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP(),
     FOREIGN KEY (package_id) REFERENCES packages(package_id),
     FOREIGN KEY (cheapest_carrier_id) REFERENCES shipping_carriers(carrier_id),

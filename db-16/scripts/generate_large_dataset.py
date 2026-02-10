@@ -512,9 +512,9 @@ def main():
     print("Writing data.sql file...")
     with open(output_file, 'w') as f:
         f.write("-- Sample Data for Flood Risk Assessment Database\n")
-        f.write("-- Compatible with PostgreSQL, Databricks, and Snowflake\n")
+        f.write("-- Compatible with PostgreSQL\n")
         f.write("-- Production sample data for physical climate risk assessment system\n")
-        f.write("-- Generated: " + datetime.now().strftime('%Y-%m-%d %H:%M:%S') + "\n\n")
+        f.write("-- Rebuilt: " + datetime.now().strftime('%Y-%m-%d %H:%M:%S') + "\n\n")
         
         # FEMA flood zones
         f.write("-- Insert FEMA flood zones\n")

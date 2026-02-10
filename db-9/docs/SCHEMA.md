@@ -164,7 +164,7 @@ The schema includes indexes for performance optimization:
 
 ## Data Types
 
-The schema uses standard SQL data types compatible with PostgreSQL, Databricks, and Snowflake:
+The schema uses standard SQL data types compatible with PostgreSQL:
 
 - **VARCHAR**: Variable-length strings
 - **NUMERIC**: Decimal numbers with precision

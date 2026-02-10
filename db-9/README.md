@@ -118,8 +118,8 @@ See `research/data_resources.json` for detailed data source documentation.
 
 All queries are designed to work across:
 - PostgreSQL (with PostGIS if spatial)
-- Databricks (Delta Lake)
-- Snowflake
+ (Delta Lake)
+
 
 ## Related Documentation
 

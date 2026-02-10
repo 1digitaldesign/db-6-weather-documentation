@@ -1,9 +1,9 @@
 {
   "database": {
     "id": "db-7",
-    "name": "db-7",
-    "description": "This database implements a comprehensive Maritime Shipping Intelligence System integrating data from government sources (NOAA, US Coast Guard, MARAD, Data.gov) and commercial maritime data providers. Supports vessel tracking, port schedules, carrier routes, sailings, port calls, and maritime analytics matching Linescape API functionality.",
-    "created_date": "2026-02-04",
+    "name": "Database db-7",
+    "description": "Database db-7",
+    "created_date": "2026-02-09",
     "version": "1.0"
   },
   "schema": {
@@ -1894,6 +1894,6 @@
   "metadata": {
     "total_queries": 30,
     "extraction_timestamp": "20260204-2020",
-    "format_date": "20260204-2128"
+    "format_date": "20260210-0053"
   }
 }

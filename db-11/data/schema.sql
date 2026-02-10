@@ -1,5 +1,5 @@
 -- Parking Intelligence Database Schema
--- Compatible with PostgreSQL, Databricks, and Snowflake
+-- Compatible with PostgreSQL
 -- Production schema for parking marketing intelligence system
 
 -- Metropolitan Areas Table

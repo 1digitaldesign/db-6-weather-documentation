@@ -48,7 +48,7 @@ def reduce_data_sql(input_file, output_file, sample_rate=0.15):
     print(f"\nSampling {sample_rate*100:.1f}% of data...")
     with open(output_file, 'w', encoding='utf-8') as out:
         out.write("-- Sample Data for Flood Risk Assessment Database\n")
-        out.write("-- Compatible with PostgreSQL, Databricks, and Snowflake\n")
+        out.write("-- Compatible with PostgreSQL\n")
         out.write("-- Production sample data for physical climate risk assessment system\n")
         out.write(f"-- Reduced dataset: {sample_rate*100:.1f}% sample for submission (target < 500MB)\n\n")
         

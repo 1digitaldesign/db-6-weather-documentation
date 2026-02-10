@@ -250,8 +250,6 @@ This database implements a comprehensive Maritime Shipping Intelligence System i
 - **Spatial Operations**: Geographic queries using PostGIS GEOGRAPHY type for distance calculations and spatial joins
 
 - **PostgreSQL**: Full support with UUID types, arrays, JSONB, and PostGIS for spatial data
-- **Databricks**: Compatible with Delta Lake format
-- **Snowflake**: Full support with VARIANT types
 
 - **NOAA**: AccessAIS Tool for vessel traffic data, MarineCadastre.gov AIS data (2009-2024)
 - **US Coast Guard**: National Vessel Movement Center (NVMC) - NOAD data, Vessel Information Verification Service (VIVS) - AIS static data
@@ -10905,8 +10903,6 @@ LIMIT 1;
 ## Usage Instructions
 
 - PostgreSQL 12+ with PostGIS extension (for spatial queries)
-- OR Databricks SQL (Delta Lake)
-- OR Snowflake
 
 1. **Create Database:**
    ```sql
@@ -10963,16 +10959,14 @@ python3 scripts/validate.py
 All queries in this database are designed to work across multiple database platforms:
 
 - **PostgreSQL**: Full support with standard SQL features
-- **Databricks**: Compatible with Delta Lake and Spark SQL
-- **Snowflake**: Full support with Snowflake SQL syntax
 
-Queries use standard SQL syntax and avoid platform-specific features to ensure cross-platform compatibility.
+Queries use standard SQL syntax and avoid platform-specific features to ensure compatibility.
 
 ---
 
 **Document Information:**
 
-- **Generated**: 20260204-2125
+- **Generated**: 20260210-0115
 - **Database**: db-7
 - **Type**: Maritime Shipping Intelligence Database
 - **Queries**: 30 production queries

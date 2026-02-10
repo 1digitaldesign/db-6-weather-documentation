@@ -34,7 +34,7 @@ def main():
     # Try both possible execution test result file names
     execution_results = load_json_file(results_dir / 'execution_test_results.json')
     if not execution_results:
-        execution_results = load_json_file(results_dir / 'query_test_results_postgres_snowflake.json')
+        execution_results = load_json_file(results_dir / 'query_test_results_postgres.json')
 
     # Generate comprehensive report
     report = {
@@ -47,7 +47,7 @@ def main():
             'fix_verification_status': fix_verification.get('overall_status', 'UNKNOWN'),
             'syntax_validation_status': 'PARTIAL',  # May not have all DBs available
             'evaluation_status': comprehensive_validation.get('evaluation', {}).get('query_count', {}).get('status', 'UNKNOWN'),
-            'execution_testing_status': 'PASS' if execution_results.get('postgresql', {}).get('available') or execution_results.get('snowflake', {}).get('available') else 'PARTIAL'
+            'execution_testing_status': 'PASS' if execution_results.get('postgresql', {}).get('available') or execution_results.get('databricks', {}).get('available') else 'PARTIAL'
         },
         'phase_1_fix_verification': fix_verification,
         'phase_2_syntax_validation': comprehensive_validation.get('syntax_validation', {}),
@@ -95,8 +95,8 @@ def main():
     available_dbs = []
     if syntax_val.get('postgresql', {}).get('available'):
         available_dbs.append('PostgreSQL')
-    if syntax_val.get('snowflake', {}).get('available'):
-        available_dbs.append('Snowflake')
+    if syntax_val.get('databricks', {}).get('available'):
+        available_dbs.append('Databricks')
     if syntax_val.get('databricks', {}).get('available'):
         available_dbs.append('Databricks')
 

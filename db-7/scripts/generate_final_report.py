@@ -33,7 +33,7 @@ def main():
     # Load all result files
     fix_verification = load_json_file(results_dir / 'fix_verification.json')
     comprehensive_validation = load_json_file(results_dir / 'comprehensive_validation_report.json')
-    execution_results = load_json_file(results_dir / 'query_test_results_postgres_databricks.json')
+    execution_results = load_json_file(results_dir / 'query_test_results_postgres.json')
 
     # Determine overall Pass status
     overall_pass = 1
@@ -48,22 +48,20 @@ def main():
     # Check syntax validation (optional - databases not required)
     syntax_val = comprehensive_validation.get('syntax_validation', {})
     pg_syntax_available = syntax_val.get('postgresql', {}).get('available', False)
-    db_syntax_available = syntax_val.get('databricks', {}).get('available', False)
-    if not pg_syntax_available and not db_syntax_available:
+    if not pg_syntax_available:
         notes.append('Limited database availability for syntax validation')
 
     # Calculate execution_testing_Pass (before creating report)
     # Execution testing is optional - Pass=1 if DBs available and tests ran successfully, or if skipped gracefully
     # Pass=0 only if tests ran and failed (success rate < 90%)
     if execution_results:
-        execution_available = execution_results.get('postgresql', {}).get('available') or execution_results.get('databricks', {}).get('available')
+        execution_available = execution_results.get('postgresql', {}).get('available')
         if execution_available:
             # Tests ran - check success rate
             execution_summary = execution_results.get('summary', {})
             pg_success = execution_summary.get('postgresql', {}).get('success_rate', 0) if execution_summary.get('postgresql') else 0
-            db_success = execution_summary.get('databricks', {}).get('success_rate', 0) if execution_summary.get('databricks') else 0
-            # Pass if at least one database has >= 90% success rate
-            execution_testing_Pass = 1 if (pg_success >= 90 or db_success >= 90) else 0
+            # Pass if PostgreSQL has >= 90% success rate
+            execution_testing_Pass = 1 if pg_success >= 90 else 0
         else:
             # No DBs available - execution testing is optional, so Pass=1 (skipped gracefully)
             execution_testing_Pass = 1
@@ -159,14 +157,11 @@ def main():
     available_dbs = []
     if syntax_val.get('postgresql', {}).get('available'):
         available_dbs.append('PostgreSQL')
-    if syntax_val.get('databricks', {}).get('available'):
-        available_dbs.append('Databricks')
-
-    if len(available_dbs) < 2:
+    if len(available_dbs) < 1:
         report['findings']['warnings'].append({
-            'issue': f'Limited database availability for syntax validation',
+            'issue': 'Limited database availability for syntax validation',
             'available_databases': available_dbs,
-            'recommendation': 'Set up database connections for full cross-database validation'
+            'recommendation': 'Set up PostgreSQL connection for syntax validation'
         })
 
     # Add recommendations
@@ -177,7 +172,7 @@ def main():
     recommendations.append('Header formatting is consistent')
     if recursive_eval.get('queries_with_recursive', 0) > 0:
         recommendations.append(f"{recursive_eval.get('queries_with_recursive', 0)} queries use recursive CTEs")
-    if len(available_dbs) < 2:
+    if len(available_dbs) < 1:
         recommendations.append('Set up database connections for full syntax and execution testing')
     
     report['findings']['recommendations'] = recommendations

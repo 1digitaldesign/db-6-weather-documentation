@@ -92,8 +92,8 @@ db-16/
 
 All queries are designed to work across:
 - PostgreSQL (with PostGIS for spatial operations)
-- Databricks (Delta Lake with spatial extensions)
-- Snowflake (with GEOGRAPHY data type support)
+ (Delta Lake with spatial extensions)
+ (with GEOGRAPHY data type support)
 
 ## Business Value for M&A Firms
 

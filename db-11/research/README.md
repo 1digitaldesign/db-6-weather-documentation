@@ -27,7 +27,7 @@ The `etl_elt_pipeline.ipynb` notebook provides a comprehensive framework for:
 
 ### Load Phase
 - Load data into PostgreSQL (with PostGIS)
-- Load data into Databricks (Delta Lake)
+- Load data into 
 - Handle upserts and incremental loads
 - Optimize load performance
 

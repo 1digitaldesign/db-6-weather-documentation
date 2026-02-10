@@ -40,7 +40,7 @@ Container(web_app, "Web Application", "React/TypeScript", "Provides M&A risk ass
 Container(api_service, "API Service", "Python/FastAPI", "RESTful API for risk assessment\nqueries and data operations")
 Container(spatial_engine, "Spatial Analysis Engine", "PostGIS/GeoPandas", "Performs spatial joins and\ngeographic analysis")
 Container(risk_calculator, "Risk Calculator", "Python", "Multi-factor risk scoring\nand financial impact modeling")
-ContainerDb(database, "Flood Risk Database", "PostgreSQL/Databricks/Snowflake", "Stores flood risk data:\nFEMA zones, NOAA projections,\nUSGS streamflow, NASA models")
+ContainerDb(database, "Flood Risk Database", "PostgreSQL/Databricks/Databricks", "Stores flood risk data:\nFEMA zones, NOAA projections,\nUSGS streamflow, NASA models")
 ContainerDb(blob_storage, "Blob Storage", "S3/Azure Blob/GCS", "Stores spatial data files\nand flood model outputs")
 
 Rel(m_a_analyst, web_app, "Uses", "HTTPS")

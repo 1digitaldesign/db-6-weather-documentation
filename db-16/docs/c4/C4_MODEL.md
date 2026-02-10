@@ -80,7 +80,7 @@ Container(web_app, "Web Application", "React/TypeScript", "Provides M&A risk ass
 Container(api_service, "API Service", "Python/FastAPI", "RESTful API for risk assessment\nqueries and data operations")
 Container(spatial_engine, "Spatial Analysis Engine", "PostGIS/GeoPandas", "Performs spatial joins and\ngeographic analysis")
 Container(risk_calculator, "Risk Calculator", "Python", "Multi-factor risk scoring\nand financial impact modeling")
-ContainerDb(database, "Flood Risk Database", "PostgreSQL/Databricks/Snowflake", "Stores flood risk data:\nFEMA zones, NOAA projections,\nUSGS streamflow, NASA models")
+ContainerDb(database, "Flood Risk Database", "PostgreSQL/Databricks/Databricks", "Stores flood risk data:\nFEMA zones, NOAA projections,\nUSGS streamflow, NASA models")
 ContainerDb(blob_storage, "Blob Storage", "S3/Azure Blob/GCS", "Stores spatial data files\nand flood model outputs")
 
 Rel(m_a_analyst, web_app, "Uses", "HTTPS")
@@ -129,7 +129,7 @@ Component(financial_impact_service, "Financial Impact Service", "Python Service"
 Component(data_ingestion_service, "Data Ingestion Service", "Python Service", "Ingests data from FEMA,\nNOAA, USGS, NASA APIs")
 Component(query_executor, "Query Executor", "SQLAlchemy", "Executes complex SQL queries\nfor risk assessments")
 
-ContainerDb(database, "Flood Risk Database", "PostgreSQL/Databricks/Snowflake")
+ContainerDb(database, "Flood Risk Database", "PostgreSQL/Databricks/Databricks")
 System_Ext(fema_api, "FEMA API")
 System_Ext(noaa_api, "NOAA API")
 System_Ext(usgs_api, "USGS API")
@@ -174,7 +174,7 @@ LAYOUT_WITH_LEGEND()
 
 title Component Diagram - Database Schema (db-16)
 
-ContainerDb(database, "Flood Risk Database", "PostgreSQL/Databricks/Snowflake")
+ContainerDb(database, "Flood Risk Database", "PostgreSQL/Databricks/Databricks")
 
 ComponentDb(fema_zones_table, "FEMA Flood Zones", "Table", "FEMA National Flood Hazard Layer\nflood zone boundaries and BFEs")
 ComponentDb(properties_table, "Real Estate Properties", "Table", "Property locations and characteristics\nfor acquisition targets")

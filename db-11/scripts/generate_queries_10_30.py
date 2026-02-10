@@ -148,7 +148,7 @@ QUERY_TEMPLATES = {
     30: {
         "title": "Cross-Database Performance Optimization Analysis with Query Efficiency Metrics",
         "description": "Analyzes cross-database performance using CTEs for query efficiency metrics, optimization recommendations, and performance benchmarking.",
-        "use_case": "Optimize query performance across PostgreSQL, Databricks, and Snowflake.",
+        "use_case": "Optimize query performance across PostgreSQL.",
         "business_value": "Performance optimization report with efficiency metrics and optimization recommendations.",
         "complexity": "Performance CTEs (7+ levels), efficiency metrics, optimization analysis"
     }

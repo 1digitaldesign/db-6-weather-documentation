@@ -249,7 +249,6 @@ This database implements a comprehensive shipping intelligence and rate comparis
 - **Data Integration**: ETL/ELT pipelines pulling 1+ GB of data from public APIs (USPS, UPS, Census Bureau, Data.gov)
 
 - **PostgreSQL**: Full support with standard SQL features
-- **Databricks**: Compatible with Delta Lake format and distributed query execution
 - **Snowflake**: Full support with VARIANT types for JSON data
 
 This database powers a shipping intelligence platform sourced from businesses with at least $1M ARR per year. The queries demonstrate production-grade patterns used by:
@@ -401,7 +400,7 @@ The schema includes indexes for performance optimization:
 - `idx_address_validation_zip`: Index on validated_zip_code
 - `idx_api_rate_request_log_carrier`: Index on carrier_id, request_timestamp
 
-The schema uses standard SQL data types compatible with PostgreSQL, Databricks, and Snowflake:
+The schema uses standard SQL data types compatible with PostgreSQL:
 
 - **VARCHAR**: Variable-length strings
 - **NUMERIC**: Decimal numbers with precision
@@ -4407,16 +4406,14 @@ python3 scripts/generate_final_report.py   # Phase 5
 All queries in this database are designed to work across multiple database platforms:
 
 - **PostgreSQL**: Full support with standard SQL features
-- **Databricks**: Compatible with Delta Lake and Spark SQL
-- **Snowflake**: Full support with Snowflake SQL syntax
 
-Queries use standard SQL syntax and avoid platform-specific features to ensure cross-platform compatibility.
+Queries use standard SQL syntax and avoid platform-specific features to ensure compatibility.
 
 ---
 
 **Document Information:**
 
-- **Generated**: 20260204-2126
+- **Generated**: 20260210-0115
 - **Database**: db-9
 - **Type**: Shipping Intelligence Database
 - **Queries**: 30 production queries

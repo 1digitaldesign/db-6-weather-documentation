@@ -1,5 +1,5 @@
 -- Flood Risk Assessment Database Schema
--- Compatible with PostgreSQL, Databricks, and Snowflake
+-- Compatible with PostgreSQL
 -- Production schema for physical climate risk assessment system
 -- Supports flood risk assessments for real estate investment portfolios
 

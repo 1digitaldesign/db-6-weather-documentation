@@ -5,7 +5,7 @@
 This data dictionary provides detailed descriptions of all tables and columns in the Maritime Shipping Intelligence Database. The database is designed to support maritime schedules, shipping intelligence, vessel tracking, port operations, and carrier performance analysis.
 
 **Database Type:** Maritime Shipping Intelligence  
-**Compatibility:** PostgreSQL (with PostGIS), Databricks (Delta Lake), Snowflake  
+**Compatibility:** PostgreSQL (with PostGIS) (Delta Lake)  
 **Total Tables:** 14  
 **Last Updated:** 2026-02-04
 
@@ -657,14 +657,14 @@ This data dictionary provides detailed descriptions of all tables and columns in
 - **NUMERIC(p, s)**: Fixed-point decimal number (p = precision, s = scale)
 - **BOOLEAN**: True/false value
 - **DATE**: Date value (year, month, day)
-- **TIMESTAMP_NTZ**: Timestamp without timezone (compatible across PostgreSQL, Databricks, Snowflake)
+- **TIMESTAMP_NTZ**: Timestamp without timezone (compatible across PostgreSQL)
 
 ### Spatial Data Types
 
 - **GEOGRAPHY**: Spatial data type for geographic coordinates (WGS84, EPSG:4326)
   - Used for: `ports.port_geom`, `vessels_tracking.position_geom`, `locations.location_geom`
   - Supports spatial operations: ST_DISTANCE, ST_WITHIN, ST_MAKEPOINT, ST_BEARING, etc.
-  - Compatible with: PostgreSQL PostGIS, Snowflake, Databricks
+  - Compatible with: PostgreSQL PostGIS
 
 ### Spatial Extent Columns
 

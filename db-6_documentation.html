@@ -933,7 +933,7 @@
                         <a href="#table-nws_api_observation_log" class="nav-link">nws_api_observation_log</a>
                         <a href="#table-satellite_transformation_log" class="nav-link">satellite_transformation_log</a>
                         <a href="#table-shapefile_integration_log" class="nav-link">shapefile_integration_log</a>
-                        <a href="#table-snowflake_load_status" class="nav-link">snowflake_load_status</a>
+                        <a href="#table-load_status" class="nav-link">load_status</a>
                     </div>
                 </div>
                 
@@ -1628,7 +1628,7 @@
                             <td><code>grid_cell_geom</code></td>
                             <td><span class="code-type">GEOGRAPHY</span></td>
                             <td><span class="constraint"></span></td>
-                            <td>Point geometry for grid cell center (PostgreSQL/Snowflake)</td>
+                            <td>Point geometry for grid cell center (PostgreSQL/Databricks)</td>
                         </tr>
                         <tr>
                             <td><code>parameter_value</code></td>
@@ -2094,7 +2094,7 @@
                             <td><code>metadata</code></td>
                             <td><span class="code-type">VARIANT</span></td>
                             <td><span class="constraint"></span></td>
-                            <td>JSON metadata (Snowflake) or JSONB (PostgreSQL) - Use OBJECT for cross-database compatibility</td>
+                            <td>JSON metadata JSONB (PostgreSQL) - Use OBJECT for cross-database compatibility</td>
                         </tr>
                         <tr>
                             <td><code>file_size_bytes</code></td>
@@ -2563,7 +2563,7 @@
                             <td></td>
                         </tr>
                         <tr>
-                            <td><code>snowflake_table</code></td>
+                            <td><code>target_table</code></td>
                             <td><span class="code-type">VARCHAR(255)</span></td>
                             <td><span class="constraint"></span></td>
                             <td></td>
@@ -3071,7 +3071,7 @@
                             <td></td>
                         </tr>
                         <tr>
-                            <td><code>snowflake_table</code></td>
+                            <td><code>target_table</code></td>
                             <td><span class="code-type">VARCHAR(255)</span></td>
                             <td><span class="constraint"></span></td>
                             <td></td>
@@ -3097,9 +3097,9 @@
                     </tbody>
                 </table>
             </div>
-            <div class="table-card" id="table-snowflake_load_status">
-                <h3>snowflake_load_status</h3>
-                <div class="table-description">Tracks data loading operations to Snowflake</div>
+            <div class="table-card" id="table-load_status">
+                <h3>load_status</h3>
+                <div class="table-description">Tracks data loading operations to Databricks</div>
                 <table>
                     <thead>
                         <tr>
@@ -3123,7 +3123,7 @@
                             <td></td>
                         </tr>
                         <tr>
-                            <td><code>snowflake_table</code></td>
+                            <td><code>target_table</code></td>
                             <td><span class="code-type">VARCHAR(255)</span></td>
                             <td><span class="constraint">NOT NULL</span></td>
                             <td></td>
@@ -3177,7 +3177,7 @@
                             <td></td>
                         </tr>
                         <tr>
-                            <td><code>snowflake_warehouse</code></td>
+                            <td><code>warehouse</code></td>
                             <td><span class="code-type">VARCHAR(255)</span></td>
                             <td><span class="constraint"></span></td>
                             <td></td>

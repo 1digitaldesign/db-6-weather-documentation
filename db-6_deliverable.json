@@ -629,7 +629,7 @@
             "name": "metadata",
             "data_type": "VARIANT",
             "constraints": "-",
-            "description": "JSON metadata (Snowflake) or JSONB (PostgreSQL) - Use OBJECT for cross-database compatibility"
+            "description": "JSON metadata JSONB (PostgreSQL) - Use OBJECT for cross-database compatibility"
           },
           {
             "name": "file_size_bytes",
@@ -1058,7 +1058,7 @@
             "description": "-"
           },
           {
-            "name": "snowflake_table",
+            "name": "target_table",
             "data_type": "VARCHAR(255)",
             "constraints": "-",
             "description": "-"
@@ -1526,7 +1526,7 @@
             "description": "-"
           },
           {
-            "name": "snowflake_table",
+            "name": "target_table",
             "data_type": "VARCHAR(255)",
             "constraints": "-",
             "description": "-"
@@ -1552,7 +1552,7 @@
         ]
       },
       {
-        "name": "snowflake_load_status",
+        "name": "load_status",
         "description": "Tracks data loading operations to Snowflake",
         "columns": [
           {
@@ -1568,7 +1568,7 @@
             "description": "-"
           },
           {
-            "name": "snowflake_table",
+            "name": "target_table",
             "data_type": "VARCHAR(255)",
             "constraints": "NOT NULL",
             "description": "-"
@@ -1622,7 +1622,7 @@
             "description": "-"
           },
           {
-            "name": "snowflake_warehouse",
+            "name": "warehouse",
             "data_type": "VARCHAR(255)",
             "constraints": "-",
             "description": "-"

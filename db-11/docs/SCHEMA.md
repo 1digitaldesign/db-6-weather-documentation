@@ -318,7 +318,7 @@ Stores data source tracking and extraction metadata.
 The database uses GEOGRAPHY type for spatial data:
 - **PostgreSQL**: PostGIS GEOGRAPHY type
 - **Databricks**: GEOMETRY type (compatible)
-- **Snowflake**: GEOGRAPHY type
+- **Databricks**: GEOGRAPHY type
 
 ## Indexes
 

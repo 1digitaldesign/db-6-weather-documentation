@@ -306,7 +306,7 @@ ETL pipeline execution tracking and error logging.
 - **INTEGER**: 32-bit signed integer
 - **BOOLEAN**: Boolean true/false value
 - **DATE**: Date value (year, month, day)
-- **TIMESTAMP_NTZ**: Timestamp without timezone (compatible across PostgreSQL, Databricks, Snowflake)
+- **TIMESTAMP_NTZ**: Timestamp without timezone (compatible across PostgreSQL)
 - **GEOGRAPHY**: Spatial geography data type for geographic coordinates and geometries
 
 ## Foreign Key Relationships

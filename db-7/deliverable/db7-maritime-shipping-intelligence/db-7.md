@@ -10972,7 +10972,7 @@ Queries use standard SQL syntax and avoid platform-specific features to ensure c
 
 **Document Information:**
 
-- **Generated**: 20260204-2125
+- **Generated**: 20260209-2306
 - **Database**: db-7
 - **Type**: Maritime Shipping Intelligence Database
 - **Queries**: 30 production queries

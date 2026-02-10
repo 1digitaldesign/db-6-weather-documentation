@@ -120,8 +120,8 @@ See `research/` for ETL pipeline and government data integration.
 
 All queries are designed to work across:
 - PostgreSQL (with PostGIS for spatial operations)
-- Databricks (Delta Lake)
-- Snowflake
+ (Delta Lake)
+
 
 ## Related Resources
 

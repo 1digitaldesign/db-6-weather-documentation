@@ -325,7 +325,7 @@
     "demographics": "JSON (Census API), CSV",
     "airports": "CSV, Excel, HTML tables",
     "traffic": "CSV, Excel, PDF",
-    "target_database": "PostgreSQL (with PostGIS) and Databricks Delta Lake"
+    "target_database": "PostgreSQL (with PostGIS) Delta Lake"
   },
   "best_practices": [
     "Respect rate limits - implement exponential backoff retry logic",

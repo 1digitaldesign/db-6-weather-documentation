@@ -175,7 +175,7 @@ CREATE TABLE data_quality_metrics (
     calculation_timestamp TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP()
 );
 
-- Load Status Table
+-- Load Status Table
 -- Tracks data loading operations to Databricks
 CREATE TABLE load_status (
     load_id VARCHAR(255) PRIMARY KEY,
@@ -308,6 +308,7 @@ ALTER TABLE grib2_forecasts ADD COLUMN IF NOT EXISTS ensemble_member INTEGER;  -
 -- Extended to support NWS API data
 ALTER TABLE weather_observations ADD COLUMN IF NOT EXISTS api_endpoint VARCHAR(500);
 ALTER TABLE weather_observations ADD COLUMN IF NOT EXISTS api_response_status INTEGER;
+ALTER TABLE weather_observations ADD COLUMN IF NOT EXISTS observation_value NUMERIC(10, 2);
 
 -- Weather Alerts Table
 -- Stores NWS weather alerts and warnings
@@ -426,6 +427,7 @@ CREATE TABLE IF NOT EXISTS insurance_risk_factors (
     -- Risk metrics
     extreme_event_probability NUMERIC(5, 4),  -- Probability of extreme event (0-1)
     cumulative_precipitation_risk NUMERIC(10, 2),  -- Total precipitation risk score
+    temperature_extreme_risk NUMERIC(10, 2),  -- Temperature extreme risk score
     wind_damage_risk NUMERIC(10, 2),  -- Wind damage risk score
     freeze_risk NUMERIC(10, 2),  -- Freeze/frost risk score
     flood_risk NUMERIC(10, 2),  -- Flood risk score
@@ -475,6 +477,7 @@ CREATE TABLE IF NOT EXISTS insurance_rate_tables (
     -- Rate tiers
     rate_tier VARCHAR(50),  -- 'Standard', 'Preferred', 'Substandard', 'High Risk'
     rate_category VARCHAR(50),  -- 'Low', 'Moderate', 'High', 'Very High'
+    overall_risk_score NUMERIC(5, 2),  -- Overall risk score (0-100)
     -- Metadata
     calculation_method VARCHAR(100),  -- 'Forecast-Based', 'Historical', 'Hybrid'
     confidence_level NUMERIC(5, 2),  -- Confidence in forecast (0-100)
@@ -534,6 +537,7 @@ CREATE TABLE IF NOT EXISTS rate_table_comparison (
     comparison_id VARCHAR(255) PRIMARY KEY,
     policy_area_id VARCHAR(255) NOT NULL,
     policy_type VARCHAR(50) NOT NULL,
+    coverage_type VARCHAR(100),  -- 'Homeowners', 'Commercial Property', 'Crop Insurance', etc.
     forecast_period_start DATE NOT NULL,  -- Dec 3, 2025
     forecast_period_end DATE NOT NULL,  -- Dec 17, 2025
     forecast_date DATE NOT NULL,  -- Date when forecast was made

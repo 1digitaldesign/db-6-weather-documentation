@@ -1,9 +1,9 @@
 {
   "database": {
     "id": "db-9",
-    "name": "Shipping Intelligence Database",
-    "description": "Shipping Intelligence Database designed to mirror the functionality of Pirate Ship, providing comprehensive shipping rate comparison, zone analysis, tracking analytics, and cost optimization capabilities.",
-    "created_date": "2026-02-04",
+    "name": "Database db-9",
+    "description": "Database db-9",
+    "created_date": "2026-02-09",
     "version": "1.0"
   },
   "schema": {
@@ -11,59 +11,1623 @@
     "tables": [
       {
         "name": "shipping_carriers",
-        "description": ""
+        "description": "",
+        "columns": [
+          {
+            "name": "carrier_id",
+            "data_type": "VARCHAR(50)",
+            "constraints": "PRIMARY KEY",
+            "description": ""
+          },
+          {
+            "name": "carrier_name",
+            "data_type": "VARCHAR(100)",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "carrier_code",
+            "data_type": "VARCHAR(10)",
+            "constraints": "UNIQUE, NOT NULL",
+            "description": "'USPS', 'UPS', 'FEDEX'"
+          },
+          {
+            "name": "carrier_type",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": "'Postal', 'Courier', 'Freight'"
+          },
+          {
+            "name": "api_endpoint",
+            "data_type": "VARCHAR(500)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "rate_api_version",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "tracking_api_version",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "commercial_pricing_available",
+            "data_type": "BOOLEAN",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "requires_account",
+            "data_type": "BOOLEAN",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "active_status",
+            "data_type": "BOOLEAN",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "created_at",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "updated_at",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "",
+            "description": ""
+          }
+        ]
       },
       {
         "name": "shipping_zones",
-        "description": ""
+        "description": "",
+        "columns": [
+          {
+            "name": "zone_id",
+            "data_type": "VARCHAR(255)",
+            "constraints": "PRIMARY KEY",
+            "description": ""
+          },
+          {
+            "name": "carrier_id",
+            "data_type": "VARCHAR(50)",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "origin_zip_code",
+            "data_type": "VARCHAR(10)",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "destination_zip_code",
+            "data_type": "VARCHAR(10)",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "zone_number",
+            "data_type": "INTEGER",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "zone_type",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": "'Domestic', 'International', 'Alaska', 'Hawaii'"
+          },
+          {
+            "name": "distance_miles",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "transit_days_min",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "transit_days_max",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "effective_date",
+            "data_type": "DATE",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "expiration_date",
+            "data_type": "DATE",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "created_at",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (carrier_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          }
+        ]
       },
       {
         "name": "shipping_service_types",
-        "description": ""
+        "description": "",
+        "columns": [
+          {
+            "name": "service_id",
+            "data_type": "VARCHAR(255)",
+            "constraints": "PRIMARY KEY",
+            "description": ""
+          },
+          {
+            "name": "carrier_id",
+            "data_type": "VARCHAR(50)",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "service_code",
+            "data_type": "VARCHAR(50)",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "service_name",
+            "data_type": "VARCHAR(255)",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "service_category",
+            "data_type": "VARCHAR(100)",
+            "constraints": "",
+            "description": "'Express', 'Ground', 'Priority', 'Economy'"
+          },
+          {
+            "name": "domestic_available",
+            "data_type": "BOOLEAN",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "international_available",
+            "data_type": "BOOLEAN",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "max_weight_lbs",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "max_dimensions_length",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "max_dimensions_width",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "max_dimensions_height",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "tracking_included",
+            "data_type": "BOOLEAN",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "insurance_available",
+            "data_type": "BOOLEAN",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "signature_required",
+            "data_type": "BOOLEAN",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "active_status",
+            "data_type": "BOOLEAN",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "created_at",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (carrier_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          }
+        ]
       },
       {
         "name": "shipping_rates",
-        "description": ""
+        "description": "",
+        "columns": [
+          {
+            "name": "rate_id",
+            "data_type": "VARCHAR(255)",
+            "constraints": "PRIMARY KEY",
+            "description": ""
+          },
+          {
+            "name": "carrier_id",
+            "data_type": "VARCHAR(50)",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "service_id",
+            "data_type": "VARCHAR(255)",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "zone_id",
+            "data_type": "VARCHAR(255)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "weight_lbs",
+            "data_type": "NUMERIC(10",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "weight_oz",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "length_inches",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "width_inches",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "height_inches",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "dimensional_weight_lbs",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "cubic_volume_cubic_inches",
+            "data_type": "NUMERIC(12",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "rate_amount",
+            "data_type": "NUMERIC(10",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "rate_type",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": "'Retail', 'Commercial', 'Daily', 'Cubic'"
+          },
+          {
+            "name": "surcharge_amount",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "total_rate",
+            "data_type": "NUMERIC(10",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "effective_date",
+            "data_type": "DATE",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "expiration_date",
+            "data_type": "DATE",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "rate_source",
+            "data_type": "VARCHAR(100)",
+            "constraints": "",
+            "description": "'API', 'Manual', 'Bulk Import'"
+          },
+          {
+            "name": "created_at",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (carrier_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (service_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (zone_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          }
+        ]
       },
       {
         "name": "packages",
-        "description": ""
+        "description": "",
+        "columns": [
+          {
+            "name": "package_id",
+            "data_type": "VARCHAR(255)",
+            "constraints": "PRIMARY KEY",
+            "description": ""
+          },
+          {
+            "name": "user_id",
+            "data_type": "VARCHAR(255)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "package_reference",
+            "data_type": "VARCHAR(255)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "weight_lbs",
+            "data_type": "NUMERIC(10",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "weight_oz",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "length_inches",
+            "data_type": "NUMERIC(10",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "width_inches",
+            "data_type": "NUMERIC(10",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "height_inches",
+            "data_type": "NUMERIC(10",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "dimensional_weight_lbs",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "cubic_volume_cubic_inches",
+            "data_type": "NUMERIC(12",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "package_type",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": "'Envelope', 'Box', 'Tube', 'Flat'"
+          },
+          {
+            "name": "package_value",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "contents_description",
+            "data_type": "VARCHAR(500)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "created_at",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "updated_at",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "",
+            "description": ""
+          }
+        ]
       },
       {
         "name": "shipments",
-        "description": ""
+        "description": "",
+        "columns": [
+          {
+            "name": "shipment_id",
+            "data_type": "VARCHAR(255)",
+            "constraints": "PRIMARY KEY",
+            "description": ""
+          },
+          {
+            "name": "package_id",
+            "data_type": "VARCHAR(255)",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "carrier_id",
+            "data_type": "VARCHAR(50)",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "service_id",
+            "data_type": "VARCHAR(255)",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "tracking_number",
+            "data_type": "VARCHAR(255)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "origin_name",
+            "data_type": "VARCHAR(255)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "origin_address_line1",
+            "data_type": "VARCHAR(255)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "origin_address_line2",
+            "data_type": "VARCHAR(255)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "origin_city",
+            "data_type": "VARCHAR(100)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "origin_state",
+            "data_type": "VARCHAR(2)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "origin_zip_code",
+            "data_type": "VARCHAR(10)",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "origin_country",
+            "data_type": "VARCHAR(2)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "destination_name",
+            "data_type": "VARCHAR(255)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "destination_address_line1",
+            "data_type": "VARCHAR(255)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "destination_address_line2",
+            "data_type": "VARCHAR(255)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "destination_city",
+            "data_type": "VARCHAR(100)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "destination_state",
+            "data_type": "VARCHAR(2)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "destination_zip_code",
+            "data_type": "VARCHAR(10)",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "destination_country",
+            "data_type": "VARCHAR(2)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "zone_id",
+            "data_type": "VARCHAR(255)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "rate_id",
+            "data_type": "VARCHAR(255)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "label_cost",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "insurance_cost",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "signature_cost",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "total_cost",
+            "data_type": "NUMERIC(10",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "shipment_status",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": "'Pending', 'Label Created', 'In Transit', 'Delivered', 'Exception'"
+          },
+          {
+            "name": "label_created_at",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "estimated_delivery_date",
+            "data_type": "DATE",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "actual_delivery_date",
+            "data_type": "DATE",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "created_at",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "updated_at",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (package_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (carrier_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (service_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (zone_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (rate_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          }
+        ]
       },
       {
         "name": "tracking_events",
-        "description": ""
+        "description": "",
+        "columns": [
+          {
+            "name": "event_id",
+            "data_type": "VARCHAR(255)",
+            "constraints": "PRIMARY KEY",
+            "description": ""
+          },
+          {
+            "name": "shipment_id",
+            "data_type": "VARCHAR(255)",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "tracking_number",
+            "data_type": "VARCHAR(255)",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "event_timestamp",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "event_type",
+            "data_type": "VARCHAR(100)",
+            "constraints": "",
+            "description": "'Label Created', 'In Transit', 'Out for Delivery', 'Delivered', 'Exception'"
+          },
+          {
+            "name": "event_status",
+            "data_type": "VARCHAR(100)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "event_location",
+            "data_type": "VARCHAR(255)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "event_city",
+            "data_type": "VARCHAR(100)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "event_state",
+            "data_type": "VARCHAR(2)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "event_zip_code",
+            "data_type": "VARCHAR(10)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "event_country",
+            "data_type": "VARCHAR(2)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "event_description",
+            "data_type": "VARCHAR(1000)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "carrier_status_code",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "raw_event_data",
+            "data_type": "JSONB",
+            "constraints": "",
+            "description": "JSON data from carrier API (PostgreSQL; use JSONB)"
+          },
+          {
+            "name": "created_at",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (shipment_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          }
+        ]
       },
       {
         "name": "rate_comparison_results",
-        "description": ""
+        "description": "",
+        "columns": [
+          {
+            "name": "comparison_id",
+            "data_type": "VARCHAR(255)",
+            "constraints": "PRIMARY KEY",
+            "description": ""
+          },
+          {
+            "name": "package_id",
+            "data_type": "VARCHAR(255)",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "origin_zip_code",
+            "data_type": "VARCHAR(10)",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "destination_zip_code",
+            "data_type": "VARCHAR(10)",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "comparison_timestamp",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "cheapest_carrier_id",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "cheapest_service_id",
+            "data_type": "VARCHAR(255)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "cheapest_rate",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "fastest_carrier_id",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "fastest_service_id",
+            "data_type": "VARCHAR(255)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "fastest_transit_days",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "total_options_count",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "comparison_metadata",
+            "data_type": "JSONB",
+            "constraints": "",
+            "description": "JSON with all rate options (PostgreSQL; use JSONB)"
+          },
+          {
+            "name": "created_at",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (package_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (cheapest_carrier_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (fastest_carrier_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          }
+        ]
       },
       {
         "name": "address_validation_results",
-        "description": ""
+        "description": "",
+        "columns": [
+          {
+            "name": "validation_id",
+            "data_type": "VARCHAR(255)",
+            "constraints": "PRIMARY KEY",
+            "description": ""
+          },
+          {
+            "name": "input_address_line1",
+            "data_type": "VARCHAR(255)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "input_address_line2",
+            "data_type": "VARCHAR(255)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "input_city",
+            "data_type": "VARCHAR(100)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "input_state",
+            "data_type": "VARCHAR(2)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "input_zip_code",
+            "data_type": "VARCHAR(10)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "validated_address_line1",
+            "data_type": "VARCHAR(255)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "validated_address_line2",
+            "data_type": "VARCHAR(255)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "validated_city",
+            "data_type": "VARCHAR(100)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "validated_state",
+            "data_type": "VARCHAR(2)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "validated_zip_code",
+            "data_type": "VARCHAR(10)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "validated_zip_plus_4",
+            "data_type": "VARCHAR(10)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "validation_status",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": "'Valid', 'Invalid', 'Corrected', 'Ambiguous'"
+          },
+          {
+            "name": "delivery_point_code",
+            "data_type": "VARCHAR(10)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "carrier_route",
+            "data_type": "VARCHAR(10)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "dpv_confirmation",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "cmra_flag",
+            "data_type": "BOOLEAN",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "vacant_flag",
+            "data_type": "BOOLEAN",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "residential_flag",
+            "data_type": "BOOLEAN",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "validation_timestamp",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "created_at",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "",
+            "description": ""
+          }
+        ]
       },
       {
         "name": "shipping_adjustments",
-        "description": ""
+        "description": "",
+        "columns": [
+          {
+            "name": "adjustment_id",
+            "data_type": "VARCHAR(255)",
+            "constraints": "PRIMARY KEY",
+            "description": ""
+          },
+          {
+            "name": "shipment_id",
+            "data_type": "VARCHAR(255)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "tracking_number",
+            "data_type": "VARCHAR(255)",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "adjustment_type",
+            "data_type": "VARCHAR(100)",
+            "constraints": "",
+            "description": "'Weight', 'Dimensions', 'Zone', 'Packaging'"
+          },
+          {
+            "name": "original_amount",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "adjusted_amount",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "adjustment_amount",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "adjustment_reason",
+            "data_type": "VARCHAR(500)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "adjustment_status",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": "'Pending', 'Applied', 'Disputed', 'Resolved'"
+          },
+          {
+            "name": "adjustment_date",
+            "data_type": "DATE",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "created_at",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (shipment_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          }
+        ]
       },
       {
         "name": "bulk_shipping_presets",
-        "description": ""
+        "description": "",
+        "columns": [
+          {
+            "name": "preset_id",
+            "data_type": "VARCHAR(255)",
+            "constraints": "PRIMARY KEY",
+            "description": ""
+          },
+          {
+            "name": "user_id",
+            "data_type": "VARCHAR(255)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "preset_name",
+            "data_type": "VARCHAR(255)",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "package_type",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "default_weight_lbs",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "default_length_inches",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "default_width_inches",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "default_height_inches",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "default_service_id",
+            "data_type": "VARCHAR(255)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "default_carrier_id",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "default_insurance_amount",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "default_signature_required",
+            "data_type": "BOOLEAN",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "created_at",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "updated_at",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (default_service_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (default_carrier_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          }
+        ]
       },
       {
         "name": "shipping_analytics",
-        "description": ""
+        "description": "",
+        "columns": [
+          {
+            "name": "analytics_id",
+            "data_type": "VARCHAR(255)",
+            "constraints": "PRIMARY KEY",
+            "description": ""
+          },
+          {
+            "name": "analytics_date",
+            "data_type": "DATE",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "carrier_id",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "service_id",
+            "data_type": "VARCHAR(255)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "total_shipments",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "total_revenue",
+            "data_type": "NUMERIC(12",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "average_rate",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "total_packages",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "total_weight_lbs",
+            "data_type": "NUMERIC(12",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "average_transit_days",
+            "data_type": "NUMERIC(6",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "on_time_delivery_rate",
+            "data_type": "NUMERIC(5",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "exception_rate",
+            "data_type": "NUMERIC(5",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "average_package_value",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "created_at",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (carrier_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (service_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          }
+        ]
       },
       {
         "name": "international_customs",
-        "description": ""
+        "description": "",
+        "columns": [
+          {
+            "name": "customs_id",
+            "data_type": "VARCHAR(255)",
+            "constraints": "PRIMARY KEY",
+            "description": ""
+          },
+          {
+            "name": "shipment_id",
+            "data_type": "VARCHAR(255)",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "customs_declaration_number",
+            "data_type": "VARCHAR(255)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "customs_value",
+            "data_type": "NUMERIC(10",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "currency_code",
+            "data_type": "VARCHAR(3)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "contents_description",
+            "data_type": "VARCHAR(1000)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "hs_tariff_code",
+            "data_type": "VARCHAR(20)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "country_of_origin",
+            "data_type": "VARCHAR(2)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "customs_duty_amount",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "customs_tax_amount",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "customs_fees_amount",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "total_customs_amount",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "customs_status",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": "'Pending', 'Cleared', 'Held', 'Returned'"
+          },
+          {
+            "name": "customs_cleared_date",
+            "data_type": "DATE",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "created_at",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (shipment_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          }
+        ]
       },
       {
         "name": "api_rate_request_log",
-        "description": ""
+        "description": "",
+        "columns": [
+          {
+            "name": "log_id",
+            "data_type": "VARCHAR(255)",
+            "constraints": "PRIMARY KEY",
+            "description": ""
+          },
+          {
+            "name": "carrier_id",
+            "data_type": "VARCHAR(50)",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "request_type",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": "'Rate', 'Tracking', 'Address Validation'"
+          },
+          {
+            "name": "origin_zip_code",
+            "data_type": "VARCHAR(10)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "destination_zip_code",
+            "data_type": "VARCHAR(10)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "weight_lbs",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "request_timestamp",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "response_time_ms",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "response_status_code",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "rate_returned",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "error_message",
+            "data_type": "VARCHAR(1000)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "api_endpoint",
+            "data_type": "VARCHAR(500)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "created_at",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (carrier_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          }
+        ]
       }
     ]
   },
@@ -338,5 +1902,10 @@
       "sql": "WITH base_data AS (\n    -- First CTE: Base data extraction\n    SELECT\n        s.shipment_id,\n        s.carrier_id,\n        s.service_id,\n        s.origin_zip_code,\n        s.destination_zip_code,\n        s.total_cost,\n        s.shipment_status,\n        s.created_at,\n        p.weight_lbs,\n        p.length_inches,\n        p.width_inches,\n        p.height_inches\n    FROM shipments s\n    INNER JOIN packages p ON s.package_id = p.package_id\n    WHERE s.created_at >= CURRENT_DATE - INTERVAL '90 days'\n),\naggregated_metrics AS (\n    -- Second CTE: Aggregate metrics\n    SELECT\n        bd.carrier_id,\n        bd.service_id,\n        COUNT(*) AS total_shipments,\n        SUM(bd.total_cost) AS total_revenue,\n        AVG(bd.total_cost) AS avg_cost,\n        COUNT(CASE WHEN bd.shipment_status = 'Delivered' THEN 1 END) AS delivered_count,\n        AVG(bd.weight_lbs) AS avg_weight_lbs\n    FROM base_data bd\n    GROUP BY bd.carrier_id, bd.service_id\n),\nperformance_analysis AS (\n    -- Third CTE: Performance analysis\n    SELECT\n        am.carrier_id,\n        c.carrier_name,\n        am.service_id,\n        st.service_name,\n        am.total_shipments,\n        am.total_revenue,\n        am.avg_cost,\n        am.delivered_count,\n        CASE\n            WHEN am.total_shipments > 0\n            THEN am.delivered_count::numeric / am.total_shipments * 100\n            ELSE 0\n        END AS delivery_success_rate,\n        ROW_NUMBER() OVER (ORDER BY am.total_revenue DESC) AS revenue_rank,\n        ROW_NUMBER() OVER (ORDER BY am.avg_cost ASC) AS cost_rank\n    FROM aggregated_metrics am\n    INNER JOIN shipping_carriers c ON am.carrier_id = c.carrier_id\n    INNER JOIN shipping_service_types st ON am.service_id = st.service_id\n),\noptimization_recommendations AS (\n    -- Fourth CTE: Generate optimization recommendations\n    SELECT\n        pa.carrier_id,\n        pa.carrier_name,\n        pa.service_id,\n        pa.service_name,\n        pa.total_shipments,\n        pa.total_revenue,\n        pa.avg_cost,\n        pa.delivery_success_rate,\n        pa.revenue_rank,\n        pa.cost_rank,\n        CASE\n            WHEN pa.delivery_success_rate >= 95 AND pa.cost_rank <= 3 THEN 'Optimal'\n            WHEN pa.delivery_success_rate >= 90 THEN 'Good'\n            WHEN pa.delivery_success_rate >= 85 THEN 'Fair'\n            ELSE 'Needs Improvement'\n        END AS performance_category\n    FROM performance_analysis pa\n)\nSELECT\n    or_rec.carrier_name,\n    or_rec.service_name,\n    or_rec.total_shipments,\n    or_rec.total_revenue,\n    or_rec.avg_cost,\n    or_rec.delivery_success_rate,\n    or_rec.performance_category,\n    or_rec.revenue_rank,\n    or_rec.cost_rank\nFROM optimization_recommendations or_rec\nORDER BY or_rec.total_revenue DESC;",
       "line_number": 3572
     }
-  ]
+  ],
+  "metadata": {
+    "total_queries": 30,
+    "extraction_timestamp": "20260204-2021",
+    "format_date": "20260210-0053"
+  }
 }

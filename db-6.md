@@ -174,7 +174,7 @@ This section provides a comprehensive data dictionary for all tables in the data
 | `format` | `VARCHAR(50)` | - | 'grib2', 'netcdf', 'binary', etc. |
 | `ingestion_timestamp` | `TIMESTAMP_NTZ` | DEFAULT CURRENT_TIMESTAMP | - |
 | `status` | `VARCHAR(50)` | DEFAULT 'Success' | 'Success', 'Failed', 'Pending' |
-| `metadata` | `VARIANT` | - | JSON metadata (Snowflake) or JSONB (PostgreSQL) - Use OBJECT for cross-database compatibility |
+| `metadata` | `VARIANT` | - | JSON metadata JSONB (PostgreSQL) - Use OBJECT for cross-database compatibility |
 | `file_size_bytes` | `BIGINT` | - | - |
 | `forecast_date` | `DATE` | - | - |
 | `forecast_cycle` | `VARCHAR(2)` | - | '00', '06', '12', '18' |
@@ -270,7 +270,7 @@ This section provides a comprehensive data dictionary for all tables in the data
 | `spatial_extent_east` | `NUMERIC(10, 6)` | - | - |
 | `spatial_extent_north` | `NUMERIC(10, 6)` | - | - |
 | `transformation_status` | `VARCHAR(50)` | - | - |
-| `snowflake_table` | `VARCHAR(255)` | - | - |
+| `target_table` | `VARCHAR(255)` | - | - |
 | `load_timestamp` | `TIMESTAMP_NTZ` | - | - |
 | `processing_duration_seconds` | `INTEGER` | - | - |
 | `records_processed` | `INTEGER` | - | - |
@@ -372,12 +372,12 @@ This section provides a comprehensive data dictionary for all tables in the data
 | `spatial_extent_east` | `NUMERIC(10, 6)` | - | - |
 | `spatial_extent_north` | `NUMERIC(10, 6)` | - | - |
 | `transformation_status` | `VARCHAR(50)` | - | - |
-| `snowflake_table` | `VARCHAR(255)` | - | - |
+| `target_table` | `VARCHAR(255)` | - | - |
 | `load_timestamp` | `TIMESTAMP_NTZ` | - | - |
 | `processing_duration_seconds` | `INTEGER` | - | - |
 | `error_message` | `VARCHAR(2000)` | - | - |
 
-#### Table: `snowflake_load_status`
+#### Table: `load_status`
 
 *Tracks data loading operations to Snowflake*
 
@@ -385,7 +385,7 @@ This section provides a comprehensive data dictionary for all tables in the data
 |-------------|-----------|-------------|-------------|
 | `load_id` | `VARCHAR(255)` | PRIMARY KEY | - |
 | `source_file` | `VARCHAR(1000)` | - | - |
-| `snowflake_table` | `VARCHAR(255)` | NOT NULL | - |
+| `target_table` | `VARCHAR(255)` | NOT NULL | - |
 | `load_start_time` | `TIMESTAMP_NTZ` | NOT NULL | - |
 | `load_end_time` | `TIMESTAMP_NTZ` | - | - |
 | `load_duration_seconds` | `INTEGER` | - | - |
@@ -394,7 +394,7 @@ This section provides a comprehensive data dictionary for all tables in the data
 | `load_rate_mb_per_sec` | `NUMERIC(10, 2)` | - | - |
 | `load_status` | `VARCHAR(50)` | - | 'Success', 'Failed', 'Partial' |
 | `error_message` | `VARCHAR(2000)` | - | - |
-| `snowflake_warehouse` | `VARCHAR(255)` | - | - |
+| `warehouse` | `VARCHAR(255)` | - | - |
 | `data_source_type` | `VARCHAR(50)` | - | - |
 
 #### Table: `spatial_join_results`

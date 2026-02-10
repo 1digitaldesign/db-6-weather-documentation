@@ -21,7 +21,7 @@ def main():
     # Load all result files
     fix_verification = load_json_file(results_dir / 'fix_verification.json')
     comprehensive_validation = load_json_file(results_dir / 'comprehensive_validation_report.json')
-    execution_results = load_json_file(results_dir / 'query_test_results_postgres_snowflake.json')
+    execution_results = load_json_file(results_dir / 'query_test_results_postgres.json')
 
     # Generate comprehensive report
     report = {
@@ -81,8 +81,8 @@ def main():
     available_dbs = []
     if syntax_val.get('postgresql', {}).get('available'):
         available_dbs.append('PostgreSQL')
-    if syntax_val.get('snowflake', {}).get('available'):
-        available_dbs.append('Snowflake')
+    if syntax_val.get('databricks', {}).get('available'):
+        available_dbs.append('Databricks')
     if syntax_val.get('databricks', {}).get('available'):
         available_dbs.append('Databricks')
 

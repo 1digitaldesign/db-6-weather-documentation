@@ -38,7 +38,7 @@
     "cross_db_compatible": {
       "Pass": 1,
       "notes": [
-        "PostgreSQL, Databricks, Snowflake"
+        "PostgreSQL"
       ]
     },
     "execution_100_percent": {

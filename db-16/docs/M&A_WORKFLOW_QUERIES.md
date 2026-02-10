@@ -256,7 +256,7 @@ All queries feature:
 - **Multi-source data fusion** (FEMA, NOAA, USGS, NASA)
 - **Financial modeling** (damage estimates, annual loss)
 - **Risk scoring algorithms** (0-100 scale)
-- **Cross-database compatibility** (PostgreSQL, Databricks, Snowflake)
+- **Cross-database compatibility** (PostgreSQL)
 
 ## Database Schema
 

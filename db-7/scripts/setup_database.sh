@@ -1,6 +1,6 @@
 #!/bin/bash
 # Setup script for db-7 maritime shipping intelligence database
-# Compatible with PostgreSQL (with PostGIS), Databricks, and Snowflake
+# Compatible with PostgreSQL (with PostGIS)
 
 set -e
 

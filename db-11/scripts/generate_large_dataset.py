@@ -182,9 +182,9 @@ def main():
     with open(output_file, 'w', encoding='utf-8') as f:
         # Write header
         f.write("-- Large Dataset for Parking Intelligence Database (db-11)\n")
-        f.write(f"-- Generated: {datetime.now().isoformat()}\n")
+        f.write(f"-- Rebuilt: {datetime.now().isoformat()}\n")
         f.write(f"-- Target size: {TARGET_SIZE_GB} GB\n")
-        f.write("-- Compatible with PostgreSQL, Databricks, and Snowflake\n")
+        f.write("-- Compatible with PostgreSQL\n")
         f.write("-- Based on legitimate Data.gov, FHWA, Census Bureau patterns and realistic parking data\n\n")
         header_size = f.tell()
         current_size = header_size
@@ -285,10 +285,10 @@ ON CONFLICT (utilization_id) DO NOTHING;"""
         content = f.read()
         f.seek(0)
         f.write(f"-- Large Dataset for Parking Intelligence Database (db-11)\n")
-        f.write(f"-- Generated: {datetime.now().isoformat()}\n")
+        f.write(f"-- Rebuilt: {datetime.now().isoformat()}\n")
         f.write(f"-- Target size: {TARGET_SIZE_GB} GB\n")
         f.write(f"-- Total SQL statements: {total_statements:,}\n")
-        f.write("-- Compatible with PostgreSQL, Databricks, and Snowflake\n")
+        f.write("-- Compatible with PostgreSQL\n")
         f.write("-- Based on legitimate Data.gov, FHWA, Census Bureau patterns and realistic parking data\n\n")
         f.write(content[header_size:])
     

@@ -401,7 +401,7 @@ The schema includes indexes for performance optimization:
 - `idx_address_validation_zip`: Index on validated_zip_code
 - `idx_api_rate_request_log_carrier`: Index on carrier_id, request_timestamp
 
-The schema uses standard SQL data types compatible with PostgreSQL, Databricks, and Snowflake:
+The schema uses standard SQL data types compatible with PostgreSQL:
 
 - **VARCHAR**: Variable-length strings
 - **NUMERIC**: Decimal numbers with precision
@@ -4416,7 +4416,7 @@ Queries use standard SQL syntax and avoid platform-specific features to ensure c
 
 **Document Information:**
 
-- **Generated**: 20260204-2113
+- **Generated**: 20260209-2337
 - **Database**: db-9
 - **Type**: Shipping Intelligence Database
 - **Queries**: 30 production queries

@@ -303,7 +303,7 @@
         }
       ]
     },
-    "snowflake": {
+    "databricks": {
       "available": false,
       "queries": []
     },
@@ -320,7 +320,7 @@
       "available": true,
       "queries": []
     },
-    "snowflake": {
+    "databricks": {
       "available": true,
       "queries": []
     }

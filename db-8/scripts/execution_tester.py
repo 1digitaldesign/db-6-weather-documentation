@@ -31,13 +31,6 @@ except ImportError:
     PG_AVAILABLE = False
     print("Warning: psycopg2 not available. PostgreSQL testing will be skipped.")
 
-try:
-    from databricks import sql
-    DATABRICKS_AVAILABLE = True
-except ImportError:
-    DATABRICKS_AVAILABLE = False
-    print("Warning: databricks-sql-connector not available. Databricks testing will be skipped.")
-
 class QueryExtractor:
     """Extract SQL queries from queries.md files"""
 
@@ -86,7 +79,7 @@ class QueryExtractor:
         return sorted(queries, key=lambda x: x['number'])
 
 class DatabaseTester:
-    """Test queries against PostgreSQL and Databricks"""
+    """Test queries against PostgreSQL"""
 
     def __init__(self, db_name: str):
         self.db_name = db_name
@@ -96,7 +89,6 @@ class DatabaseTester:
             'database': db_name,
             'test_date': get_est_timestamp(),  # EST format: YYYYMMDD-HHMM
             'postgresql': {'available': False, 'queries': []},
-            'databricks': {'available': False, 'queries': []},
             'summary': {}
         }
 
@@ -117,23 +109,6 @@ class DatabaseTester:
             return True
         except Exception as e:
             print(f"PostgreSQL connection failed: {e}")
-            return False
-
-    def connect_databricks(self, config: Dict) -> bool:
-        """Connect to Databricks"""
-        if not DATABRICKS_AVAILABLE:
-            return False
-
-        try:
-            self.db_conn = sql.connect(
-                server_hostname=config.get('server_hostname'),
-                http_path=config.get('http_path'),
-                access_token=config.get('access_token')
-            )
-            self.results['databricks']['available'] = True
-            return True
-        except Exception as e:
-            print(f"Databricks connection failed: {e}")
             return False
 
     def test_query_postgresql(self, query: Dict) -> Dict:
@@ -198,52 +173,6 @@ class DatabaseTester:
 
         return result
 
-    def test_query_databricks(self, query: Dict) -> Dict:
-        """Test a query on Databricks"""
-        result = {
-            'query_number': query['number'],
-            'success': False,
-            'error': None,
-            'execution_time_ms': None,
-            'row_count': None,
-            'columns': None
-        }
-
-        if not self.db_conn:
-            result['error'] = 'Databricks not connected'
-            return result
-
-        try:
-            cursor = self.db_conn.cursor()
-            start_time = datetime.now()
-
-            # Add LIMIT clause if not present
-            sql_query = query['sql']
-            if 'LIMIT' not in sql_query.upper() and 'FETCH' not in sql_query.upper():
-                sql_query = sql_query.rstrip(';') + ' LIMIT 100'
-
-            cursor.execute(sql_query)
-
-            # Fetch results (limit to prevent memory issues)
-            rows = cursor.fetchmany(100)
-            row_count = len(rows)
-
-            end_time = datetime.now()
-            execution_time = (end_time - start_time).total_seconds() * 1000
-
-            result['success'] = True
-            result['execution_time_ms'] = round(execution_time, 2)
-            result['row_count'] = row_count
-            result['columns'] = [desc[0] for desc in cursor.description] if cursor.description else None
-
-            cursor.close()
-
-        except Exception as e:
-            result['error'] = str(e)
-            result['error_type'] = type(e).__name__
-
-        return result
-
     def test_all_queries(self, queries: List[Dict], pg_config: Dict = None, db_config: Dict = None):
         """Test all queries on both databases"""
         print(f"\n{'='*70}")
@@ -264,44 +193,22 @@ class DatabaseTester:
             if self.pg_conn:
                 self.pg_conn.close()
 
-        # Test Databricks
-        if db_config and self.connect_databricks(db_config):
-            print(f"\nTesting on Databricks...")
-            for i, query in enumerate(queries, 1):
-                print(f"  Query {query['number']}/{len(queries)}...", end=' ', flush=True)
-                result = self.test_query_databricks(query)
-                self.results['databricks']['queries'].append(result)
-                if result['success']:
-                    print(f"✓ ({result['execution_time_ms']}ms)")
-                else:
-                    print(f"✗ {result['error'][:60]}")
-            if self.db_conn:
-                self.db_conn.close()
-
         # Generate summary
         self._generate_summary()
 
     def _generate_summary(self):
         """Generate test summary"""
         pg_results = self.results['postgresql']['queries']
-        db_results = self.results['databricks']['queries']
 
         pg_success = sum(1 for r in pg_results if r['success'])
-        db_success = sum(1 for r in db_results if r['success'])
 
         self.results['summary'] = {
-            'total_queries': len(pg_results) or len(db_results),
+            'total_queries': len(pg_results),
             'postgresql': {
                 'tested': len(pg_results),
                 'successful': pg_success,
                 'failed': len(pg_results) - pg_success,
                 'success_rate': round(pg_success / len(pg_results) * 100, 2) if pg_results else 0
-            },
-            'databricks': {
-                'tested': len(db_results),
-                'successful': db_success,
-                'failed': len(db_results) - db_success,
-                'success_rate': round(db_success / len(db_results) * 100, 2) if db_results else 0
             }
         }
 
@@ -314,7 +221,7 @@ def main():
     """Main execution testing function"""
     script_dir = Path(__file__).parent
     queries_file = script_dir.parent / 'queries' / 'queries.md'
-    results_file = script_dir.parent / 'results' / 'query_test_results_postgres_databricks.json'
+    results_file = script_dir.parent / 'results' / 'query_test_results_postgres.json'
 
     if not queries_file.exists():
         print(f"Error: {queries_file} not found")
@@ -339,24 +246,13 @@ def main():
         'database': os.environ.get('PG_DATABASE', 'db_8_validation')
     }
 
-    db_config = {
-        'server_hostname': os.environ.get('DATABRICKS_SERVER_HOSTNAME'),
-        'http_path': os.environ.get('DATABRICKS_HTTP_PATH'),
-        'access_token': os.environ.get('DATABRICKS_TOKEN')
-    }
-
-    # Check if configs are available
-    if not all([db_config.get('server_hostname'), db_config.get('http_path'), db_config.get('access_token')]):
-        print("\n⚠️  Databricks credentials not found. Skipping Databricks execution testing.")
-        db_config = None
-
     if not PG_AVAILABLE:
         print("\n⚠️  psycopg2 not available. Skipping PostgreSQL execution testing.")
         pg_config = None
 
     # Test queries
     tester = DatabaseTester('db-8')
-    tester.test_all_queries(queries, pg_config, db_config)
+    tester.test_all_queries(queries, pg_config, None)
     tester.save_results(results_file)
 
     print("\n" + "="*70)

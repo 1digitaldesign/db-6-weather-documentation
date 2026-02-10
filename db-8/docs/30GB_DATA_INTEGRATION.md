@@ -33,7 +33,7 @@ This guide provides step-by-step instructions for integrating 30GB of data into 
 
 - Python 3.8+
 - PostgreSQL 12+ (with PostGIS if spatial features needed)
-- Databricks SQL Warehouse (optional)
+ SQL Warehouse (optional)
 - Required Python packages (see `scripts/requirements.txt`)
 
 ### Environment Variables

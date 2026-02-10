@@ -237,7 +237,7 @@ def generate_html_documentation():
     # Write HTML file
     output_file = db_dir / 'deliverable' / 'db8-job-market-intelligence' / 'db-8_documentation.html'
     output_file.write_text(html_doc)
-    print(f"HTML documentation generated: {output_file}")
+    print(f"HTML documentation Rebuilt: {output_file}")
 
 if __name__ == '__main__':
     generate_html_documentation()

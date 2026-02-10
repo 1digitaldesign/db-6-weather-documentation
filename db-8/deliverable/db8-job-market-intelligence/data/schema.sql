@@ -1,5 +1,5 @@
 -- Job Market Intelligence Database Schema
--- Compatible with PostgreSQL, Databricks, and Snowflake
+-- Compatible with PostgreSQL
 -- Production schema for job market intelligence and targeted application system
 -- Integrates data from USAJobs.gov, BLS, Department of Labor, and state employment boards
 
@@ -90,6 +90,7 @@ CREATE TABLE job_postings (
     grade_level VARCHAR(50), -- For federal jobs
     data_source VARCHAR(50) NOT NULL, -- 'usajobs', 'bls', 'state_board', 'aggregated'
     source_url VARCHAR(1000),
+    industry VARCHAR(100), -- Denormalized from companies for query performance
     created_at TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP(),
     updated_at TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP(),
     view_count INTEGER DEFAULT 0,
@@ -320,3 +321,6 @@ CREATE INDEX idx_user_profiles_is_active ON user_profiles(is_active);
 
 CREATE INDEX idx_companies_industry ON companies(industry);
 CREATE INDEX idx_companies_name_normalized ON companies(company_name_normalized);
+
+-- Migration: Add industry to job_postings if missing (for existing databases)
+ALTER TABLE job_postings ADD COLUMN IF NOT EXISTS industry VARCHAR(100);

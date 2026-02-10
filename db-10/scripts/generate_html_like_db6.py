@@ -151,7 +151,7 @@ def generate_html_like_db6():
     # Write HTML file
     output_file = db_dir / 'deliverable' / 'db10-marketing-intelligence' / 'db-10_documentation.html'
     output_file.write_text(html_doc, encoding='utf-8')
-    print(f"✅ Generated: {output_file}")
+    print(f"✅ Rebuilt: {output_file}")
     print(f"   Size: {len(html_doc):,} characters")
     
     return True

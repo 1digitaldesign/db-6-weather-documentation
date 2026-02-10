@@ -35,7 +35,7 @@ def main():
     # Try both possible execution test result file names
     execution_results = load_json_file(results_dir / 'execution_test_results.json')
     if not execution_results:
-        execution_results = load_json_file(results_dir / 'query_test_results_postgres_databricks.json')
+        execution_results = load_json_file(results_dir / 'query_test_results_postgres.json')
 
     # Handle both Pass and status formats for evaluation (before creating report)
     eval_data = comprehensive_validation.get('evaluation', {})
@@ -50,8 +50,7 @@ def main():
     
     # Check execution testing
     pg_exec_available = execution_results.get('postgresql', {}).get('available', False)
-    db_exec_available = execution_results.get('databricks', {}).get('available', False)
-    execution_testing_Pass = 1 if (pg_exec_available or db_exec_available) else 0
+    execution_testing_Pass = 1 if pg_exec_available else 0
 
     # Generate comprehensive report
     report = {
@@ -112,39 +111,28 @@ def main():
     available_dbs = []
     if syntax_val.get('postgresql', {}).get('available'):
         available_dbs.append('PostgreSQL')
-    if syntax_val.get('databricks', {}).get('available'):
-        available_dbs.append('Databricks')
-
-    if len(available_dbs) < 2:
+    if len(available_dbs) < 1:
         # This is informational, not a warning - database connections are optional
-        report['notes'].append(f'Syntax validation ran with limited database availability ({len(available_dbs)} of 2 databases). Set up database connections for full cross-database validation.')
+        report['notes'].append('Syntax validation ran with limited database availability. Set up PostgreSQL connection for syntax validation.')
 
     # Calculate execution_testing_Pass
     # Execution testing is optional - Pass=1 if DBs available and tests ran successfully, or if skipped gracefully
     # Pass=0 only if tests ran and failed (success rate < 90%)
-    # Handle both databricks and snowflake keys
     has_pg = bool(execution_results.get('postgresql'))
-    has_db = bool(execution_results.get('databricks') or execution_results.get('snowflake'))
     
-    if execution_results and (has_pg or has_db):
+    if execution_results and has_pg:
         pg_available = execution_results.get('postgresql', {}).get('available', False)
-        db_available = (execution_results.get('databricks', {}).get('available', False) or 
-                       execution_results.get('snowflake', {}).get('available', False))
-        execution_available = pg_available or db_available
         
-        if execution_available:
+        if pg_available:
             # Check if queries were actually tested (not just empty arrays)
             pg_queries = execution_results.get('postgresql', {}).get('queries', [])
-            db_queries = execution_results.get('databricks', {}).get('queries', []) or execution_results.get('snowflake', {}).get('queries', [])
             
-            if pg_queries or db_queries:
+            if pg_queries:
                 # Tests ran - check success rate
                 execution_summary = execution_results.get('summary', {})
                 pg_success = execution_summary.get('postgresql', {}).get('success_rate', 0) if execution_summary.get('postgresql') else 0
-                db_success = (execution_summary.get('databricks', {}).get('success_rate', 0) if execution_summary.get('databricks') else 0) or \
-                            (execution_summary.get('snowflake', {}).get('success_rate', 0) if execution_summary.get('snowflake') else 0)
-                # Pass if at least one database has >= 90% success rate
-                report['summary']['execution_testing_Pass'] = 1 if (pg_success >= 90 or db_success >= 90) else 0
+                # Pass if PostgreSQL has >= 90% success rate
+                report['summary']['execution_testing_Pass'] = 1 if pg_success >= 90 else 0
             else:
                 # DBs available but no queries tested - execution testing is optional, so Pass=1 (skipped gracefully)
                 report['summary']['execution_testing_Pass'] = 1

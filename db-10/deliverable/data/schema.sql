@@ -1,5 +1,5 @@
--- Shopping Aggregator Database Schema
--- Compatible with PostgreSQL, Databricks, and Snowflake
+-- Marketing Intelligence Database Schema
+-- Compatible with PostgreSQL
 -- Production schema for marketing intelligence and retail inventory tracking system
 -- Integrates data from U.S. Census Bureau, BLS, FTC, Data.gov, and retail sources
 

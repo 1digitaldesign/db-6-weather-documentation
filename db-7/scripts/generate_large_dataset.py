@@ -393,10 +393,10 @@ def main():
     
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write("-- Large Dataset for Maritime Shipping Database (db-7)\n")
-        f.write(f"-- Generated: {datetime.now().isoformat()}\n")
+        f.write(f"-- Rebuilt: {datetime.now().isoformat()}\n")
         f.write(f"-- Target size: {TARGET_SIZE_GB} GB\n")
         f.write(f"-- Total SQL statements: {len(all_sql):,}\n")
-        f.write("-- Compatible with PostgreSQL, Databricks, and Snowflake\n")
+        f.write("-- Compatible with PostgreSQL\n")
         f.write("-- Based on legitimate MARAD, NOAA, USCG patterns and realistic maritime data\n\n")
         
         for sql in all_sql:

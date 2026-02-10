@@ -241,7 +241,7 @@ ON CONFLICT (job_id) DO NOTHING;"""
             return sql, job_ids, current_size
         
         if records_generated % 10000 == 0:
-            logger.info(f"  Generated {records_generated:,} job postings ({current_size / (1024**3):.2f} GB)")
+            logger.info(f"  Generated {records_Rebuilt:,} job postings ({current_size / (1024**3):.2f} GB)")
     
     return sql, job_ids, current_size
 
@@ -354,9 +354,9 @@ def main():
     with open(output_file, 'w', encoding='utf-8') as f:
         # Write header
         f.write("-- Large Dataset for Job Market Database (db-8)\n")
-        f.write(f"-- Generated: {datetime.now().isoformat()}\n")
+        f.write(f"-- Rebuilt: {datetime.now().isoformat()}\n")
         f.write(f"-- Target size: {TARGET_SIZE_GB} GB\n")
-        f.write("-- Compatible with PostgreSQL, Databricks, and Snowflake\n")
+        f.write("-- Compatible with PostgreSQL\n")
         f.write("-- Based on legitimate BLS, USAJobs.gov patterns and realistic job market data\n\n")
         header_size = f.tell()
         current_size = header_size
@@ -478,10 +478,10 @@ ON CONFLICT (job_id) DO NOTHING;"""
         content = f.read()
         f.seek(0)
         f.write(f"-- Large Dataset for Job Market Database (db-8)\n")
-        f.write(f"-- Generated: {datetime.now().isoformat()}\n")
+        f.write(f"-- Rebuilt: {datetime.now().isoformat()}\n")
         f.write(f"-- Target size: {TARGET_SIZE_GB} GB\n")
         f.write(f"-- Total SQL statements: {total_statements:,}\n")
-        f.write("-- Compatible with PostgreSQL, Databricks, and Snowflake\n")
+        f.write("-- Compatible with PostgreSQL\n")
         f.write("-- Based on legitimate BLS, USAJobs.gov patterns and realistic job market data\n\n")
         f.write(content[header_size:])
     

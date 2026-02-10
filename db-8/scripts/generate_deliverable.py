@@ -143,7 +143,7 @@ This section contains all 30 extremely complex SQL queries for the Job Market In
     # Write deliverable file
     deliverable_file = db_dir / 'deliverable' / 'db-8.md'
     deliverable_file.write_text(deliverable_content)
-    print(f"Deliverable generated: {deliverable_file}")
+    print(f"Deliverable Rebuilt: {deliverable_file}")
 
 if __name__ == '__main__':
     main()

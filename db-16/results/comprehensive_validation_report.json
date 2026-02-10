@@ -1,5 +1,5 @@
 {
-  "validation_date": "2026-02-09T03:44:23.606767",
+  "validation_date": "2026-02-09T23:38:21.715552",
   "database": "db-16",
   "file": "/Users/machine/Documents/AQ/db/db-16/queries/queries.md",
   "total_queries": 30,
@@ -9,187 +9,187 @@
       "queries": [
         {
           "query_number": 1,
-          "success": true,
-          "error": null,
-          "error_type": null
+          "success": false,
+          "error": "relation \"real_estate_properties\" does not exist\nLINE 26:     FROM real_estate_properties rep\n                  ^\n",
+          "error_type": "UndefinedTable"
         },
         {
           "query_number": 2,
-          "success": true,
-          "error": null,
-          "error_type": null
+          "success": false,
+          "error": "current transaction is aborted, commands ignored until end of transaction block\n",
+          "error_type": "InFailedSqlTransaction"
         },
         {
           "query_number": 3,
-          "success": true,
-          "error": null,
-          "error_type": null
+          "success": false,
+          "error": "current transaction is aborted, commands ignored until end of transaction block\n",
+          "error_type": "InFailedSqlTransaction"
         },
         {
           "query_number": 4,
-          "success": true,
-          "error": null,
-          "error_type": null
+          "success": false,
+          "error": "current transaction is aborted, commands ignored until end of transaction block\n",
+          "error_type": "InFailedSqlTransaction"
         },
         {
           "query_number": 5,
-          "success": true,
-          "error": null,
-          "error_type": null
+          "success": false,
+          "error": "current transaction is aborted, commands ignored until end of transaction block\n",
+          "error_type": "InFailedSqlTransaction"
         },
         {
           "query_number": 6,
-          "success": true,
-          "error": null,
-          "error_type": null
+          "success": false,
+          "error": "current transaction is aborted, commands ignored until end of transaction block\n",
+          "error_type": "InFailedSqlTransaction"
         },
         {
           "query_number": 7,
-          "success": true,
-          "error": null,
-          "error_type": null
+          "success": false,
+          "error": "current transaction is aborted, commands ignored until end of transaction block\n",
+          "error_type": "InFailedSqlTransaction"
         },
         {
           "query_number": 8,
-          "success": true,
-          "error": null,
-          "error_type": null
+          "success": false,
+          "error": "current transaction is aborted, commands ignored until end of transaction block\n",
+          "error_type": "InFailedSqlTransaction"
         },
         {
           "query_number": 9,
-          "success": true,
-          "error": null,
-          "error_type": null
+          "success": false,
+          "error": "current transaction is aborted, commands ignored until end of transaction block\n",
+          "error_type": "InFailedSqlTransaction"
         },
         {
           "query_number": 10,
-          "success": true,
-          "error": null,
-          "error_type": null
+          "success": false,
+          "error": "current transaction is aborted, commands ignored until end of transaction block\n",
+          "error_type": "InFailedSqlTransaction"
         },
         {
           "query_number": 11,
-          "success": true,
-          "error": null,
-          "error_type": null
+          "success": false,
+          "error": "current transaction is aborted, commands ignored until end of transaction block\n",
+          "error_type": "InFailedSqlTransaction"
         },
         {
           "query_number": 12,
-          "success": true,
-          "error": null,
-          "error_type": null
+          "success": false,
+          "error": "current transaction is aborted, commands ignored until end of transaction block\n",
+          "error_type": "InFailedSqlTransaction"
         },
         {
           "query_number": 13,
-          "success": true,
-          "error": null,
-          "error_type": null
+          "success": false,
+          "error": "current transaction is aborted, commands ignored until end of transaction block\n",
+          "error_type": "InFailedSqlTransaction"
         },
         {
           "query_number": 14,
-          "success": true,
-          "error": null,
-          "error_type": null
+          "success": false,
+          "error": "current transaction is aborted, commands ignored until end of transaction block\n",
+          "error_type": "InFailedSqlTransaction"
         },
         {
           "query_number": 15,
-          "success": true,
-          "error": null,
-          "error_type": null
+          "success": false,
+          "error": "current transaction is aborted, commands ignored until end of transaction block\n",
+          "error_type": "InFailedSqlTransaction"
         },
         {
           "query_number": 16,
-          "success": true,
-          "error": null,
-          "error_type": null
+          "success": false,
+          "error": "current transaction is aborted, commands ignored until end of transaction block\n",
+          "error_type": "InFailedSqlTransaction"
         },
         {
           "query_number": 17,
-          "success": true,
-          "error": null,
-          "error_type": null
+          "success": false,
+          "error": "current transaction is aborted, commands ignored until end of transaction block\n",
+          "error_type": "InFailedSqlTransaction"
         },
         {
           "query_number": 18,
-          "success": true,
-          "error": null,
-          "error_type": null
+          "success": false,
+          "error": "current transaction is aborted, commands ignored until end of transaction block\n",
+          "error_type": "InFailedSqlTransaction"
         },
         {
           "query_number": 19,
-          "success": true,
-          "error": null,
-          "error_type": null
+          "success": false,
+          "error": "current transaction is aborted, commands ignored until end of transaction block\n",
+          "error_type": "InFailedSqlTransaction"
         },
         {
           "query_number": 20,
-          "success": true,
-          "error": null,
-          "error_type": null
+          "success": false,
+          "error": "current transaction is aborted, commands ignored until end of transaction block\n",
+          "error_type": "InFailedSqlTransaction"
         },
         {
           "query_number": 21,
-          "success": true,
-          "error": null,
-          "error_type": null
+          "success": false,
+          "error": "current transaction is aborted, commands ignored until end of transaction block\n",
+          "error_type": "InFailedSqlTransaction"
         },
         {
           "query_number": 22,
-          "success": true,
-          "error": null,
-          "error_type": null
+          "success": false,
+          "error": "current transaction is aborted, commands ignored until end of transaction block\n",
+          "error_type": "InFailedSqlTransaction"
         },
         {
           "query_number": 23,
-          "success": true,
-          "error": null,
-          "error_type": null
+          "success": false,
+          "error": "current transaction is aborted, commands ignored until end of transaction block\n",
+          "error_type": "InFailedSqlTransaction"
         },
         {
           "query_number": 24,
-          "success": true,
-          "error": null,
-          "error_type": null
+          "success": false,
+          "error": "current transaction is aborted, commands ignored until end of transaction block\n",
+          "error_type": "InFailedSqlTransaction"
         },
         {
           "query_number": 25,
-          "success": true,
-          "error": null,
-          "error_type": null
+          "success": false,
+          "error": "current transaction is aborted, commands ignored until end of transaction block\n",
+          "error_type": "InFailedSqlTransaction"
         },
         {
           "query_number": 26,
-          "success": true,
-          "error": null,
-          "error_type": null
+          "success": false,
+          "error": "current transaction is aborted, commands ignored until end of transaction block\n",
+          "error_type": "InFailedSqlTransaction"
         },
         {
           "query_number": 27,
-          "success": true,
-          "error": null,
-          "error_type": null
+          "success": false,
+          "error": "current transaction is aborted, commands ignored until end of transaction block\n",
+          "error_type": "InFailedSqlTransaction"
         },
         {
           "query_number": 28,
-          "success": true,
-          "error": null,
-          "error_type": null
+          "success": false,
+          "error": "current transaction is aborted, commands ignored until end of transaction block\n",
+          "error_type": "InFailedSqlTransaction"
         },
         {
           "query_number": 29,
-          "success": true,
-          "error": null,
-          "error_type": null
+          "success": false,
+          "error": "current transaction is aborted, commands ignored until end of transaction block\n",
+          "error_type": "InFailedSqlTransaction"
         },
         {
           "query_number": 30,
-          "success": true,
-          "error": null,
-          "error_type": null
+          "success": false,
+          "error": "current transaction is aborted, commands ignored until end of transaction block\n",
+          "error_type": "InFailedSqlTransaction"
         }
       ]
     },
-    "snowflake": {
+    "databricks": {
       "available": false,
       "queries": []
     },

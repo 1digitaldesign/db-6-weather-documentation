@@ -31,7 +31,7 @@ except ImportError:
     PG_AVAILABLE = False
 
 try:
-    import snowflake.connector
+    import databricks.connector
     SNOWFLAKE_AVAILABLE = True
 except ImportError:
     SNOWFLAKE_AVAILABLE = False
@@ -98,7 +98,7 @@ class SyntaxValidator:
         self.db_conn = None
         self.results = {
             'postgresql': {'available': False, 'queries': []},
-            'snowflake': {'available': False, 'queries': []},
+            'databricks': {'available': False, 'queries': []},
             'databricks': {'available': False, 'queries': []}
         }
 
@@ -121,13 +121,13 @@ class SyntaxValidator:
             print(f"PostgreSQL connection failed: {e}")
             return False
 
-    def connect_snowflake(self, config: Dict) -> bool:
-        """Connect to Snowflake"""
+    def connect_databricks(self, config: Dict) -> bool:
+        """Connect to Databricks"""
         if not SNOWFLAKE_AVAILABLE:
             return False
 
         try:
-            self.sf_conn = snowflake.connector.connect(
+            self.sf_conn = databricks.connector.connect(
                 user=config.get('user', os.environ.get('SNOWFLAKE_USER')),
                 password=config.get('password', os.environ.get('SNOWFLAKE_PASSWORD')),
                 account=config.get('account', os.environ.get('SNOWFLAKE_ACCOUNT')),
@@ -135,10 +135,10 @@ class SyntaxValidator:
                 database=config.get('database', 'TEST_DB'),
                 schema=config.get('schema', 'PUBLIC')
             )
-            self.results['snowflake']['available'] = True
+            self.results['databricks']['available'] = True
             return True
         except Exception as e:
-            print(f"Snowflake connection failed: {e}")
+            print(f"Databricks connection failed: {e}")
             return False
 
     def validate_syntax_postgresql(self, query: Dict) -> Dict:
@@ -168,8 +168,8 @@ class SyntaxValidator:
 
         return result
 
-    def validate_syntax_snowflake(self, query: Dict) -> Dict:
-        """Validate SQL syntax on Snowflake using EXPLAIN"""
+    def validate_syntax_databricks(self, query: Dict) -> Dict:
+        """Validate SQL syntax on Databricks using EXPLAIN"""
         result = {
             'query_number': query['number'],
             'success': False,
@@ -178,7 +178,7 @@ class SyntaxValidator:
         }
 
         if not self.sf_conn:
-            result['error'] = 'Snowflake not connected'
+            result['error'] = 'Databricks not connected'
             return result
 
         try:
@@ -215,13 +215,13 @@ class SyntaxValidator:
             if self.pg_conn:
                 self.pg_conn.close()
 
-        # Snowflake validation
-        if sf_config and self.connect_snowflake(sf_config):
-            print(f"\nValidating on Snowflake...")
+        # Databricks validation
+        if sf_config and self.connect_databricks(sf_config):
+            print(f"\nValidating on Databricks...")
             for query in queries:
                 print(f"  Query {query['number']}/{len(queries)}...", end=' ', flush=True)
-                result = self.validate_syntax_snowflake(query)
-                self.results['snowflake']['queries'].append(result)
+                result = self.validate_syntax_databricks(query)
+                self.results['databricks']['queries'].append(result)
                 if result['success']:
                     print("✓")
                 else:
@@ -391,7 +391,7 @@ def main():
 
     # Check if configs are available
     if not all([sf_config.get('user'), sf_config.get('password'), sf_config.get('account')]):
-        print("\n⚠️  Snowflake credentials not found. Skipping Snowflake validation.")
+        print("\n⚠️  Databricks credentials not found. Skipping Databricks validation.")
         sf_config = None
 
     if not PG_AVAILABLE:

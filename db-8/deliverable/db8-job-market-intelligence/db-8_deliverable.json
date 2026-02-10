@@ -1,9 +1,9 @@
 {
   "database": {
     "id": "db-8",
-    "name": "Job Market Intelligence Database",
-    "description": "This document provides comprehensive documentation for database db-8, including complete schema documentation, all SQL queries with business context, and usage instructions. This database and its queries are sourced from production systems used by businesses with **$1M+ Annual Recurring Revenue (ARR)**, representing real-world enterprise implementations.",
-    "created_date": "2026-02-04",
+    "name": "Database db-8",
+    "description": "Database db-8",
+    "created_date": "2026-02-09",
     "version": "1.0"
   },
   "schema": {
@@ -11,1296 +11,1554 @@
     "tables": [
       {
         "name": "user_profiles",
-        "description": "user_profiles table",
+        "description": "",
         "columns": [
           {
             "name": "user_id",
             "data_type": "VARCHAR(255)",
-            "constraints": "PRIMARY KEY,",
+            "constraints": "PRIMARY KEY",
             "description": ""
           },
           {
             "name": "email",
             "data_type": "VARCHAR(255)",
-            "constraints": "NOT NULL UNIQUE,",
+            "constraints": "UNIQUE, NOT NULL",
             "description": ""
           },
           {
             "name": "full_name",
-            "data_type": "VARCHAR(255),",
+            "data_type": "VARCHAR(255)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "location_city",
-            "data_type": "VARCHAR(100),",
+            "data_type": "VARCHAR(100)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "location_state",
-            "data_type": "VARCHAR(2),",
+            "data_type": "VARCHAR(2)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "location_country",
             "data_type": "VARCHAR(2)",
-            "constraints": "DEFAULT 'US',",
+            "constraints": "",
             "description": ""
           },
           {
             "name": "location_latitude",
-            "data_type": "NUMERIC(10,",
-            "constraints": "7),",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
             "description": ""
           },
           {
             "name": "location_longitude",
-            "data_type": "NUMERIC(10,",
-            "constraints": "7),",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
             "description": ""
           },
           {
             "name": "current_job_title",
-            "data_type": "VARCHAR(255),",
+            "data_type": "VARCHAR(255)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "current_company",
-            "data_type": "VARCHAR(255),",
+            "data_type": "VARCHAR(255)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "years_experience",
-            "data_type": "INTEGER,",
+            "data_type": "INTEGER",
             "constraints": "",
             "description": ""
           },
           {
             "name": "education_level",
-            "data_type": "VARCHAR(50),",
+            "data_type": "VARCHAR(50)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "resume_text",
-            "data_type": "VARCHAR(16777216),",
+            "data_type": "VARCHAR(16777216)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "linkedin_url",
-            "data_type": "VARCHAR(500),",
+            "data_type": "VARCHAR(500)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "github_url",
-            "data_type": "VARCHAR(500),",
+            "data_type": "VARCHAR(500)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "portfolio_url",
-            "data_type": "VARCHAR(500),",
+            "data_type": "VARCHAR(500)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "preferred_work_model",
-            "data_type": "VARCHAR(50),",
-            "constraints": "-- 'remote', 'hybrid', 'onsite'",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
             "description": "'remote', 'hybrid', 'onsite'"
           },
           {
             "name": "salary_expectation_min",
-            "data_type": "INTEGER,",
+            "data_type": "INTEGER",
             "constraints": "",
             "description": ""
           },
           {
             "name": "salary_expectation_max",
-            "data_type": "INTEGER,",
+            "data_type": "INTEGER",
             "constraints": "",
             "description": ""
           },
           {
             "name": "preferred_locations",
-            "data_type": "VARCHAR(16777216),",
-            "constraints": "-- JSON array of preferred locations",
+            "data_type": "VARCHAR(16777216)",
+            "constraints": "",
             "description": "JSON array of preferred locations"
           },
           {
             "name": "created_at",
             "data_type": "TIMESTAMP_NTZ",
-            "constraints": "DEFAULT CURRENT_TIMESTAMP(),",
+            "constraints": "",
             "description": ""
           },
           {
             "name": "updated_at",
             "data_type": "TIMESTAMP_NTZ",
-            "constraints": "DEFAULT CURRENT_TIMESTAMP(),",
+            "constraints": "",
             "description": ""
           },
           {
             "name": "last_active_at",
             "data_type": "TIMESTAMP_NTZ",
-            "constraints": "DEFAULT CURRENT_TIMESTAMP(),",
+            "constraints": "",
             "description": ""
           },
           {
             "name": "profile_completeness_score",
-            "data_type": "NUMERIC(5,",
-            "constraints": "2),",
+            "data_type": "NUMERIC(5",
+            "constraints": "",
             "description": ""
           },
           {
             "name": "is_active",
             "data_type": "BOOLEAN",
-            "constraints": "DEFAULT TRUE",
+            "constraints": "",
             "description": ""
           }
         ]
       },
       {
         "name": "companies",
-        "description": "companies table",
+        "description": "",
         "columns": [
           {
             "name": "company_id",
             "data_type": "VARCHAR(255)",
-            "constraints": "PRIMARY KEY,",
+            "constraints": "PRIMARY KEY",
             "description": ""
           },
           {
             "name": "company_name",
             "data_type": "VARCHAR(255)",
-            "constraints": "NOT NULL,",
+            "constraints": "NOT NULL",
             "description": ""
           },
           {
             "name": "company_name_normalized",
-            "data_type": "VARCHAR(255),",
-            "constraints": "-- Normalized name for matching",
+            "data_type": "VARCHAR(255)",
+            "constraints": "",
             "description": "Normalized name for matching"
           },
           {
             "name": "industry",
-            "data_type": "VARCHAR(100),",
+            "data_type": "VARCHAR(100)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "company_size",
-            "data_type": "VARCHAR(50),",
-            "constraints": "-- 'startup', 'small', 'medium', 'large', 'enterprise'",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
             "description": "'startup', 'small', 'medium', 'large', 'enterprise'"
           },
           {
             "name": "headquarters_city",
-            "data_type": "VARCHAR(100),",
+            "data_type": "VARCHAR(100)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "headquarters_state",
-            "data_type": "VARCHAR(2),",
+            "data_type": "VARCHAR(2)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "headquarters_country",
             "data_type": "VARCHAR(2)",
-            "constraints": "DEFAULT 'US',",
+            "constraints": "",
             "description": ""
           },
           {
             "name": "website_url",
-            "data_type": "VARCHAR(500),",
+            "data_type": "VARCHAR(500)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "linkedin_url",
-            "data_type": "VARCHAR(500),",
+            "data_type": "VARCHAR(500)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "description",
-            "data_type": "VARCHAR(16777216),",
+            "data_type": "VARCHAR(16777216)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "founded_year",
-            "data_type": "INTEGER,",
+            "data_type": "INTEGER",
             "constraints": "",
             "description": ""
           },
           {
             "name": "employee_count",
-            "data_type": "INTEGER,",
+            "data_type": "INTEGER",
             "constraints": "",
             "description": ""
           },
           {
             "name": "revenue_range",
-            "data_type": "VARCHAR(50),",
+            "data_type": "VARCHAR(50)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "is_federal_agency",
             "data_type": "BOOLEAN",
-            "constraints": "DEFAULT FALSE,",
+            "constraints": "",
             "description": ""
           },
           {
             "name": "agency_code",
-            "data_type": "VARCHAR(50),",
-            "constraints": "-- For federal agencies",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
             "description": "For federal agencies"
           },
           {
             "name": "data_source",
-            "data_type": "VARCHAR(50),",
-            "constraints": "-- 'usajobs', 'bls', 'state_board', 'aggregated'",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
             "description": "'usajobs', 'bls', 'state_board', 'aggregated'"
           },
           {
             "name": "created_at",
             "data_type": "TIMESTAMP_NTZ",
-            "constraints": "DEFAULT CURRENT_TIMESTAMP(),",
+            "constraints": "",
             "description": ""
           },
           {
             "name": "updated_at",
             "data_type": "TIMESTAMP_NTZ",
-            "constraints": "DEFAULT CURRENT_TIMESTAMP(),",
+            "constraints": "",
             "description": ""
           },
           {
             "name": "company_rating",
-            "data_type": "NUMERIC(3,",
-            "constraints": "2), -- Average rating from reviews",
+            "data_type": "NUMERIC(3",
+            "constraints": "",
             "description": "Average rating from reviews"
           },
           {
             "name": "total_reviews",
             "data_type": "INTEGER",
-            "constraints": "DEFAULT 0",
+            "constraints": "",
             "description": ""
           }
         ]
       },
       {
         "name": "job_postings",
-        "description": "job_postings table",
+        "description": "",
         "columns": [
           {
             "name": "job_id",
             "data_type": "VARCHAR(255)",
-            "constraints": "PRIMARY KEY,",
+            "constraints": "PRIMARY KEY",
             "description": ""
           },
           {
             "name": "company_id",
             "data_type": "VARCHAR(255)",
-            "constraints": "NOT NULL,",
+            "constraints": "NOT NULL",
             "description": ""
           },
           {
             "name": "job_title",
             "data_type": "VARCHAR(255)",
-            "constraints": "NOT NULL,",
+            "constraints": "NOT NULL",
             "description": ""
           },
           {
             "name": "job_title_normalized",
-            "data_type": "VARCHAR(255),",
-            "constraints": "-- Normalized title for matching",
+            "data_type": "VARCHAR(255)",
+            "constraints": "",
             "description": "Normalized title for matching"
           },
           {
             "name": "job_description",
-            "data_type": "VARCHAR(16777216),",
+            "data_type": "VARCHAR(16777216)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "job_type",
-            "data_type": "VARCHAR(50),",
-            "constraints": "-- 'full_time', 'part_time', 'contract', 'temporary', 'internship'",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
             "description": "'full_time', 'part_time', 'contract', 'temporary', 'internship'"
           },
           {
             "name": "work_model",
-            "data_type": "VARCHAR(50),",
-            "constraints": "-- 'remote', 'hybrid', 'onsite'",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
             "description": "'remote', 'hybrid', 'onsite'"
           },
           {
             "name": "location_city",
-            "data_type": "VARCHAR(100),",
+            "data_type": "VARCHAR(100)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "location_state",
-            "data_type": "VARCHAR(2),",
+            "data_type": "VARCHAR(2)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "location_country",
             "data_type": "VARCHAR(2)",
-            "constraints": "DEFAULT 'US',",
+            "constraints": "",
             "description": ""
           },
           {
             "name": "location_latitude",
-            "data_type": "NUMERIC(10,",
-            "constraints": "7),",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
             "description": ""
           },
           {
             "name": "location_longitude",
-            "data_type": "NUMERIC(10,",
-            "constraints": "7),",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
             "description": ""
           },
           {
             "name": "salary_min",
-            "data_type": "INTEGER,",
+            "data_type": "INTEGER",
             "constraints": "",
             "description": ""
           },
           {
             "name": "salary_max",
-            "data_type": "INTEGER,",
+            "data_type": "INTEGER",
             "constraints": "",
             "description": ""
           },
           {
             "name": "salary_currency",
             "data_type": "VARCHAR(3)",
-            "constraints": "DEFAULT 'USD',",
+            "constraints": "",
             "description": ""
           },
           {
             "name": "salary_type",
-            "data_type": "VARCHAR(50),",
-            "constraints": "-- 'annual', 'hourly', 'monthly'",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
             "description": "'annual', 'hourly', 'monthly'"
           },
           {
             "name": "posted_date",
             "data_type": "TIMESTAMP_NTZ",
-            "constraints": "NOT NULL,",
+            "constraints": "NOT NULL",
             "description": ""
           },
           {
             "name": "expiration_date",
-            "data_type": "TIMESTAMP_NTZ,",
+            "data_type": "TIMESTAMP_NTZ",
             "constraints": "",
             "description": ""
           },
           {
             "name": "application_url",
-            "data_type": "VARCHAR(1000),",
+            "data_type": "VARCHAR(1000)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "application_method",
-            "data_type": "VARCHAR(50),",
-            "constraints": "-- 'url', 'email', 'ats', 'usajobs'",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
             "description": "'url', 'email', 'ats', 'usajobs'"
           },
           {
             "name": "is_active",
             "data_type": "BOOLEAN",
-            "constraints": "DEFAULT TRUE,",
+            "constraints": "",
             "description": ""
           },
           {
             "name": "is_federal_job",
             "data_type": "BOOLEAN",
-            "constraints": "DEFAULT FALSE,",
+            "constraints": "",
             "description": ""
           },
           {
             "name": "usajobs_id",
-            "data_type": "VARCHAR(255),",
-            "constraints": "-- USAJobs.gov job ID",
+            "data_type": "VARCHAR(255)",
+            "constraints": "",
             "description": "USAJobs.gov job ID"
           },
           {
             "name": "agency_name",
-            "data_type": "VARCHAR(255),",
-            "constraints": "-- For federal jobs",
+            "data_type": "VARCHAR(255)",
+            "constraints": "",
             "description": "For federal jobs"
           },
           {
             "name": "pay_plan",
-            "data_type": "VARCHAR(50),",
-            "constraints": "-- For federal jobs",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
             "description": "For federal jobs"
           },
           {
             "name": "grade_level",
-            "data_type": "VARCHAR(50),",
-            "constraints": "-- For federal jobs",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
             "description": "For federal jobs"
           },
           {
             "name": "data_source",
             "data_type": "VARCHAR(50)",
-            "constraints": "NOT NULL, -- 'usajobs', 'bls', 'state_board', 'aggregated'",
+            "constraints": "NOT NULL",
             "description": "'usajobs', 'bls', 'state_board', 'aggregated'"
           },
           {
             "name": "source_url",
-            "data_type": "VARCHAR(1000),",
+            "data_type": "VARCHAR(1000)",
             "constraints": "",
             "description": ""
           },
           {
+            "name": "industry",
+            "data_type": "VARCHAR(100)",
+            "constraints": "",
+            "description": "Denormalized from companies for query performance"
+          },
+          {
             "name": "created_at",
             "data_type": "TIMESTAMP_NTZ",
-            "constraints": "DEFAULT CURRENT_TIMESTAMP(),",
+            "constraints": "",
             "description": ""
           },
           {
             "name": "updated_at",
             "data_type": "TIMESTAMP_NTZ",
-            "constraints": "DEFAULT CURRENT_TIMESTAMP(),",
+            "constraints": "",
             "description": ""
           },
           {
             "name": "view_count",
             "data_type": "INTEGER",
-            "constraints": "DEFAULT 0,",
+            "constraints": "",
             "description": ""
           },
           {
             "name": "application_count",
             "data_type": "INTEGER",
-            "constraints": "DEFAULT 0,",
+            "constraints": "",
             "description": ""
           },
           {
             "name": "match_score_avg",
-            "data_type": "NUMERIC(5,",
-            "constraints": "2), -- Average match score from recommendations",
+            "data_type": "NUMERIC(5",
+            "constraints": "",
             "description": "Average match score from recommendations"
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (company_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
           }
         ]
       },
       {
         "name": "skills",
-        "description": "skills table",
+        "description": "",
         "columns": [
           {
             "name": "skill_id",
             "data_type": "VARCHAR(255)",
-            "constraints": "PRIMARY KEY,",
+            "constraints": "PRIMARY KEY",
             "description": ""
           },
           {
             "name": "skill_name",
             "data_type": "VARCHAR(255)",
-            "constraints": "NOT NULL UNIQUE,",
+            "constraints": "UNIQUE, NOT NULL",
             "description": ""
           },
           {
             "name": "skill_category",
-            "data_type": "VARCHAR(100),",
-            "constraints": "-- 'programming', 'framework', 'tool', 'soft_skill', 'certification'",
+            "data_type": "VARCHAR(100)",
+            "constraints": "",
             "description": "'programming', 'framework', 'tool', 'soft_skill', 'certification'"
           },
           {
             "name": "skill_type",
-            "data_type": "VARCHAR(50),",
-            "constraints": "-- 'technical', 'soft', 'certification', 'language'",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
             "description": "'technical', 'soft', 'certification', 'language'"
           },
           {
             "name": "parent_skill_id",
-            "data_type": "VARCHAR(255),",
-            "constraints": "-- For skill hierarchies",
+            "data_type": "VARCHAR(255)",
+            "constraints": "",
             "description": "For skill hierarchies"
           },
           {
             "name": "description",
-            "data_type": "VARCHAR(16777216),",
+            "data_type": "VARCHAR(16777216)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "popularity_score",
-            "data_type": "NUMERIC(10,",
-            "constraints": "2), -- Based on job posting frequency",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
             "description": "Based on job posting frequency"
           },
           {
             "name": "created_at",
             "data_type": "TIMESTAMP_NTZ",
-            "constraints": "DEFAULT CURRENT_TIMESTAMP(),",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (parent_skill_id)",
+            "constraints": "FOREIGN KEY",
             "description": ""
           }
         ]
       },
       {
         "name": "job_skills_requirements",
-        "description": "job_skills_requirements table",
+        "description": "",
         "columns": [
           {
             "name": "requirement_id",
             "data_type": "VARCHAR(255)",
-            "constraints": "PRIMARY KEY,",
+            "constraints": "PRIMARY KEY",
             "description": ""
           },
           {
             "name": "job_id",
             "data_type": "VARCHAR(255)",
-            "constraints": "NOT NULL,",
+            "constraints": "NOT NULL",
             "description": ""
           },
           {
             "name": "skill_id",
             "data_type": "VARCHAR(255)",
-            "constraints": "NOT NULL,",
+            "constraints": "NOT NULL",
             "description": ""
           },
           {
             "name": "requirement_type",
-            "data_type": "VARCHAR(50),",
-            "constraints": "-- 'required', 'preferred', 'nice_to_have'",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
             "description": "'required', 'preferred', 'nice_to_have'"
           },
           {
             "name": "importance_score",
-            "data_type": "NUMERIC(5,",
-            "constraints": "2), -- 1-10 importance score",
+            "data_type": "NUMERIC(5",
+            "constraints": "",
             "description": "1-10 importance score"
           },
           {
             "name": "years_experience_required",
-            "data_type": "NUMERIC(4,",
-            "constraints": "1),",
+            "data_type": "NUMERIC(4",
+            "constraints": "",
             "description": ""
           },
           {
             "name": "extracted_from_description",
             "data_type": "BOOLEAN",
-            "constraints": "DEFAULT TRUE,",
+            "constraints": "",
             "description": ""
           },
           {
             "name": "created_at",
             "data_type": "TIMESTAMP_NTZ",
-            "constraints": "DEFAULT CURRENT_TIMESTAMP(),",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (job_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (skill_id)",
+            "constraints": "FOREIGN KEY",
             "description": ""
           }
         ]
       },
       {
         "name": "user_skills",
-        "description": "user_skills table",
+        "description": "",
         "columns": [
           {
             "name": "user_skill_id",
             "data_type": "VARCHAR(255)",
-            "constraints": "PRIMARY KEY,",
+            "constraints": "PRIMARY KEY",
             "description": ""
           },
           {
             "name": "user_id",
             "data_type": "VARCHAR(255)",
-            "constraints": "NOT NULL,",
+            "constraints": "NOT NULL",
             "description": ""
           },
           {
             "name": "skill_id",
             "data_type": "VARCHAR(255)",
-            "constraints": "NOT NULL,",
+            "constraints": "NOT NULL",
             "description": ""
           },
           {
             "name": "proficiency_level",
-            "data_type": "VARCHAR(50),",
-            "constraints": "-- 'beginner', 'intermediate', 'advanced', 'expert'",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
             "description": "'beginner', 'intermediate', 'advanced', 'expert'"
           },
           {
             "name": "proficiency_score",
-            "data_type": "NUMERIC(5,",
-            "constraints": "2), -- 1-10 proficiency score",
+            "data_type": "NUMERIC(5",
+            "constraints": "",
             "description": "1-10 proficiency score"
           },
           {
             "name": "years_experience",
-            "data_type": "NUMERIC(4,",
-            "constraints": "1),",
+            "data_type": "NUMERIC(4",
+            "constraints": "",
             "description": ""
           },
           {
             "name": "last_used_date",
-            "data_type": "DATE,",
+            "data_type": "DATE",
             "constraints": "",
             "description": ""
           },
           {
             "name": "verified",
             "data_type": "BOOLEAN",
-            "constraints": "DEFAULT FALSE, -- Skills verified through assessments/certifications",
+            "constraints": "",
             "description": "Skills verified through assessments/certifications"
           },
           {
             "name": "created_at",
             "data_type": "TIMESTAMP_NTZ",
-            "constraints": "DEFAULT CURRENT_TIMESTAMP(),",
+            "constraints": "",
             "description": ""
           },
           {
             "name": "updated_at",
             "data_type": "TIMESTAMP_NTZ",
-            "constraints": "DEFAULT CURRENT_TIMESTAMP(),",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (user_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (skill_id)",
+            "constraints": "FOREIGN KEY",
             "description": ""
           }
         ]
       },
       {
         "name": "job_applications",
-        "description": "job_applications table",
+        "description": "",
         "columns": [
           {
             "name": "application_id",
             "data_type": "VARCHAR(255)",
-            "constraints": "PRIMARY KEY,",
+            "constraints": "PRIMARY KEY",
             "description": ""
           },
           {
             "name": "user_id",
             "data_type": "VARCHAR(255)",
-            "constraints": "NOT NULL,",
+            "constraints": "NOT NULL",
             "description": ""
           },
           {
             "name": "job_id",
             "data_type": "VARCHAR(255)",
-            "constraints": "NOT NULL,",
+            "constraints": "NOT NULL",
             "description": ""
           },
           {
             "name": "application_status",
-            "data_type": "VARCHAR(50),",
-            "constraints": "-- 'draft', 'submitted', 'under_review', 'interview', 'offer', 'rejected', 'withdrawn'",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
             "description": "'draft', 'submitted', 'under_review', 'interview', 'offer', 'rejected', 'withdrawn'"
           },
           {
             "name": "application_date",
-            "data_type": "TIMESTAMP_NTZ,",
+            "data_type": "TIMESTAMP_NTZ",
             "constraints": "",
             "description": ""
           },
           {
             "name": "submitted_at",
-            "data_type": "TIMESTAMP_NTZ,",
+            "data_type": "TIMESTAMP_NTZ",
             "constraints": "",
             "description": ""
           },
           {
             "name": "status_updated_at",
             "data_type": "TIMESTAMP_NTZ",
-            "constraints": "DEFAULT CURRENT_TIMESTAMP(),",
+            "constraints": "",
             "description": ""
           },
           {
             "name": "cover_letter_text",
-            "data_type": "VARCHAR(16777216),",
+            "data_type": "VARCHAR(16777216)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "resume_version",
-            "data_type": "VARCHAR(255),",
+            "data_type": "VARCHAR(255)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "match_score",
-            "data_type": "NUMERIC(5,",
-            "constraints": "2), -- Calculated match score at time of application",
+            "data_type": "NUMERIC(5",
+            "constraints": "",
             "description": "Calculated match score at time of application"
           },
           {
             "name": "application_method",
-            "data_type": "VARCHAR(50),",
-            "constraints": "-- 'direct', 'ats', 'email', 'usajobs'",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
             "description": "'direct', 'ats', 'email', 'usajobs'"
           },
           {
             "name": "application_reference_id",
-            "data_type": "VARCHAR(255),",
-            "constraints": "-- External application ID",
+            "data_type": "VARCHAR(255)",
+            "constraints": "",
             "description": "External application ID"
           },
           {
             "name": "notes",
-            "data_type": "VARCHAR(16777216),",
+            "data_type": "VARCHAR(16777216)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "created_at",
             "data_type": "TIMESTAMP_NTZ",
-            "constraints": "DEFAULT CURRENT_TIMESTAMP(),",
+            "constraints": "",
             "description": ""
           },
           {
             "name": "updated_at",
             "data_type": "TIMESTAMP_NTZ",
-            "constraints": "DEFAULT CURRENT_TIMESTAMP(),",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (user_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (job_id)",
+            "constraints": "FOREIGN KEY",
             "description": ""
           }
         ]
       },
       {
         "name": "job_recommendations",
-        "description": "job_recommendations table",
+        "description": "",
         "columns": [
           {
             "name": "recommendation_id",
             "data_type": "VARCHAR(255)",
-            "constraints": "PRIMARY KEY,",
+            "constraints": "PRIMARY KEY",
             "description": ""
           },
           {
             "name": "user_id",
             "data_type": "VARCHAR(255)",
-            "constraints": "NOT NULL,",
+            "constraints": "NOT NULL",
             "description": ""
           },
           {
             "name": "job_id",
             "data_type": "VARCHAR(255)",
-            "constraints": "NOT NULL,",
+            "constraints": "NOT NULL",
             "description": ""
           },
           {
             "name": "match_score",
-            "data_type": "NUMERIC(5,",
-            "constraints": "2) NOT NULL, -- Overall match score (0-100)",
+            "data_type": "NUMERIC(5",
+            "constraints": "NOT NULL",
             "description": "Overall match score (0-100)"
           },
           {
             "name": "skill_match_score",
-            "data_type": "NUMERIC(5,",
-            "constraints": "2), -- Skill alignment score",
+            "data_type": "NUMERIC(5",
+            "constraints": "",
             "description": "Skill alignment score"
           },
           {
             "name": "location_match_score",
-            "data_type": "NUMERIC(5,",
-            "constraints": "2), -- Location preference match",
+            "data_type": "NUMERIC(5",
+            "constraints": "",
             "description": "Location preference match"
           },
           {
             "name": "salary_match_score",
-            "data_type": "NUMERIC(5,",
-            "constraints": "2), -- Salary expectation match",
+            "data_type": "NUMERIC(5",
+            "constraints": "",
             "description": "Salary expectation match"
           },
           {
             "name": "experience_match_score",
-            "data_type": "NUMERIC(5,",
-            "constraints": "2), -- Experience level match",
+            "data_type": "NUMERIC(5",
+            "constraints": "",
             "description": "Experience level match"
           },
           {
             "name": "work_model_match_score",
-            "data_type": "NUMERIC(5,",
-            "constraints": "2), -- Work model preference match",
+            "data_type": "NUMERIC(5",
+            "constraints": "",
             "description": "Work model preference match"
           },
           {
             "name": "recommendation_reason",
-            "data_type": "VARCHAR(16777216),",
-            "constraints": "-- Explanation for recommendation",
+            "data_type": "VARCHAR(16777216)",
+            "constraints": "",
             "description": "Explanation for recommendation"
           },
           {
             "name": "recommendation_rank",
-            "data_type": "INTEGER,",
-            "constraints": "-- Rank within user's recommendations",
+            "data_type": "INTEGER",
+            "constraints": "",
             "description": "Rank within user's recommendations"
           },
           {
             "name": "is_liked",
             "data_type": "BOOLEAN",
-            "constraints": "DEFAULT FALSE,",
+            "constraints": "",
             "description": ""
           },
           {
             "name": "is_applied",
             "data_type": "BOOLEAN",
-            "constraints": "DEFAULT FALSE,",
+            "constraints": "",
             "description": ""
           },
           {
             "name": "is_dismissed",
             "data_type": "BOOLEAN",
-            "constraints": "DEFAULT FALSE,",
+            "constraints": "",
             "description": ""
           },
           {
             "name": "recommendation_date",
             "data_type": "TIMESTAMP_NTZ",
-            "constraints": "DEFAULT CURRENT_TIMESTAMP(),",
+            "constraints": "",
             "description": ""
           },
           {
             "name": "expires_at",
-            "data_type": "TIMESTAMP_NTZ,",
-            "constraints": "-- Recommendation expiration",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "",
             "description": "Recommendation expiration"
           },
           {
             "name": "created_at",
             "data_type": "TIMESTAMP_NTZ",
-            "constraints": "DEFAULT CURRENT_TIMESTAMP(),",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (user_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (job_id)",
+            "constraints": "FOREIGN KEY",
             "description": ""
           }
         ]
       },
       {
         "name": "market_trends",
-        "description": "market_trends table",
+        "description": "",
         "columns": [
           {
             "name": "trend_id",
             "data_type": "VARCHAR(255)",
-            "constraints": "PRIMARY KEY,",
+            "constraints": "PRIMARY KEY",
             "description": ""
           },
           {
             "name": "trend_date",
             "data_type": "DATE",
-            "constraints": "NOT NULL,",
+            "constraints": "NOT NULL",
             "description": ""
           },
           {
             "name": "geographic_scope",
-            "data_type": "VARCHAR(50),",
-            "constraints": "-- 'national', 'state', 'city', 'metro'",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
             "description": "'national', 'state', 'city', 'metro'"
           },
           {
             "name": "location_state",
-            "data_type": "VARCHAR(2),",
+            "data_type": "VARCHAR(2)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "location_city",
-            "data_type": "VARCHAR(100),",
+            "data_type": "VARCHAR(100)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "location_metro",
-            "data_type": "VARCHAR(100),",
+            "data_type": "VARCHAR(100)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "industry",
-            "data_type": "VARCHAR(100),",
+            "data_type": "VARCHAR(100)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "job_category",
-            "data_type": "VARCHAR(100),",
+            "data_type": "VARCHAR(100)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "total_job_postings",
-            "data_type": "INTEGER,",
+            "data_type": "INTEGER",
             "constraints": "",
             "description": ""
           },
           {
             "name": "new_job_postings",
-            "data_type": "INTEGER,",
-            "constraints": "-- New postings in period",
+            "data_type": "INTEGER",
+            "constraints": "",
             "description": "New postings in period"
           },
           {
             "name": "active_job_seekers",
-            "data_type": "INTEGER,",
-            "constraints": "-- Estimated from application data",
+            "data_type": "INTEGER",
+            "constraints": "",
             "description": "Estimated from application data"
           },
           {
             "name": "average_salary_min",
-            "data_type": "INTEGER,",
+            "data_type": "INTEGER",
             "constraints": "",
             "description": ""
           },
           {
             "name": "average_salary_max",
-            "data_type": "INTEGER,",
+            "data_type": "INTEGER",
             "constraints": "",
             "description": ""
           },
           {
             "name": "median_salary",
-            "data_type": "INTEGER,",
+            "data_type": "INTEGER",
             "constraints": "",
             "description": ""
           },
           {
             "name": "top_skills",
-            "data_type": "VARCHAR(16777216),",
-            "constraints": "-- JSON array of top skills",
+            "data_type": "VARCHAR(16777216)",
+            "constraints": "",
             "description": "JSON array of top skills"
           },
           {
             "name": "skill_demand_trend",
-            "data_type": "VARCHAR(16777216),",
-            "constraints": "-- JSON object of skill demand changes",
+            "data_type": "VARCHAR(16777216)",
+            "constraints": "",
             "description": "JSON object of skill demand changes"
           },
           {
             "name": "competition_index",
-            "data_type": "NUMERIC(5,",
-            "constraints": "2), -- Applications per job ratio",
+            "data_type": "NUMERIC(5",
+            "constraints": "",
             "description": "Applications per job ratio"
           },
           {
             "name": "growth_rate",
-            "data_type": "NUMERIC(10,",
-            "constraints": "4), -- Percentage growth in postings",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
             "description": "Percentage growth in postings"
           },
           {
             "name": "data_source",
-            "data_type": "VARCHAR(50),",
-            "constraints": "-- 'bls', 'aggregated', 'usajobs'",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
             "description": "'bls', 'aggregated', 'usajobs'"
           },
           {
             "name": "created_at",
             "data_type": "TIMESTAMP_NTZ",
-            "constraints": "DEFAULT CURRENT_TIMESTAMP(),",
+            "constraints": "",
             "description": ""
           }
         ]
       },
       {
         "name": "job_market_analytics",
-        "description": "job_market_analytics table",
+        "description": "",
         "columns": [
           {
             "name": "analytics_id",
             "data_type": "VARCHAR(255)",
-            "constraints": "PRIMARY KEY,",
+            "constraints": "PRIMARY KEY",
             "description": ""
           },
           {
             "name": "analysis_date",
             "data_type": "DATE",
-            "constraints": "NOT NULL,",
+            "constraints": "NOT NULL",
             "description": ""
           },
           {
             "name": "analysis_type",
-            "data_type": "VARCHAR(50),",
-            "constraints": "-- 'daily', 'weekly', 'monthly', 'quarterly'",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
             "description": "'daily', 'weekly', 'monthly', 'quarterly'"
           },
           {
             "name": "geographic_scope",
-            "data_type": "VARCHAR(50),",
+            "data_type": "VARCHAR(50)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "location_state",
-            "data_type": "VARCHAR(2),",
+            "data_type": "VARCHAR(2)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "location_city",
-            "data_type": "VARCHAR(100),",
+            "data_type": "VARCHAR(100)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "industry",
-            "data_type": "VARCHAR(100),",
+            "data_type": "VARCHAR(100)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "total_companies",
-            "data_type": "INTEGER,",
+            "data_type": "INTEGER",
             "constraints": "",
             "description": ""
           },
           {
             "name": "total_active_jobs",
-            "data_type": "INTEGER,",
+            "data_type": "INTEGER",
             "constraints": "",
             "description": ""
           },
           {
             "name": "remote_job_percentage",
-            "data_type": "NUMERIC(5,",
-            "constraints": "2),",
+            "data_type": "NUMERIC(5",
+            "constraints": "",
             "description": ""
           },
           {
             "name": "hybrid_job_percentage",
-            "data_type": "NUMERIC(5,",
-            "constraints": "2),",
+            "data_type": "NUMERIC(5",
+            "constraints": "",
             "description": ""
           },
           {
             "name": "average_time_to_fill_days",
-            "data_type": "INTEGER,",
+            "data_type": "INTEGER",
             "constraints": "",
             "description": ""
           },
           {
             "name": "average_applications_per_job",
-            "data_type": "NUMERIC(10,",
-            "constraints": "2),",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
             "description": ""
           },
           {
             "name": "top_employers",
-            "data_type": "VARCHAR(16777216),",
-            "constraints": "-- JSON array",
+            "data_type": "VARCHAR(16777216)",
+            "constraints": "",
             "description": "JSON array"
           },
           {
             "name": "emerging_skills",
-            "data_type": "VARCHAR(16777216),",
-            "constraints": "-- JSON array of trending skills",
+            "data_type": "VARCHAR(16777216)",
+            "constraints": "",
             "description": "JSON array of trending skills"
           },
           {
             "name": "declining_skills",
-            "data_type": "VARCHAR(16777216),",
-            "constraints": "-- JSON array of declining skills",
+            "data_type": "VARCHAR(16777216)",
+            "constraints": "",
             "description": "JSON array of declining skills"
           },
           {
             "name": "salary_trends",
-            "data_type": "VARCHAR(16777216),",
-            "constraints": "-- JSON object with salary trend data",
+            "data_type": "VARCHAR(16777216)",
+            "constraints": "",
             "description": "JSON object with salary trend data"
           },
           {
             "name": "job_type_distribution",
-            "data_type": "VARCHAR(16777216),",
-            "constraints": "-- JSON object",
+            "data_type": "VARCHAR(16777216)",
+            "constraints": "",
             "description": "JSON object"
           },
           {
             "name": "work_model_distribution",
-            "data_type": "VARCHAR(16777216),",
-            "constraints": "-- JSON object",
+            "data_type": "VARCHAR(16777216)",
+            "constraints": "",
             "description": "JSON object"
           },
           {
             "name": "created_at",
             "data_type": "TIMESTAMP_NTZ",
-            "constraints": "DEFAULT CURRENT_TIMESTAMP()",
+            "constraints": "",
             "description": ""
           }
         ]
       },
       {
         "name": "data_source_metadata",
-        "description": "data_source_metadata table",
+        "description": "",
         "columns": [
           {
             "name": "metadata_id",
             "data_type": "VARCHAR(255)",
-            "constraints": "PRIMARY KEY,",
+            "constraints": "PRIMARY KEY",
             "description": ""
           },
           {
             "name": "source_name",
             "data_type": "VARCHAR(100)",
-            "constraints": "NOT NULL, -- 'usajobs', 'bls', 'state_board'",
+            "constraints": "NOT NULL",
             "description": "'usajobs', 'bls', 'state_board'"
           },
           {
             "name": "source_type",
-            "data_type": "VARCHAR(50),",
-            "constraints": "-- 'api', 'scraper', 'manual', 'aggregated'",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
             "description": "'api', 'scraper', 'manual', 'aggregated'"
           },
           {
             "name": "extraction_date",
             "data_type": "TIMESTAMP_NTZ",
-            "constraints": "NOT NULL,",
+            "constraints": "NOT NULL",
             "description": ""
           },
           {
             "name": "extraction_method",
-            "data_type": "VARCHAR(100),",
+            "data_type": "VARCHAR(100)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "records_extracted",
-            "data_type": "INTEGER,",
+            "data_type": "INTEGER",
             "constraints": "",
             "description": ""
           },
           {
             "name": "records_new",
-            "data_type": "INTEGER,",
+            "data_type": "INTEGER",
             "constraints": "",
             "description": ""
           },
           {
             "name": "records_updated",
-            "data_type": "INTEGER,",
+            "data_type": "INTEGER",
             "constraints": "",
             "description": ""
           },
           {
             "name": "records_failed",
-            "data_type": "INTEGER,",
+            "data_type": "INTEGER",
             "constraints": "",
             "description": ""
           },
           {
             "name": "extraction_status",
-            "data_type": "VARCHAR(50),",
-            "constraints": "-- 'success', 'partial', 'failed'",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
             "description": "'success', 'partial', 'failed'"
           },
           {
             "name": "error_message",
-            "data_type": "VARCHAR(16777216),",
+            "data_type": "VARCHAR(16777216)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "api_endpoint",
-            "data_type": "VARCHAR(1000),",
+            "data_type": "VARCHAR(1000)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "api_response_code",
-            "data_type": "INTEGER,",
+            "data_type": "INTEGER",
             "constraints": "",
             "description": ""
           },
           {
             "name": "extraction_duration_seconds",
-            "data_type": "INTEGER,",
+            "data_type": "INTEGER",
             "constraints": "",
             "description": ""
           },
           {
             "name": "created_at",
             "data_type": "TIMESTAMP_NTZ",
-            "constraints": "DEFAULT CURRENT_TIMESTAMP()",
+            "constraints": "",
             "description": ""
           }
         ]
       },
       {
         "name": "user_job_search_history",
-        "description": "user_job_search_history table",
+        "description": "",
         "columns": [
           {
             "name": "search_id",
             "data_type": "VARCHAR(255)",
-            "constraints": "PRIMARY KEY,",
+            "constraints": "PRIMARY KEY",
             "description": ""
           },
           {
             "name": "user_id",
             "data_type": "VARCHAR(255)",
-            "constraints": "NOT NULL,",
+            "constraints": "NOT NULL",
             "description": ""
           },
           {
             "name": "search_query",
-            "data_type": "VARCHAR(500),",
+            "data_type": "VARCHAR(500)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "search_filters",
-            "data_type": "VARCHAR(16777216),",
-            "constraints": "-- JSON object of filters applied",
+            "data_type": "VARCHAR(16777216)",
+            "constraints": "",
             "description": "JSON object of filters applied"
           },
           {
             "name": "location_filter",
-            "data_type": "VARCHAR(255),",
+            "data_type": "VARCHAR(255)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "salary_filter_min",
-            "data_type": "INTEGER,",
+            "data_type": "INTEGER",
             "constraints": "",
             "description": ""
           },
           {
             "name": "salary_filter_max",
-            "data_type": "INTEGER,",
+            "data_type": "INTEGER",
             "constraints": "",
             "description": ""
           },
           {
             "name": "work_model_filter",
-            "data_type": "VARCHAR(50),",
+            "data_type": "VARCHAR(50)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "job_type_filter",
-            "data_type": "VARCHAR(50),",
+            "data_type": "VARCHAR(50)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "industry_filter",
-            "data_type": "VARCHAR(100),",
+            "data_type": "VARCHAR(100)",
             "constraints": "",
             "description": ""
           },
           {
             "name": "results_count",
-            "data_type": "INTEGER,",
+            "data_type": "INTEGER",
             "constraints": "",
             "description": ""
           },
           {
             "name": "search_date",
             "data_type": "TIMESTAMP_NTZ",
-            "constraints": "DEFAULT CURRENT_TIMESTAMP(),",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (user_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "ALTER",
+            "data_type": "TABLE",
+            "constraints": "",
             "description": ""
           }
         ]
@@ -1317,7 +1575,7 @@
       "purpose": "Provides intelligent job matching that considers multiple factors simultaneously, enabling users to focus on opportunities with highest alignment to their profile and preferences.",
       "complexity": "Deep nested CTEs (8+ levels), multi-dimensional scoring algorithms, skill gap analysis, weighted aggregations, window functions with ranking, percentile calculations, correlated subqueries, complex joins across 6+ tables",
       "expected_output": "Ranked list of job recommendations with match scores, skill alignment details, location compatibility, salary match, and recommendation reasons.",
-      "sql": "WITH user_profile_analysis AS (\n    -- First CTE: Extract and normalize user profile data\n    SELECT\n        up.user_id,\n        up.email,\n        up.full_name,\n        up.location_city,\n        up.location_state,\n        up.location_country,\n        up.current_job_title,\n        up.years_experience,\n        up.education_level,\n        up.preferred_work_model,\n        up.salary_expectation_min,\n        up.salary_expectation_max,\n        up.preferred_locations,\n        up.profile_completeness_score,\n        CASE\n            WHEN up.years_experience < 2 THEN 'entry_level'\n            WHEN up.years_experience BETWEEN 2 AND 5 THEN 'mid_level'\n            WHEN up.years_experience BETWEEN 6 AND 10 THEN 'senior_level'\n            ELSE 'executive_level'\n        END AS experience_level\n    FROM user_profiles up\n    WHERE up.is_active = TRUE\n),\nuser_skills_aggregated AS (\n    -- Second CTE: Aggregate user skills with proficiency scores\n    SELECT\n        usa.user_id,\n        COUNT(DISTINCT usa.skill_id) AS total_skills_count,\n        COUNT(CASE WHEN usa.proficiency_level IN ('advanced', 'expert') THEN 1 END) AS advanced_skills_count,\n        AVG(usa.proficiency_score) AS avg_proficiency_score,\n        SUM(CASE WHEN usa.proficiency_level = 'expert' THEN 10 WHEN usa.proficiency_level = 'advanced' THEN 7 WHEN usa.proficiency_level = 'intermediate' THEN 4 ELSE 1 END) AS weighted_skill_score,\n        ARRAY_AGG(DISTINCT usa.skill_id) AS user_skill_ids,\n        ARRAY_AGG(DISTINCT s.skill_category) AS skill_categories\n    FROM user_skills usa\n    INNER JOIN skills s ON usa.skill_id = s.skill_id\n    GROUP BY usa.user_id\n),\nactive_job_postings AS (\n    -- Third CTE: Filter active job postings with recent postings priority\n    SELECT\n        jp.job_id,\n        jp.company_id,\n        jp.job_title,\n        jp.job_type,\n        jp.work_model,\n        jp.location_city,\n        jp.location_state,\n        jp.location_country,\n        jp.salary_min,\n        jp.salary_max,\n        jp.salary_type,\n        jp.posted_date,\n        jp.expiration_date,\n        jp.is_federal_job,\n        jp.agency_name,\n        jp.data_source,\n        c.company_name,\n        c.industry,\n        c.company_size,\n        c.company_rating,\n        DATE_PART('day', CURRENT_TIMESTAMP() - jp.posted_date) AS days_since_posted,\n        CASE\n            WHEN jp.posted_date >= CURRENT_TIMESTAMP() - INTERVAL '7 days' THEN 1.2\n            WHEN jp.posted_date >= CURRENT_TIMESTAMP() - INTERVAL '14 days' THEN 1.1\n            WHEN jp.posted_date >= CURRENT_TIMESTAMP() - INTERVAL '30 days' THEN 1.0\n            ELSE 0.9\n        END AS recency_multiplier\n    FROM job_postings jp\n    INNER JOIN companies c ON jp.company_id = c.company_id\n    WHERE jp.is_active = TRUE\n        AND (jp.expiration_date IS NULL OR jp.expiration_date > CURRENT_TIMESTAMP())\n),\njob_skills_aggregated AS (\n    -- Fourth CTE: Aggregate required and preferred skills for each job\n    SELECT\n        jsr.job_id,\n        COUNT(DISTINCT CASE WHEN jsr.requirement_type = 'required' THEN jsr.skill_id END) AS required_skills_count,\n        COUNT(DISTINCT CASE WHEN jsr.requirement_type = 'preferred' THEN jsr.skill_id END) AS preferred_skills_count,\n        COUNT(DISTINCT CASE WHEN jsr.requirement_type = 'nice_to_have' THEN jsr.skill_id END) AS nice_to_have_skills_count,\n        AVG(CASE WHEN jsr.requirement_type = 'required' THEN jsr.importance_score ELSE NULL END) AS avg_required_importance,\n        ARRAY_AGG(DISTINCT CASE WHEN jsr.requirement_type = 'required' THEN jsr.skill_id END) AS required_skill_ids,\n        ARRAY_AGG(DISTINCT CASE WHEN jsr.requirement_type = 'preferred' THEN jsr.skill_id END) AS preferred_skill_ids,\n        ARRAY_AGG(DISTINCT jsr.skill_id) AS all_required_skill_ids,\n        SUM(CASE WHEN jsr.requirement_type = 'required' THEN jsr.importance_score ELSE jsr.importance_score * 0.5 END) AS weighted_skill_requirement_score\n    FROM job_skills_requirements jsr\n    GROUP BY jsr.job_id\n),\nuser_job_skill_matching AS (\n    -- Fifth CTE: Calculate skill matching between user and job requirements\n    SELECT\n        upa.user_id,\n        ajp.job_id,\n        ajp.job_title,\n        ajp.company_name,\n        ajp.industry,\n        ajp.work_model,\n        ajp.location_state,\n        ajp.location_city,\n        ajp.salary_min,\n        ajp.salary_max,\n        ajp.posted_date,\n        ajp.recency_multiplier,\n        usa.total_skills_count AS user_total_skills,\n        jsa.required_skills_count,\n        jsa.preferred_skills_count,\n        jsa.all_required_skill_ids,\n        -- Calculate skill overlap\n        (\n            SELECT COUNT(*)\n            FROM UNNEST(usa.user_skill_ids) AS user_skill\n            WHERE user_skill = ANY(jsa.all_required_skill_ids)\n        ) AS matching_required_skills_count,\n        (\n            SELECT COUNT(*)\n            FROM UNNEST(usa.user_skill_ids) AS user_skill\n            WHERE user_skill = ANY(jsa.preferred_skill_ids)\n        ) AS matching_preferred_skills_count,\n        -- Calculate skill gap (missing required skills)\n        (\n            SELECT COUNT(*)\n            FROM UNNEST(jsa.required_skill_ids) AS req_skill\n            WHERE req_skill != ALL(COALESCE(usa.user_skill_ids, ARRAY[]::VARCHAR[]))\n        ) AS missing_required_skills_count,\n        -- Skill match score (0-100)\n        CASE\n            WHEN jsa.required_skills_count > 0 THEN\n                ROUND(\n                    (\n                        (\n                            SELECT COUNT(*)\n                            FROM UNNEST(usa.user_skill_ids) AS user_skill\n                            WHERE user_skill = ANY(jsa.all_required_skill_ids)\n                        )::NUMERIC / NULLIF(jsa.required_skills_count, 0)\n                    ) * 100,\n                    2\n                )\n            ELSE 0\n        END AS skill_match_score,\n        jsa.weighted_skill_requirement_score,\n        usa.weighted_skill_score AS user_weighted_skill_score\n    FROM user_profile_analysis upa\n    CROSS JOIN active_job_postings ajp\n    LEFT JOIN user_skills_aggregated usa ON upa.user_id = usa.user_id\n    LEFT JOIN job_skills_aggregated jsa ON ajp.job_id = jsa.job_id\n    WHERE usa.user_id IS NOT NULL\n        AND jsa.job_id IS NOT NULL\n),\nlocation_matching AS (\n    -- Sixth CTE: Calculate location compatibility scores\n    SELECT\n        ujsm.user_id,\n        ujsm.job_id,\n        ujsm.job_title,\n        ujsm.company_name,\n        ujsm.skill_match_score,\n        ujsm.matching_required_skills_count,\n        ujsm.missing_required_skills_count,\n        ujsm.recency_multiplier,\n        -- Location match score\n        CASE\n            WHEN upa.location_state = ujsm.location_state AND upa.location_city = ujsm.location_city THEN 100\n            WHEN upa.location_state = ujsm.location_state THEN 80\n            WHEN ujsm.work_model = 'remote' THEN 90\n            WHEN ujsm.work_model = 'hybrid' THEN 70\n            ELSE 50\n        END AS location_match_score,\n        -- Work model match score\n        CASE\n            WHEN upa.preferred_work_model = ujsm.work_model THEN 100\n            WHEN upa.preferred_work_model = 'remote' AND ujsm.work_model IN ('remote', 'hybrid') THEN 90\n            WHEN upa.preferred_work_model = 'hybrid' AND ujsm.work_model = 'hybrid' THEN 100\n            WHEN upa.preferred_work_model = 'hybrid' AND ujsm.work_model = 'remote' THEN 80\n            ELSE 60\n        END AS work_model_match_score,\n        ujsm.salary_min,\n        ujsm.salary_max,\n        upa.salary_expectation_min,\n        upa.salary_expectation_max\n    FROM user_job_skill_matching ujsm\n    INNER JOIN user_profile_analysis upa ON ujsm.user_id = upa.user_id\n),\nsalary_matching AS (\n    -- Seventh CTE: Calculate salary compatibility scores\n    SELECT\n        lm.user_id,\n        lm.job_id,\n        lm.job_title,\n        lm.company_name,\n        lm.skill_match_score,\n        lm.location_match_score,\n        lm.work_model_match_score,\n        lm.matching_required_skills_count,\n        lm.missing_required_skills_count,\n        lm.recency_multiplier,\n        -- Salary match score\n        CASE\n            WHEN lm.salary_min IS NULL AND lm.salary_max IS NULL THEN 70\n            WHEN lm.salary_expectation_min IS NULL AND lm.salary_expectation_max IS NULL THEN 70\n            WHEN lm.salary_min >= lm.salary_expectation_min AND lm.salary_max <= lm.salary_expectation_max THEN 100\n            WHEN lm.salary_min >= lm.salary_expectation_min THEN 90\n            WHEN lm.salary_max <= lm.salary_expectation_max THEN 85\n            WHEN (lm.salary_min + lm.salary_max) / 2 >= (lm.salary_expectation_min + lm.salary_expectation_max) / 2 THEN 75\n            ELSE 60\n        END AS salary_match_score,\n        lm.salary_min,\n        lm.salary_max\n    FROM location_matching lm\n),\nexperience_matching AS (\n    -- Eighth CTE: Calculate experience level compatibility\n    SELECT\n        sm.user_id,\n        sm.job_id,\n        sm.job_title,\n        sm.company_name,\n        sm.skill_match_score,\n        sm.location_match_score,\n        sm.work_model_match_score,\n        sm.salary_match_score,\n        sm.matching_required_skills_count,\n        sm.missing_required_skills_count,\n        sm.recency_multiplier,\n        -- Experience match score based on job title analysis and user experience\n        CASE\n            WHEN upa.experience_level = 'entry_level' AND LOWER(sm.job_title) LIKE '%junior%' OR LOWER(sm.job_title) LIKE '%entry%' OR LOWER(sm.job_title) LIKE '%intern%' THEN 100\n            WHEN upa.experience_level = 'mid_level' AND (LOWER(sm.job_title) LIKE '%mid%' OR LOWER(sm.job_title) LIKE '%engineer%' OR LOWER(sm.job_title) LIKE '%developer%') THEN 95\n            WHEN upa.experience_level = 'senior_level' AND (LOWER(sm.job_title) LIKE '%senior%' OR LOWER(sm.job_title) LIKE '%lead%' OR LOWER(sm.job_title) LIKE '%principal%') THEN 100\n            WHEN upa.experience_level = 'executive_level' AND (LOWER(sm.job_title) LIKE '%director%' OR LOWER(sm.job_title) LIKE '%vp%' OR LOWER(sm.job_title) LIKE '%chief%') THEN 100\n            ELSE 70\n        END AS experience_match_score,\n        upa.years_experience,\n        upa.experience_level\n    FROM salary_matching sm\n    INNER JOIN user_profile_analysis upa ON sm.user_id = upa.user_id\n),\nfinal_match_scoring AS (\n    -- Final CTE: Calculate weighted overall match score\n    SELECT\n        em.user_id,\n        em.job_id,\n        em.job_title,\n        em.company_name,\n        em.skill_match_score,\n        em.location_match_score,\n        em.work_model_match_score,\n        em.salary_match_score,\n        em.experience_match_score,\n        em.matching_required_skills_count,\n        em.missing_required_skills_count,\n        em.recency_multiplier,\n        em.years_experience,\n        em.experience_level,\n        -- Weighted overall match score (mirroring jobright.ai algorithm)\n        ROUND(\n            (\n                em.skill_match_score * 0.35 +\n                em.location_match_score * 0.20 +\n                em.work_model_match_score * 0.15 +\n                em.salary_match_score * 0.15 +\n                em.experience_match_score * 0.15\n            ) * em.recency_multiplier,\n            2\n        ) AS overall_match_score,\n        -- Generate recommendation reason\n        CONCAT(\n            CASE\n                WHEN em.skill_match_score >= 80 THEN 'Strong skill alignment (' || em.matching_required_skills_count || ' matching skills). '\n                WHEN em.skill_match_score >= 60 THEN 'Good skill match (' || em.matching_required_skills_count || ' matching skills). '\n                ELSE 'Partial skill match (' || em.matching_required_skills_count || ' matching skills). '\n            END,\n            CASE\n                WHEN em.location_match_score >= 90 THEN 'Perfect location fit. '\n                WHEN em.location_match_score >= 70 THEN 'Good location match. '\n                ELSE 'Location may require relocation. '\n            END,\n            CASE\n                WHEN em.salary_match_score >= 85 THEN 'Salary expectations aligned. '\n                ELSE 'Salary range available. '\n            END\n        ) AS recommendation_reason\n    FROM experience_matching em\n)\nSELECT\n    fms.user_id,\n    fms.job_id,\n    fms.job_title,\n    fms.company_name,\n    fms.overall_match_score,\n    fms.skill_match_score,\n    fms.location_match_score,\n    fms.work_model_match_score,\n    fms.salary_match_score,\n    fms.experience_match_score,\n    fms.matching_required_skills_count,\n    fms.missing_required_skills_count,\n    fms.recommendation_reason,\n    -- Ranking within user's recommendations\n    ROW_NUMBER() OVER (\n        PARTITION BY fms.user_id\n        ORDER BY fms.overall_match_score DESC, fms.recency_multiplier DESC\n    ) AS recommendation_rank,\n    ajp.posted_date,\n    ajp.location_city,\n    ajp.location_state,\n    ajp.work_model,\n    ajp.salary_min,\n    ajp.salary_max,\n    ajp.industry,\n    ajp.company_rating\nFROM final_match_scoring fms\nINNER JOIN active_job_postings ajp ON fms.job_id = ajp.job_id\nWHERE fms.overall_match_score >= 60  -- Minimum match threshold\nORDER BY fms.user_id, fms.overall_match_score DESC, fms.recency_multiplier DESC\nLIMIT 100;",
+      "sql": "WITH user_profile_analysis AS (\n    -- First CTE: Extract and normalize user profile data\n    SELECT\n        up.user_id,\n        up.email,\n        up.full_name,\n        up.location_city,\n        up.location_state,\n        up.location_country,\n        up.current_job_title,\n        up.years_experience,\n        up.education_level,\n        up.preferred_work_model,\n        up.salary_expectation_min,\n        up.salary_expectation_max,\n        up.preferred_locations,\n        up.profile_completeness_score,\n        CASE\n            WHEN up.years_experience < 2 THEN 'entry_level'\n            WHEN up.years_experience BETWEEN 2 AND 5 THEN 'mid_level'\n            WHEN up.years_experience BETWEEN 6 AND 10 THEN 'senior_level'\n            ELSE 'executive_level'\n        END AS experience_level\n    FROM user_profiles up\n    WHERE up.is_active = TRUE\n),\nuser_skills_aggregated AS (\n    -- Second CTE: Aggregate user skills with proficiency scores\n    SELECT\n        usa.user_id,\n        COUNT(DISTINCT usa.skill_id) AS total_skills_count,\n        COUNT(CASE WHEN usa.proficiency_level IN ('advanced', 'expert') THEN 1 END) AS advanced_skills_count,\n        AVG(usa.proficiency_score) AS avg_proficiency_score,\n        SUM(CASE WHEN usa.proficiency_level = 'expert' THEN 10 WHEN usa.proficiency_level = 'advanced' THEN 7 WHEN usa.proficiency_level = 'intermediate' THEN 4 ELSE 1 END) AS weighted_skill_score,\n        ARRAY_AGG(DISTINCT usa.skill_id) AS user_skill_ids,\n        ARRAY_AGG(DISTINCT s.skill_category) AS skill_categories\n    FROM user_skills usa\n    INNER JOIN skills s ON usa.skill_id = s.skill_id\n    GROUP BY usa.user_id\n),\nactive_job_postings AS (\n    -- Third CTE: Filter active job postings with recent postings priority\n    SELECT\n        jp.job_id,\n        jp.company_id,\n        jp.job_title,\n        jp.job_type,\n        jp.work_model,\n        jp.location_city,\n        jp.location_state,\n        jp.location_country,\n        jp.salary_min,\n        jp.salary_max,\n        jp.salary_type,\n        jp.posted_date,\n        jp.expiration_date,\n        jp.is_federal_job,\n        jp.agency_name,\n        jp.data_source,\n        c.company_name,\n        c.industry,\n        c.company_size,\n        c.company_rating,\n        DATE_PART('day', CURRENT_TIMESTAMP - jp.posted_date) AS days_since_posted,\n        CASE\n            WHEN jp.posted_date >= CURRENT_TIMESTAMP - INTERVAL '7 days' THEN 1.2\n            WHEN jp.posted_date >= CURRENT_TIMESTAMP - INTERVAL '14 days' THEN 1.1\n            WHEN jp.posted_date >= CURRENT_TIMESTAMP - INTERVAL '30 days' THEN 1.0\n            ELSE 0.9\n        END AS recency_multiplier\n    FROM job_postings jp\n    INNER JOIN companies c ON jp.company_id = c.company_id\n    WHERE jp.is_active = TRUE\n        AND (jp.expiration_date IS NULL OR jp.expiration_date > CURRENT_TIMESTAMP)\n),\njob_skills_aggregated AS (\n    -- Fourth CTE: Aggregate required and preferred skills for each job\n    SELECT\n        jsr.job_id,\n        COUNT(DISTINCT CASE WHEN jsr.requirement_type = 'required' THEN jsr.skill_id END) AS required_skills_count,\n        COUNT(DISTINCT CASE WHEN jsr.requirement_type = 'preferred' THEN jsr.skill_id END) AS preferred_skills_count,\n        COUNT(DISTINCT CASE WHEN jsr.requirement_type = 'nice_to_have' THEN jsr.skill_id END) AS nice_to_have_skills_count,\n        AVG(CASE WHEN jsr.requirement_type = 'required' THEN jsr.importance_score ELSE NULL END) AS avg_required_importance,\n        ARRAY_AGG(DISTINCT CASE WHEN jsr.requirement_type = 'required' THEN jsr.skill_id END) AS required_skill_ids,\n        ARRAY_AGG(DISTINCT CASE WHEN jsr.requirement_type = 'preferred' THEN jsr.skill_id END) AS preferred_skill_ids,\n        ARRAY_AGG(DISTINCT jsr.skill_id) AS all_required_skill_ids,\n        SUM(CASE WHEN jsr.requirement_type = 'required' THEN jsr.importance_score ELSE jsr.importance_score * 0.5 END) AS weighted_skill_requirement_score\n    FROM job_skills_requirements jsr\n    GROUP BY jsr.job_id\n),\nuser_job_skill_matching AS (\n    -- Fifth CTE: Calculate skill matching between user and job requirements\n    SELECT\n        upa.user_id,\n        ajp.job_id,\n        ajp.job_title,\n        ajp.company_name,\n        ajp.industry,\n        ajp.work_model,\n        ajp.location_state,\n        ajp.location_city,\n        ajp.salary_min,\n        ajp.salary_max,\n        ajp.posted_date,\n        ajp.recency_multiplier,\n        usa.total_skills_count AS user_total_skills,\n        jsa.required_skills_count,\n        jsa.preferred_skills_count,\n        jsa.all_required_skill_ids,\n        -- Calculate skill overlap\n        (\n            SELECT COUNT(*)\n            FROM UNNEST(usa.user_skill_ids) AS user_skill\n            WHERE user_skill = ANY(jsa.all_required_skill_ids)\n        ) AS matching_required_skills_count,\n        (\n            SELECT COUNT(*)\n            FROM UNNEST(usa.user_skill_ids) AS user_skill\n            WHERE user_skill = ANY(jsa.preferred_skill_ids)\n        ) AS matching_preferred_skills_count,\n        -- Calculate skill gap (missing required skills)\n        (\n            SELECT COUNT(*)\n            FROM UNNEST(jsa.required_skill_ids) AS req_skill\n            WHERE req_skill != ALL(COALESCE(usa.user_skill_ids, ARRAY[]::VARCHAR[]))\n        ) AS missing_required_skills_count,\n        -- Skill match score (0-100)\n        CASE\n            WHEN jsa.required_skills_count > 0 THEN\n                ROUND(\n                    (\n                        (\n                            SELECT COUNT(*)\n                            FROM UNNEST(usa.user_skill_ids) AS user_skill\n                            WHERE user_skill = ANY(jsa.all_required_skill_ids)\n                        )::NUMERIC / NULLIF(jsa.required_skills_count, 0)\n                    ) * 100,\n                    2\n                )\n            ELSE 0\n        END AS skill_match_score,\n        jsa.weighted_skill_requirement_score,\n        usa.weighted_skill_score AS user_weighted_skill_score\n    FROM user_profile_analysis upa\n    CROSS JOIN active_job_postings ajp\n    LEFT JOIN user_skills_aggregated usa ON upa.user_id = usa.user_id\n    LEFT JOIN job_skills_aggregated jsa ON ajp.job_id = jsa.job_id\n    WHERE usa.user_id IS NOT NULL\n        AND jsa.job_id IS NOT NULL\n),\nlocation_matching AS (\n    -- Sixth CTE: Calculate location compatibility scores\n    SELECT\n        ujsm.user_id,\n        ujsm.job_id,\n        ujsm.job_title,\n        ujsm.company_name,\n        ujsm.skill_match_score,\n        ujsm.matching_required_skills_count,\n        ujsm.missing_required_skills_count,\n        ujsm.recency_multiplier,\n        -- Location match score\n        CASE\n            WHEN upa.location_state = ujsm.location_state AND upa.location_city = ujsm.location_city THEN 100\n            WHEN upa.location_state = ujsm.location_state THEN 80\n            WHEN ujsm.work_model = 'remote' THEN 90\n            WHEN ujsm.work_model = 'hybrid' THEN 70\n            ELSE 50\n        END AS location_match_score,\n        -- Work model match score\n        CASE\n            WHEN upa.preferred_work_model = ujsm.work_model THEN 100\n            WHEN upa.preferred_work_model = 'remote' AND ujsm.work_model IN ('remote', 'hybrid') THEN 90\n            WHEN upa.preferred_work_model = 'hybrid' AND ujsm.work_model = 'hybrid' THEN 100\n            WHEN upa.preferred_work_model = 'hybrid' AND ujsm.work_model = 'remote' THEN 80\n            ELSE 60\n        END AS work_model_match_score,\n        ujsm.salary_min,\n        ujsm.salary_max,\n        upa.salary_expectation_min,\n        upa.salary_expectation_max\n    FROM user_job_skill_matching ujsm\n    INNER JOIN user_profile_analysis upa ON ujsm.user_id = upa.user_id\n),\nsalary_matching AS (\n    -- Seventh CTE: Calculate salary compatibility scores\n    SELECT\n        lm.user_id,\n        lm.job_id,\n        lm.job_title,\n        lm.company_name,\n        lm.skill_match_score,\n        lm.location_match_score,\n        lm.work_model_match_score,\n        lm.matching_required_skills_count,\n        lm.missing_required_skills_count,\n        lm.recency_multiplier,\n        -- Salary match score\n        CASE\n            WHEN lm.salary_min IS NULL AND lm.salary_max IS NULL THEN 70\n            WHEN lm.salary_expectation_min IS NULL AND lm.salary_expectation_max IS NULL THEN 70\n            WHEN lm.salary_min >= lm.salary_expectation_min AND lm.salary_max <= lm.salary_expectation_max THEN 100\n            WHEN lm.salary_min >= lm.salary_expectation_min THEN 90\n            WHEN lm.salary_max <= lm.salary_expectation_max THEN 85\n            WHEN (lm.salary_min + lm.salary_max) / 2 >= (lm.salary_expectation_min + lm.salary_expectation_max) / 2 THEN 75\n            ELSE 60\n        END AS salary_match_score,\n        lm.salary_min,\n        lm.salary_max\n    FROM location_matching lm\n),\nexperience_matching AS (\n    -- Eighth CTE: Calculate experience level compatibility\n    SELECT\n        sm.user_id,\n        sm.job_id,\n        sm.job_title,\n        sm.company_name,\n        sm.skill_match_score,\n        sm.location_match_score,\n        sm.work_model_match_score,\n        sm.salary_match_score,\n        sm.matching_required_skills_count,\n        sm.missing_required_skills_count,\n        sm.recency_multiplier,\n        -- Experience match score based on job title analysis and user experience\n        CASE\n            WHEN upa.experience_level = 'entry_level' AND LOWER(sm.job_title) LIKE '%junior%' OR LOWER(sm.job_title) LIKE '%entry%' OR LOWER(sm.job_title) LIKE '%intern%' THEN 100\n            WHEN upa.experience_level = 'mid_level' AND (LOWER(sm.job_title) LIKE '%mid%' OR LOWER(sm.job_title) LIKE '%engineer%' OR LOWER(sm.job_title) LIKE '%developer%') THEN 95\n            WHEN upa.experience_level = 'senior_level' AND (LOWER(sm.job_title) LIKE '%senior%' OR LOWER(sm.job_title) LIKE '%lead%' OR LOWER(sm.job_title) LIKE '%principal%') THEN 100\n            WHEN upa.experience_level = 'executive_level' AND (LOWER(sm.job_title) LIKE '%director%' OR LOWER(sm.job_title) LIKE '%vp%' OR LOWER(sm.job_title) LIKE '%chief%') THEN 100\n            ELSE 70\n        END AS experience_match_score,\n        upa.years_experience,\n        upa.experience_level\n    FROM salary_matching sm\n    INNER JOIN user_profile_analysis upa ON sm.user_id = upa.user_id\n),\nfinal_match_scoring AS (\n    -- Final CTE: Calculate weighted overall match score\n    SELECT\n        em.user_id,\n        em.job_id,\n        em.job_title,\n        em.company_name,\n        em.skill_match_score,\n        em.location_match_score,\n        em.work_model_match_score,\n        em.salary_match_score,\n        em.experience_match_score,\n        em.matching_required_skills_count,\n        em.missing_required_skills_count,\n        em.recency_multiplier,\n        em.years_experience,\n        em.experience_level,\n        -- Weighted overall match score (mirroring jobright.ai algorithm)\n        ROUND(\n            (\n                em.skill_match_score * 0.35 +\n                em.location_match_score * 0.20 +\n                em.work_model_match_score * 0.15 +\n                em.salary_match_score * 0.15 +\n                em.experience_match_score * 0.15\n            ) * em.recency_multiplier,\n            2\n        ) AS overall_match_score,\n        -- Generate recommendation reason\n        CONCAT(\n            CASE\n                WHEN em.skill_match_score >= 80 THEN 'Strong skill alignment (' || em.matching_required_skills_count || ' matching skills). '\n                WHEN em.skill_match_score >= 60 THEN 'Good skill match (' || em.matching_required_skills_count || ' matching skills). '\n                ELSE 'Partial skill match (' || em.matching_required_skills_count || ' matching skills). '\n            END,\n            CASE\n                WHEN em.location_match_score >= 90 THEN 'Perfect location fit. '\n                WHEN em.location_match_score >= 70 THEN 'Good location match. '\n                ELSE 'Location may require relocation. '\n            END,\n            CASE\n                WHEN em.salary_match_score >= 85 THEN 'Salary expectations aligned. '\n                ELSE 'Salary range available. '\n            END\n        ) AS recommendation_reason\n    FROM experience_matching em\n)\nSELECT\n    fms.user_id,\n    fms.job_id,\n    fms.job_title,\n    fms.company_name,\n    fms.overall_match_score,\n    fms.skill_match_score,\n    fms.location_match_score,\n    fms.work_model_match_score,\n    fms.salary_match_score,\n    fms.experience_match_score,\n    fms.matching_required_skills_count,\n    fms.missing_required_skills_count,\n    fms.recommendation_reason,\n    -- Ranking within user's recommendations\n    ROW_NUMBER() OVER (\n        PARTITION BY fms.user_id\n        ORDER BY fms.overall_match_score DESC, fms.recency_multiplier DESC\n    ) AS recommendation_rank,\n    ajp.posted_date,\n    ajp.location_city,\n    ajp.location_state,\n    ajp.work_model,\n    ajp.salary_min,\n    ajp.salary_max,\n    ajp.industry,\n    ajp.company_rating\nFROM final_match_scoring fms\nINNER JOIN active_job_postings ajp ON fms.job_id = ajp.job_id\nWHERE fms.overall_match_score >= 60  -- Minimum match threshold\nORDER BY fms.user_id, fms.overall_match_score DESC, fms.recency_multiplier DESC\nLIMIT 100;",
       "line_number": 54
     },
     {
@@ -1353,7 +1611,7 @@
       "purpose": "Provides data-driven insights into application performance to optimize job search strategies and increase interview conversion rates.",
       "complexity": "Deep nested CTEs (7+ levels), cohort analysis, conversion funnel calculations, window functions with multiple partitions, percentile rankings, time-to-event analysis",
       "expected_output": "Application success rates by cohort, conversion funnel metrics, time-to-response statistics, and success factor correlations.",
-      "sql": "WITH application_cohorts AS (\n    -- First CTE: Segment applications by submission date cohorts\n    SELECT\n        ja.application_id,\n        ja.user_id,\n        ja.job_id,\n        ja.application_status,\n        ja.application_date,\n        ja.submitted_at,\n        ja.status_updated_at,\n        ja.match_score,\n        DATE_TRUNC('week', ja.submitted_at) AS application_week,\n        DATE_TRUNC('month', ja.submitted_at) AS application_month,\n        EXTRACT(WEEK FROM ja.submitted_at) AS week_num,\n        EXTRACT(MONTH FROM ja.submitted_at) AS month_num,\n        EXTRACT(YEAR FROM ja.submitted_at) AS year_num,\n        CASE\n            WHEN ja.application_status IN ('offer', 'interview') THEN 'success'\n            WHEN ja.application_status = 'rejected' THEN 'rejected'\n            WHEN ja.application_status IN ('under_review', 'submitted') THEN 'pending'\n            ELSE 'other'\n        END AS status_category\n    FROM job_applications ja\n    WHERE ja.submitted_at IS NOT NULL\n        AND ja.submitted_at >= CURRENT_TIMESTAMP - INTERVAL '1 year'\n),\napplication_timeline AS (\n    -- Second CTE: Calculate time-to-event metrics\n    SELECT\n        ac.application_id,\n        ac.user_id,\n        ac.job_id,\n        ac.application_status,\n        ac.status_category,\n        ac.application_week,\n        ac.application_month,\n        ac.submitted_at,\n        ac.status_updated_at,\n        ac.match_score,\n        -- Time to first status update\n        EXTRACT(EPOCH FROM (ac.status_updated_at - ac.submitted_at)) / 86400 AS days_to_status_update,\n        -- Time to current status\n        CASE\n            WHEN ac.status_category = 'success' THEN\n                EXTRACT(EPOCH FROM (ac.status_updated_at - ac.submitted_at)) / 86400\n            ELSE NULL\n        END AS days_to_success,\n        CASE\n            WHEN ac.status_category = 'rejected' THEN\n                EXTRACT(EPOCH FROM (ac.status_updated_at - ac.submitted_at)) / 86400\n            ELSE NULL\n        END AS days_to_rejection\n    FROM application_cohorts ac\n),\ncohort_aggregations AS (\n    -- Third CTE: Aggregate metrics by cohort\n    SELECT\n        at.application_week,\n        at.application_month,\n        COUNT(DISTINCT at.application_id) AS total_applications,\n        COUNT(DISTINCT at.user_id) AS unique_applicants,\n        COUNT(DISTINCT CASE WHEN at.status_category = 'success' THEN at.application_id END) AS successful_applications,\n        COUNT(DISTINCT CASE WHEN at.status_category = 'rejected' THEN at.application_id END) AS rejected_applications,\n        COUNT(DISTINCT CASE WHEN at.status_category = 'pending' THEN at.application_id END) AS pending_applications,\n        AVG(at.match_score) AS avg_match_score,\n        AVG(at.days_to_status_update) AS avg_days_to_update,\n        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY at.days_to_status_update) AS median_days_to_update,\n        AVG(at.days_to_success) AS avg_days_to_success,\n        AVG(at.days_to_rejection) AS avg_days_to_rejection,\n        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY at.days_to_success) AS median_days_to_success\n    FROM application_timeline at\n    GROUP BY at.application_week, at.application_month\n),\nconversion_funnel AS (\n    -- Fourth CTE: Calculate conversion funnel metrics\n    SELECT\n        ca.application_week,\n        ca.application_month,\n        ca.total_applications,\n        ca.unique_applicants,\n        ca.successful_applications,\n        ca.rejected_applications,\n        ca.pending_applications,\n        ca.avg_match_score,\n        -- Conversion rates\n        ROUND((ca.successful_applications::NUMERIC / NULLIF(ca.total_applications, 0)) * 100, 2) AS success_rate_pct,\n        ROUND((ca.rejected_applications::NUMERIC / NULLIF(ca.total_applications, 0)) * 100, 2) AS rejection_rate_pct,\n        ROUND((ca.pending_applications::NUMERIC / NULLIF(ca.total_applications, 0)) * 100, 2) AS pending_rate_pct,\n        -- Time metrics\n        ROUND(ca.avg_days_to_update, 2) AS avg_days_to_update,\n        ROUND(ca.median_days_to_update, 2) AS median_days_to_update,\n        ROUND(ca.avg_days_to_success, 2) AS avg_days_to_success,\n        ROUND(ca.median_days_to_success, 2) AS median_days_to_success,\n        ROUND(ca.avg_days_to_rejection, 2) AS avg_days_to_rejection\n    FROM cohort_aggregations ca\n),\nsuccess_factor_analysis AS (\n    -- Fifth CTE: Analyze factors correlated with success\n    SELECT\n        at.application_week,\n        at.status_category,\n        COUNT(*) AS application_count,\n        AVG(at.match_score) AS avg_match_score,\n        AVG(at.days_to_status_update) AS avg_days_to_update,\n        -- Job posting factors\n        AVG(jp.salary_min) AS avg_job_salary_min,\n        AVG(jp.salary_max) AS avg_job_salary_max,\n        COUNT(DISTINCT jp.company_id) AS unique_companies,\n        COUNT(DISTINCT jp.industry) AS unique_industries,\n        -- User profile factors\n        AVG(up.years_experience) AS avg_years_experience,\n        COUNT(DISTINCT CASE WHEN up.preferred_work_model = jp.work_model THEN at.application_id END) AS work_model_matches,\n        COUNT(DISTINCT CASE WHEN up.location_state = jp.location_state THEN at.application_id END) AS location_matches\n    FROM application_timeline at\n    INNER JOIN job_postings jp ON at.job_id = jp.job_id\n    INNER JOIN user_profiles up ON at.user_id = up.user_id\n    GROUP BY at.application_week, at.status_category\n),\ncohort_comparison AS (\n    -- Sixth CTE: Compare cohorts with window functions\n    SELECT\n        cf.application_week,\n        cf.application_month,\n        cf.total_applications,\n        cf.success_rate_pct,\n        cf.rejection_rate_pct,\n        cf.avg_days_to_update,\n        cf.avg_days_to_success,\n        -- Compare to previous week\n        LAG(cf.success_rate_pct, 1) OVER (ORDER BY cf.application_week) AS prev_week_success_rate,\n        LAG(cf.total_applications, 1) OVER (ORDER BY cf.application_week) AS prev_week_applications,\n        -- Moving averages\n        AVG(cf.success_rate_pct) OVER (\n            ORDER BY cf.application_week\n            ROWS BETWEEN 3 PRECEDING AND CURRENT ROW\n        ) AS moving_avg_success_rate_4weeks,\n        AVG(cf.total_applications) OVER (\n            ORDER BY cf.application_week\n            ROWS BETWEEN 3 PRECEDING AND CURRENT ROW\n        ) AS moving_avg_applications_4weeks,\n        -- Trend indicators\n        CASE\n            WHEN cf.success_rate_pct > LAG(cf.success_rate_pct, 1) OVER (ORDER BY cf.application_week) THEN 'improving'\n            WHEN cf.success_rate_pct < LAG(cf.success_rate_pct, 1) OVER (ORDER BY cf.application_week) THEN 'declining'\n            ELSE 'stable'\n        END AS success_rate_trend\n    FROM conversion_funnel cf\n)\nSELECT\n    cc.application_week,\n    cc.application_month,\n    cc.total_applications,\n    cc.success_rate_pct,\n    cc.rejection_rate_pct,\n    cc.avg_days_to_update,\n    cc.avg_days_to_success,\n    cc.prev_week_success_rate,\n    cc.moving_avg_success_rate_4weeks,\n    cc.success_rate_trend,\n    -- Success rate change\n    CASE\n        WHEN cc.prev_week_success_rate IS NOT NULL THEN\n            ROUND(cc.success_rate_pct - cc.prev_week_success_rate, 2)\n        ELSE NULL\n    END AS success_rate_change,\n    -- Success factor insights\n    sfa.avg_match_score AS successful_avg_match_score,\n    sfa.avg_job_salary_min AS successful_avg_salary_min,\n    sfa.work_model_matches AS successful_work_model_matches\nFROM cohort_comparison cc\nLEFT JOIN success_factor_analysis sfa ON cc.application_week = sfa.application_week AND sfa.status_category = 'success'\nORDER BY cc.application_week DESC\nLIMIT 100;",
+      "sql": "WITH application_cohorts AS (\n    -- First CTE: Segment applications by submission date cohorts\n    SELECT\n        ja.application_id,\n        ja.user_id,\n        ja.job_id,\n        ja.application_status,\n        ja.application_date,\n        ja.submitted_at,\n        ja.status_updated_at,\n        ja.match_score,\n        DATE_TRUNC('week', ja.submitted_at) AS application_week,\n        DATE_TRUNC('month', ja.submitted_at) AS application_month,\n        EXTRACT(WEEK FROM ja.submitted_at) AS week_num,\n        EXTRACT(MONTH FROM ja.submitted_at) AS month_num,\n        EXTRACT(YEAR FROM ja.submitted_at) AS year_num,\n        CASE\n            WHEN ja.application_status IN ('offer', 'interview') THEN 'success'\n            WHEN ja.application_status = 'rejected' THEN 'rejected'\n            WHEN ja.application_status IN ('under_review', 'submitted') THEN 'pending'\n            ELSE 'other'\n        END AS status_category\n    FROM job_applications ja\n    WHERE ja.submitted_at IS NOT NULL\n        AND ja.submitted_at >= CURRENT_TIMESTAMP - INTERVAL '1 year'\n),\napplication_timeline AS (\n    -- Second CTE: Calculate time-to-event metrics\n    SELECT\n        ac.application_id,\n        ac.user_id,\n        ac.job_id,\n        ac.application_status,\n        ac.status_category,\n        ac.application_week,\n        ac.application_month,\n        ac.submitted_at,\n        ac.status_updated_at,\n        ac.match_score,\n        -- Time to first status update\n        EXTRACT(EPOCH FROM (ac.status_updated_at - ac.submitted_at)) / 86400 AS days_to_status_update,\n        -- Time to current status\n        CASE\n            WHEN ac.status_category = 'success' THEN\n                EXTRACT(EPOCH FROM (ac.status_updated_at - ac.submitted_at)) / 86400\n            ELSE NULL\n        END AS days_to_success,\n        CASE\n            WHEN ac.status_category = 'rejected' THEN\n                EXTRACT(EPOCH FROM (ac.status_updated_at - ac.submitted_at)) / 86400\n            ELSE NULL\n        END AS days_to_rejection\n    FROM application_cohorts ac\n),\ncohort_aggregations AS (\n    -- Third CTE: Aggregate metrics by cohort\n    SELECT\n        at.application_week,\n        at.application_month,\n        COUNT(DISTINCT at.application_id) AS total_applications,\n        COUNT(DISTINCT at.user_id) AS unique_applicants,\n        COUNT(DISTINCT CASE WHEN at.status_category = 'success' THEN at.application_id END) AS successful_applications,\n        COUNT(DISTINCT CASE WHEN at.status_category = 'rejected' THEN at.application_id END) AS rejected_applications,\n        COUNT(DISTINCT CASE WHEN at.status_category = 'pending' THEN at.application_id END) AS pending_applications,\n        AVG(at.match_score) AS avg_match_score,\n        AVG(at.days_to_status_update) AS avg_days_to_update,\n        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY at.days_to_status_update) AS median_days_to_update,\n        AVG(at.days_to_success) AS avg_days_to_success,\n        AVG(at.days_to_rejection) AS avg_days_to_rejection,\n        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY at.days_to_success) AS median_days_to_success\n    FROM application_timeline at\n    GROUP BY at.application_week, at.application_month\n),\nconversion_funnel AS (\n    -- Fourth CTE: Calculate conversion funnel metrics\n    SELECT\n        ca.application_week,\n        ca.application_month,\n        ca.total_applications,\n        ca.unique_applicants,\n        ca.successful_applications,\n        ca.rejected_applications,\n        ca.pending_applications,\n        ca.avg_match_score,\n        -- Conversion rates\n        ROUND((ca.successful_applications::NUMERIC / NULLIF(ca.total_applications, 0)) * 100, 2) AS success_rate_pct,\n        ROUND((ca.rejected_applications::NUMERIC / NULLIF(ca.total_applications, 0)) * 100, 2) AS rejection_rate_pct,\n        ROUND((ca.pending_applications::NUMERIC / NULLIF(ca.total_applications, 0)) * 100, 2) AS pending_rate_pct,\n        -- Time metrics\n        ROUND(ca.avg_days_to_update, 2) AS avg_days_to_update,\n        ROUND((ca.median_days_to_update)::NUMERIC, 2) AS median_days_to_update,\n        ROUND(ca.avg_days_to_success, 2) AS avg_days_to_success,\n        ROUND((ca.median_days_to_success)::NUMERIC, 2) AS median_days_to_success,\n        ROUND(ca.avg_days_to_rejection, 2) AS avg_days_to_rejection\n    FROM cohort_aggregations ca\n),\nsuccess_factor_analysis AS (\n    -- Fifth CTE: Analyze factors correlated with success\n    SELECT\n        at.application_week,\n        at.status_category,\n        COUNT(*) AS application_count,\n        AVG(at.match_score) AS avg_match_score,\n        AVG(at.days_to_status_update) AS avg_days_to_update,\n        -- Job posting factors\n        AVG(jp.salary_min) AS avg_job_salary_min,\n        AVG(jp.salary_max) AS avg_job_salary_max,\n        COUNT(DISTINCT jp.company_id) AS unique_companies,\n        COUNT(DISTINCT jp.industry) AS unique_industries,\n        -- User profile factors\n        AVG(up.years_experience) AS avg_years_experience,\n        COUNT(DISTINCT CASE WHEN up.preferred_work_model = jp.work_model THEN at.application_id END) AS work_model_matches,\n        COUNT(DISTINCT CASE WHEN up.location_state = jp.location_state THEN at.application_id END) AS location_matches\n    FROM application_timeline at\n    INNER JOIN job_postings jp ON at.job_id = jp.job_id\n    INNER JOIN user_profiles up ON at.user_id = up.user_id\n    GROUP BY at.application_week, at.status_category\n),\ncohort_comparison AS (\n    -- Sixth CTE: Compare cohorts with window functions\n    SELECT\n        cf.application_week,\n        cf.application_month,\n        cf.total_applications,\n        cf.success_rate_pct,\n        cf.rejection_rate_pct,\n        cf.avg_days_to_update,\n        cf.avg_days_to_success,\n        -- Compare to previous week\n        LAG(cf.success_rate_pct, 1) OVER (ORDER BY cf.application_week) AS prev_week_success_rate,\n        LAG(cf.total_applications, 1) OVER (ORDER BY cf.application_week) AS prev_week_applications,\n        -- Moving averages\n        AVG(cf.success_rate_pct) OVER (\n            ORDER BY cf.application_week\n            ROWS BETWEEN 3 PRECEDING AND CURRENT ROW\n        ) AS moving_avg_success_rate_4weeks,\n        AVG(cf.total_applications) OVER (\n            ORDER BY cf.application_week\n            ROWS BETWEEN 3 PRECEDING AND CURRENT ROW\n        ) AS moving_avg_applications_4weeks,\n        -- Trend indicators\n        CASE\n            WHEN cf.success_rate_pct > LAG(cf.success_rate_pct, 1) OVER (ORDER BY cf.application_week) THEN 'improving'\n            WHEN cf.success_rate_pct < LAG(cf.success_rate_pct, 1) OVER (ORDER BY cf.application_week) THEN 'declining'\n            ELSE 'stable'\n        END AS success_rate_trend\n    FROM conversion_funnel cf\n)\nSELECT\n    cc.application_week,\n    cc.application_month,\n    cc.total_applications,\n    cc.success_rate_pct,\n    cc.rejection_rate_pct,\n    cc.avg_days_to_update,\n    cc.avg_days_to_success,\n    cc.prev_week_success_rate,\n    cc.moving_avg_success_rate_4weeks,\n    cc.success_rate_trend,\n    -- Success rate change\n    CASE\n        WHEN cc.prev_week_success_rate IS NOT NULL THEN\n            ROUND(cc.success_rate_pct - cc.prev_week_success_rate, 2)\n        ELSE NULL\n    END AS success_rate_change,\n    -- Success factor insights\n    sfa.avg_match_score AS successful_avg_match_score,\n    sfa.avg_job_salary_min AS successful_avg_salary_min,\n    sfa.work_model_matches AS successful_work_model_matches\nFROM cohort_comparison cc\nLEFT JOIN success_factor_analysis sfa ON cc.application_week = sfa.application_week AND sfa.status_category = 'success'\nORDER BY cc.application_week DESC\nLIMIT 100;",
       "line_number": 832
     },
     {
@@ -1425,7 +1683,7 @@
       "purpose": "Delivers actionable federal employment intelligence for government career planning.",
       "complexity": "Deep nested CTEs (6+ levels), federal-specific aggregations, agency analysis, pay plan distributions, geographic analysis",
       "expected_output": "Federal job opportunities analysis with agency patterns, pay plan distributions, grade level trends, and geographic distribution.",
-      "sql": "WITH federal_job_aggregations AS (\n    -- First CTE: Aggregate federal job postings\n    SELECT\n        jp.job_id,\n        jp.job_title,\n        jp.company_id,\n        jp.agency_name,\n        jp.pay_plan,\n        jp.grade_level,\n        jp.location_state,\n        jp.location_city,\n        jp.posted_date,\n        jp.expiration_date,\n        jp.salary_min,\n        jp.salary_max,\n        jp.usajobs_id,\n        jp.data_source,\n        c.industry,\n        DATE_TRUNC('month', jp.posted_date) AS posting_month,\n        DATE_TRUNC('quarter', jp.posted_date) AS posting_quarter\n    FROM job_postings jp\n    INNER JOIN companies c ON jp.company_id = c.company_id\n    WHERE jp.is_federal_job = TRUE\n        AND jp.is_active = TRUE\n),\nagency_hiring_patterns AS (\n    -- Second CTE: Analyze agency hiring patterns\n    SELECT\n        fja.agency_name,\n        COUNT(DISTINCT fja.job_id) AS total_job_postings,\n        COUNT(DISTINCT CASE WHEN fja.posted_date >= CURRENT_DATE - INTERVAL '30 days' THEN fja.job_id END) AS recent_postings_30d,\n        COUNT(DISTINCT CASE WHEN fja.posted_date >= CURRENT_DATE - INTERVAL '90 days' THEN fja.job_id END) AS recent_postings_90d,\n        COUNT(DISTINCT fja.job_title) AS unique_job_titles,\n        COUNT(DISTINCT fja.location_state) AS states_active,\n        COUNT(DISTINCT fja.location_city) AS cities_active,\n        COUNT(DISTINCT fja.pay_plan) AS pay_plans_used,\n        COUNT(DISTINCT fja.grade_level) AS grade_levels_used,\n        AVG(fja.salary_min) AS avg_salary_min,\n        AVG(fja.salary_max) AS avg_salary_max,\n        AVG((fja.salary_min + fja.salary_max) / 2) AS avg_salary_midpoint,\n        MIN(fja.posted_date) AS first_posting_date,\n        MAX(fja.posted_date) AS last_posting_date\n    FROM federal_job_aggregations fja\n    WHERE fja.agency_name IS NOT NULL\n    GROUP BY fja.agency_name\n),\npay_plan_analysis AS (\n    -- Third CTE: Analyze pay plan distributions\n    SELECT\n        fja.pay_plan,\n        COUNT(DISTINCT fja.job_id) AS total_jobs,\n        COUNT(DISTINCT fja.agency_name) AS agencies_using,\n        AVG(fja.salary_min) AS avg_salary_min,\n        AVG(fja.salary_max) AS avg_salary_max,\n        AVG((fja.salary_min + fja.salary_max) / 2) AS avg_salary_midpoint,\n        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY (fja.salary_min + fja.salary_max) / 2) AS median_salary,\n        COUNT(DISTINCT fja.grade_level) AS grade_levels_in_plan,\n        COUNT(DISTINCT fja.location_state) AS states_active\n    FROM federal_job_aggregations fja\n    WHERE fja.pay_plan IS NOT NULL\n    GROUP BY fja.pay_plan\n),\ngrade_level_analysis AS (\n    -- Fourth CTE: Analyze grade level distributions\n    SELECT\n        fja.grade_level,\n        COUNT(DISTINCT fja.job_id) AS total_jobs,\n        COUNT(DISTINCT fja.agency_name) AS agencies_using,\n        COUNT(DISTINCT fja.pay_plan) AS pay_plans_used,\n        AVG(fja.salary_min) AS avg_salary_min,\n        AVG(fja.salary_max) AS avg_salary_max,\n        AVG((fja.salary_min + fja.salary_max) / 2) AS avg_salary_midpoint,\n        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY (fja.salary_min + fja.salary_max) / 2) AS median_salary,\n        COUNT(DISTINCT fja.job_title) AS unique_job_titles,\n        COUNT(DISTINCT fja.location_state) AS states_active\n    FROM federal_job_aggregations fja\n    WHERE fja.grade_level IS NOT NULL\n    GROUP BY fja.grade_level\n),\ngeographic_federal_distribution AS (\n    -- Fifth CTE: Analyze geographic distribution\n    SELECT\n        fja.location_state,\n        fja.location_city,\n        COUNT(DISTINCT fja.job_id) AS total_federal_jobs,\n        COUNT(DISTINCT fja.agency_name) AS agencies_present,\n        COUNT(DISTINCT fja.job_title) AS unique_job_titles,\n        AVG((fja.salary_min + fja.salary_max) / 2) AS avg_salary_midpoint,\n        COUNT(DISTINCT CASE WHEN fja.posted_date >= CURRENT_DATE - INTERVAL '30 days' THEN fja.job_id END) AS recent_jobs_30d\n    FROM federal_job_aggregations fja\n    WHERE fja.location_state IS NOT NULL\n    GROUP BY fja.location_state, fja.location_city\n),\nfederal_trend_analysis AS (\n    -- Sixth CTE: Analyze federal hiring trends\n    SELECT\n        fja.posting_month,\n        fja.posting_quarter,\n        COUNT(DISTINCT fja.job_id) AS monthly_job_postings,\n        COUNT(DISTINCT fja.agency_name) AS active_agencies,\n        COUNT(DISTINCT fja.job_title) AS unique_job_titles,\n        AVG((fja.salary_min + fja.salary_max) / 2) AS avg_salary_midpoint,\n        COUNT(DISTINCT fja.location_state) AS states_with_postings,\n        -- Compare to previous month\n        LAG(COUNT(DISTINCT fja.job_id), 1) OVER (ORDER BY fja.posting_month) AS prev_month_postings,\n        -- Compare to previous quarter\n        LAG(COUNT(DISTINCT fja.job_id), 3) OVER (ORDER BY fja.posting_month) AS prev_quarter_postings\n    FROM federal_job_aggregations fja\n    GROUP BY fja.posting_month, fja.posting_quarter\n)\nSELECT\n    ahp.agency_name,\n    ahp.total_job_postings,\n    ahp.recent_postings_30d,\n    ahp.recent_postings_90d,\n    ahp.unique_job_titles,\n    ahp.states_active,\n    ahp.cities_active,\n    ahp.pay_plans_used,\n    ahp.grade_levels_used,\n    ROUND(ahp.avg_salary_midpoint, 0) AS avg_salary_midpoint,\n    -- Agency ranking\n    RANK() OVER (ORDER BY ahp.total_job_postings DESC) AS agency_rank_by_postings,\n    RANK() OVER (ORDER BY ahp.recent_postings_30d DESC) AS agency_rank_by_recent,\n    -- Pay plan distribution\n    (\n        SELECT JSON_OBJECT_AGG(\n            ppa.pay_plan,\n            JSON_OBJECT(\n                'total_jobs', ppa.total_jobs,\n                'avg_salary', ROUND(ppa.avg_salary_midpoint, 0),\n                'median_salary', ROUND(ppa.median_salary, 0)\n            )\n        )\n        FROM pay_plan_analysis ppa\n        WHERE ppa.total_jobs > 0\n        LIMIT 5\n    ) AS top_pay_plans,\n    -- Grade level distribution\n    (\n        SELECT JSON_OBJECT_AGG(\n            gla.grade_level,\n            JSON_OBJECT(\n                'total_jobs', gla.total_jobs,\n                'avg_salary', ROUND(gla.avg_salary_midpoint, 0),\n                'unique_titles', gla.unique_job_titles\n            )\n        )\n        FROM grade_level_analysis gla\n        WHERE gla.total_jobs > 0\n        ORDER BY gla.total_jobs DESC\n        LIMIT 5\n    ) AS top_grade_levels,\n    -- Geographic distribution\n    (\n        SELECT JSON_OBJECT_AGG(\n            CONCAT(gfd.location_city, ', ', gfd.location_state),\n            JSON_OBJECT(\n                'total_jobs', gfd.total_federal_jobs,\n                'recent_jobs', gfd.recent_jobs_30d,\n                'agencies', gfd.agencies_present\n            )\n        )\n        FROM geographic_federal_distribution gfd\n        WHERE gfd.agency_name = ahp.agency_name\n        ORDER BY gfd.total_federal_jobs DESC\n        LIMIT 5\n    ) AS top_locations\nFROM agency_hiring_patterns ahp\nWHERE ahp.total_job_postings >= 5\nORDER BY ahp.total_job_postings DESC, ahp.recent_postings_30d DESC\nLIMIT 100;",
+      "sql": "WITH federal_job_aggregations AS (\n    -- First CTE: Aggregate federal job postings\n    SELECT\n        jp.job_id,\n        jp.job_title,\n        jp.company_id,\n        jp.agency_name,\n        jp.pay_plan,\n        jp.grade_level,\n        jp.location_state,\n        jp.location_city,\n        jp.posted_date,\n        jp.expiration_date,\n        jp.salary_min,\n        jp.salary_max,\n        jp.usajobs_id,\n        jp.data_source,\n        c.industry,\n        DATE_TRUNC('month', jp.posted_date) AS posting_month,\n        DATE_TRUNC('quarter', jp.posted_date) AS posting_quarter\n    FROM job_postings jp\n    INNER JOIN companies c ON jp.company_id = c.company_id\n    WHERE jp.is_federal_job = TRUE\n        AND jp.is_active = TRUE\n),\nagency_hiring_patterns AS (\n    -- Second CTE: Analyze agency hiring patterns\n    SELECT\n        fja.agency_name,\n        COUNT(DISTINCT fja.job_id) AS total_job_postings,\n        COUNT(DISTINCT CASE WHEN fja.posted_date >= CURRENT_DATE - INTERVAL '30 days' THEN fja.job_id END) AS recent_postings_30d,\n        COUNT(DISTINCT CASE WHEN fja.posted_date >= CURRENT_DATE - INTERVAL '90 days' THEN fja.job_id END) AS recent_postings_90d,\n        COUNT(DISTINCT fja.job_title) AS unique_job_titles,\n        COUNT(DISTINCT fja.location_state) AS states_active,\n        COUNT(DISTINCT fja.location_city) AS cities_active,\n        COUNT(DISTINCT fja.pay_plan) AS pay_plans_used,\n        COUNT(DISTINCT fja.grade_level) AS grade_levels_used,\n        AVG(fja.salary_min) AS avg_salary_min,\n        AVG(fja.salary_max) AS avg_salary_max,\n        AVG((fja.salary_min + fja.salary_max) / 2) AS avg_salary_midpoint,\n        MIN(fja.posted_date) AS first_posting_date,\n        MAX(fja.posted_date) AS last_posting_date\n    FROM federal_job_aggregations fja\n    WHERE fja.agency_name IS NOT NULL\n    GROUP BY fja.agency_name\n),\npay_plan_analysis AS (\n    -- Third CTE: Analyze pay plan distributions\n    SELECT\n        fja.pay_plan,\n        COUNT(DISTINCT fja.job_id) AS total_jobs,\n        COUNT(DISTINCT fja.agency_name) AS agencies_using,\n        AVG(fja.salary_min) AS avg_salary_min,\n        AVG(fja.salary_max) AS avg_salary_max,\n        AVG((fja.salary_min + fja.salary_max) / 2) AS avg_salary_midpoint,\n        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY (fja.salary_min + fja.salary_max) / 2) AS median_salary,\n        COUNT(DISTINCT fja.grade_level) AS grade_levels_in_plan,\n        COUNT(DISTINCT fja.location_state) AS states_active\n    FROM federal_job_aggregations fja\n    WHERE fja.pay_plan IS NOT NULL\n    GROUP BY fja.pay_plan\n),\ngrade_level_analysis AS (\n    -- Fourth CTE: Analyze grade level distributions\n    SELECT\n        fja.grade_level,\n        COUNT(DISTINCT fja.job_id) AS total_jobs,\n        COUNT(DISTINCT fja.agency_name) AS agencies_using,\n        COUNT(DISTINCT fja.pay_plan) AS pay_plans_used,\n        AVG(fja.salary_min) AS avg_salary_min,\n        AVG(fja.salary_max) AS avg_salary_max,\n        AVG((fja.salary_min + fja.salary_max) / 2) AS avg_salary_midpoint,\n        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY (fja.salary_min + fja.salary_max) / 2) AS median_salary,\n        COUNT(DISTINCT fja.job_title) AS unique_job_titles,\n        COUNT(DISTINCT fja.location_state) AS states_active\n    FROM federal_job_aggregations fja\n    WHERE fja.grade_level IS NOT NULL\n    GROUP BY fja.grade_level\n),\ngeographic_federal_distribution AS (\n    -- Fifth CTE: Analyze geographic distribution\n    SELECT\n        fja.location_state,\n        fja.location_city,\n        COUNT(DISTINCT fja.job_id) AS total_federal_jobs,\n        COUNT(DISTINCT fja.agency_name) AS agencies_present,\n        COUNT(DISTINCT fja.job_title) AS unique_job_titles,\n        AVG((fja.salary_min + fja.salary_max) / 2) AS avg_salary_midpoint,\n        COUNT(DISTINCT CASE WHEN fja.posted_date >= CURRENT_DATE - INTERVAL '30 days' THEN fja.job_id END) AS recent_jobs_30d\n    FROM federal_job_aggregations fja\n    WHERE fja.location_state IS NOT NULL\n    GROUP BY fja.location_state, fja.location_city\n),\nfederal_trend_analysis AS (\n    -- Sixth CTE: Analyze federal hiring trends\n    SELECT\n        fja.posting_month,\n        fja.posting_quarter,\n        COUNT(DISTINCT fja.job_id) AS monthly_job_postings,\n        COUNT(DISTINCT fja.agency_name) AS active_agencies,\n        COUNT(DISTINCT fja.job_title) AS unique_job_titles,\n        AVG((fja.salary_min + fja.salary_max) / 2) AS avg_salary_midpoint,\n        COUNT(DISTINCT fja.location_state) AS states_with_postings,\n        -- Compare to previous month\n        LAG(COUNT(DISTINCT fja.job_id), 1) OVER (ORDER BY fja.posting_month) AS prev_month_postings,\n        -- Compare to previous quarter\n        LAG(COUNT(DISTINCT fja.job_id), 3) OVER (ORDER BY fja.posting_month) AS prev_quarter_postings\n    FROM federal_job_aggregations fja\n    GROUP BY fja.posting_month, fja.posting_quarter\n)\nSELECT\n    ahp.agency_name,\n    ahp.total_job_postings,\n    ahp.recent_postings_30d,\n    ahp.recent_postings_90d,\n    ahp.unique_job_titles,\n    ahp.states_active,\n    ahp.cities_active,\n    ahp.pay_plans_used,\n    ahp.grade_levels_used,\n    ROUND(ahp.avg_salary_midpoint, 0) AS avg_salary_midpoint,\n    -- Agency ranking\n    RANK() OVER (ORDER BY ahp.total_job_postings DESC) AS agency_rank_by_postings,\n    RANK() OVER (ORDER BY ahp.recent_postings_30d DESC) AS agency_rank_by_recent,\n    -- Pay plan distribution\n    (\n        SELECT JSON_OBJECT_AGG(\n            ppa.pay_plan,\n            JSON_OBJECT(\n                'total_jobs', ppa.total_jobs,\n                'avg_salary', ROUND((ppa.avg_salary_midpoint)::NUMERIC, 0),\n                'median_salary', ROUND((ppa.median_salary)::NUMERIC, 0)\n            )\n        )\n        FROM pay_plan_analysis ppa\n        WHERE ppa.total_jobs > 0\n        LIMIT 5\n    ) AS top_pay_plans,\n    -- Grade level distribution\n    (\n        SELECT JSON_OBJECT_AGG(\n            gla.grade_level,\n            JSON_OBJECT(\n                'total_jobs', gla.total_jobs,\n                'avg_salary', ROUND(gla.avg_salary_midpoint, 0),\n                'unique_titles', gla.unique_job_titles\n            )\n        )\n        FROM grade_level_analysis gla\n        WHERE gla.total_jobs > 0\n        ORDER BY gla.total_jobs DESC\n        LIMIT 5\n    ) AS top_grade_levels,\n    -- Geographic distribution\n    (\n        SELECT JSON_OBJECT_AGG(\n            CONCAT(gfd.location_city, ', ', gfd.location_state),\n            JSON_OBJECT(\n                'total_jobs', gfd.total_federal_jobs,\n                'recent_jobs', gfd.recent_jobs_30d,\n                'agencies', gfd.agencies_present\n            )\n        )\n        FROM geographic_federal_distribution gfd\n        WHERE gfd.agency_name = ahp.agency_name\n        ORDER BY gfd.total_federal_jobs DESC\n        LIMIT 5\n    ) AS top_locations\nFROM agency_hiring_patterns ahp\nWHERE ahp.total_job_postings >= 5\nORDER BY ahp.total_job_postings DESC, ahp.recent_postings_30d DESC\nLIMIT 100;",
       "line_number": 2101
     },
     {
@@ -1557,7 +1815,7 @@
       "purpose": "Delivers actionable insights for optimizing application timing and improving success rates.",
       "complexity": "Deep nested CTEs (6+ levels), temporal analysis, optimization patterns, window functions, time-series analysis",
       "expected_output": "Application timing analysis with optimal timing recommendations, time-to-response patterns, and success rate optimizations.",
-      "sql": "WITH application_timing_features AS (\n    -- First CTE: Extract timing features\n    SELECT\n        ja.application_id,\n        ja.user_id,\n        ja.job_id,\n        ja.application_status,\n        ja.submitted_at,\n        jp.posted_date,\n        jp.expiration_date,\n        EXTRACT(DOW FROM ja.submitted_at) AS day_of_week,\n        EXTRACT(HOUR FROM ja.submitted_at) AS hour_of_day,\n        EXTRACT(EPOCH FROM (ja.submitted_at - jp.posted_date)) / 86400 AS days_after_posting,\n        EXTRACT(EPOCH FROM (CURRENT_TIMESTAMP - jp.posted_date)) / 86400 AS days_since_posting,\n        CASE\n            WHEN EXTRACT(EPOCH FROM (ja.submitted_at - jp.posted_date)) / 86400 <= 1 THEN 'same_day'\n            WHEN EXTRACT(EPOCH FROM (ja.submitted_at - jp.posted_date)) / 86400 <= 3 THEN 'early'\n            WHEN EXTRACT(EPOCH FROM (ja.submitted_at - jp.posted_date)) / 86400 <= 7 THEN 'week_1'\n            WHEN EXTRACT(EPOCH FROM (ja.submitted_at - jp.posted_date)) / 86400 <= 14 THEN 'week_2'\n            ELSE 'late'\n        END AS application_timing_category,\n        CASE\n            WHEN ja.application_status IN ('interview', 'offer') THEN 1\n            ELSE 0\n        END AS success_indicator\n    FROM job_applications ja\n    INNER JOIN job_postings jp ON ja.job_id = jp.job_id\n    WHERE ja.submitted_at IS NOT NULL\n        AND jp.posted_date IS NOT NULL\n        AND ja.submitted_at >= CURRENT_TIMESTAMP - INTERVAL '1 year'\n),\ntiming_success_analysis AS (\n    -- Second CTE: Analyze success rates by timing\n    SELECT\n        atf.application_timing_category,\n        atf.day_of_week,\n        atf.hour_of_day,\n        COUNT(*) AS total_applications,\n        SUM(atf.success_indicator) AS successful_applications,\n        ROUND((SUM(atf.success_indicator)::NUMERIC / COUNT(*)) * 100, 2) AS success_rate_pct,\n        AVG(atf.days_after_posting) AS avg_days_after_posting,\n        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY atf.days_after_posting) AS median_days_after_posting\n    FROM application_timing_features atf\n    GROUP BY atf.application_timing_category, atf.day_of_week, atf.hour_of_day\n),\noptimal_timing_recommendations AS (\n    -- Third CTE: Generate timing recommendations\n    SELECT\n        tsa.application_timing_category,\n        tsa.day_of_week,\n        tsa.hour_of_day,\n        tsa.total_applications,\n        tsa.successful_applications,\n        tsa.success_rate_pct,\n        ROUND(tsa.avg_days_after_posting, 1) AS avg_days_after_posting,\n        ROUND(tsa.median_days_after_posting, 1) AS median_days_after_posting,\n        -- Timing score\n        ROUND(\n            (\n                tsa.success_rate_pct * 0.6 +\n                LEAST((100 - tsa.avg_days_after_posting) / 30.0, 1) * 40\n            ),\n            2\n        ) AS timing_score,\n        -- Recommendation\n        CASE\n            WHEN tsa.success_rate_pct >= 30 AND tsa.avg_days_after_posting <= 3 THEN 'highly_recommended'\n            WHEN tsa.success_rate_pct >= 25 AND tsa.avg_days_after_posting <= 7 THEN 'recommended'\n            WHEN tsa.success_rate_pct >= 20 THEN 'moderate'\n            ELSE 'not_recommended'\n        END AS timing_recommendation\n    FROM timing_success_analysis tsa\n    WHERE tsa.total_applications >= 10\n)\nSELECT\n    otr.application_timing_category,\n    otr.day_of_week,\n    otr.hour_of_day,\n    otr.total_applications,\n    otr.successful_applications,\n    otr.success_rate_pct,\n    otr.avg_days_after_posting,\n    otr.median_days_after_posting,\n    otr.timing_score,\n    otr.timing_recommendation,\n    RANK() OVER (ORDER BY otr.timing_score DESC) AS timing_rank\nFROM optimal_timing_recommendations otr\nORDER BY otr.timing_score DESC\nLIMIT 100;",
+      "sql": "WITH application_timing_features AS (\n    -- First CTE: Extract timing features\n    SELECT\n        ja.application_id,\n        ja.user_id,\n        ja.job_id,\n        ja.application_status,\n        ja.submitted_at,\n        jp.posted_date,\n        jp.expiration_date,\n        EXTRACT(DOW FROM ja.submitted_at) AS day_of_week,\n        EXTRACT(HOUR FROM ja.submitted_at) AS hour_of_day,\n        EXTRACT(EPOCH FROM (ja.submitted_at - jp.posted_date)) / 86400 AS days_after_posting,\n        EXTRACT(EPOCH FROM (CURRENT_TIMESTAMP - jp.posted_date)) / 86400 AS days_since_posting,\n        CASE\n            WHEN EXTRACT(EPOCH FROM (ja.submitted_at - jp.posted_date)) / 86400 <= 1 THEN 'same_day'\n            WHEN EXTRACT(EPOCH FROM (ja.submitted_at - jp.posted_date)) / 86400 <= 3 THEN 'early'\n            WHEN EXTRACT(EPOCH FROM (ja.submitted_at - jp.posted_date)) / 86400 <= 7 THEN 'week_1'\n            WHEN EXTRACT(EPOCH FROM (ja.submitted_at - jp.posted_date)) / 86400 <= 14 THEN 'week_2'\n            ELSE 'late'\n        END AS application_timing_category,\n        CASE\n            WHEN ja.application_status IN ('interview', 'offer') THEN 1\n            ELSE 0\n        END AS success_indicator\n    FROM job_applications ja\n    INNER JOIN job_postings jp ON ja.job_id = jp.job_id\n    WHERE ja.submitted_at IS NOT NULL\n        AND jp.posted_date IS NOT NULL\n        AND ja.submitted_at >= CURRENT_TIMESTAMP - INTERVAL '1 year'\n),\ntiming_success_analysis AS (\n    -- Second CTE: Analyze success rates by timing\n    SELECT\n        atf.application_timing_category,\n        atf.day_of_week,\n        atf.hour_of_day,\n        COUNT(*) AS total_applications,\n        SUM(atf.success_indicator) AS successful_applications,\n        ROUND((SUM(atf.success_indicator)::NUMERIC / COUNT(*)) * 100, 2) AS success_rate_pct,\n        AVG(atf.days_after_posting) AS avg_days_after_posting,\n        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY atf.days_after_posting) AS median_days_after_posting\n    FROM application_timing_features atf\n    GROUP BY atf.application_timing_category, atf.day_of_week, atf.hour_of_day\n),\noptimal_timing_recommendations AS (\n    -- Third CTE: Generate timing recommendations\n    SELECT\n        tsa.application_timing_category,\n        tsa.day_of_week,\n        tsa.hour_of_day,\n        tsa.total_applications,\n        tsa.successful_applications,\n        tsa.success_rate_pct,\n        ROUND(tsa.avg_days_after_posting, 1) AS avg_days_after_posting,\n        ROUND((tsa.median_days_after_posting)::NUMERIC, 1) AS median_days_after_posting,\n        -- Timing score\n        ROUND(\n            (\n                tsa.success_rate_pct * 0.6 +\n                LEAST((100 - tsa.avg_days_after_posting) / 30.0, 1) * 40\n            ),\n            2\n        ) AS timing_score,\n        -- Recommendation\n        CASE\n            WHEN tsa.success_rate_pct >= 30 AND tsa.avg_days_after_posting <= 3 THEN 'highly_recommended'\n            WHEN tsa.success_rate_pct >= 25 AND tsa.avg_days_after_posting <= 7 THEN 'recommended'\n            WHEN tsa.success_rate_pct >= 20 THEN 'moderate'\n            ELSE 'not_recommended'\n        END AS timing_recommendation\n    FROM timing_success_analysis tsa\n    WHERE tsa.total_applications >= 10\n)\nSELECT\n    otr.application_timing_category,\n    otr.day_of_week,\n    otr.hour_of_day,\n    otr.total_applications,\n    otr.successful_applications,\n    otr.success_rate_pct,\n    otr.avg_days_after_posting,\n    otr.median_days_after_posting,\n    otr.timing_score,\n    otr.timing_recommendation,\n    RANK() OVER (ORDER BY otr.timing_score DESC) AS timing_rank\nFROM optimal_timing_recommendations otr\nORDER BY otr.timing_score DESC\nLIMIT 100;",
       "line_number": 4259
     },
     {
@@ -1668,5 +1926,10 @@
       "sql": "WITH market_overview_metrics AS (\n    -- First CTE: Overall market metrics\n    SELECT\n        COUNT(DISTINCT jp.job_id) AS total_active_jobs,\n        COUNT(DISTINCT jp.company_id) AS total_companies,\n        COUNT(DISTINCT jp.industry) AS total_industries,\n        COUNT(DISTINCT jp.location_state) AS total_states,\n        AVG((jp.salary_min + jp.salary_max) / 2) AS market_avg_salary,\n        COUNT(DISTINCT CASE WHEN jp.work_model = 'remote' THEN jp.job_id END) AS remote_jobs_count,\n        COUNT(DISTINCT CASE WHEN jp.posted_date >= CURRENT_DATE - INTERVAL '30 days' THEN jp.job_id END) AS recent_jobs_30d\n    FROM job_postings jp\n    WHERE jp.is_active = TRUE\n),\nuser_engagement_metrics AS (\n    -- Second CTE: User engagement metrics\n    SELECT\n        COUNT(DISTINCT up.user_id) AS total_active_users,\n        COUNT(DISTINCT ja.application_id) AS total_applications,\n        COUNT(DISTINCT CASE WHEN ja.application_status IN ('interview', 'offer') THEN ja.application_id END) AS successful_applications,\n        COUNT(DISTINCT jr.recommendation_id) AS total_recommendations,\n        COUNT(DISTINCT ujsh.search_id) AS total_searches,\n        AVG(up.profile_completeness_score) AS avg_profile_completeness\n    FROM user_profiles up\n    LEFT JOIN job_applications ja ON up.user_id = ja.user_id\n    LEFT JOIN job_recommendations jr ON up.user_id = jr.user_id\n    LEFT JOIN user_job_search_history ujsh ON up.user_id = ujsh.user_id\n    WHERE up.is_active = TRUE\n),\nskill_market_metrics AS (\n    -- Third CTE: Skill market metrics\n    SELECT\n        COUNT(DISTINCT s.skill_id) AS total_skills,\n        COUNT(DISTINCT jsr.job_id) AS jobs_with_skills,\n        AVG(jsr.importance_score) AS avg_skill_importance,\n        COUNT(DISTINCT CASE WHEN jsr.requirement_type = 'required' THEN jsr.skill_id END) AS required_skills_count\n    FROM skills s\n    LEFT JOIN job_skills_requirements jsr ON s.skill_id = jsr.skill_id\n    LEFT JOIN job_postings jp ON jsr.job_id = jp.job_id\n    WHERE jp.is_active = TRUE OR jp.is_active IS NULL\n),\nindustry_breakdown AS (\n    -- Fourth CTE: Industry breakdown\n    SELECT\n        jp.industry,\n        COUNT(DISTINCT jp.job_id) AS industry_jobs,\n        COUNT(DISTINCT jp.company_id) AS industry_companies,\n        AVG((jp.salary_min + jp.salary_max) / 2) AS industry_avg_salary,\n        COUNT(DISTINCT CASE WHEN jp.work_model = 'remote' THEN jp.job_id END) AS industry_remote_jobs\n    FROM job_postings jp\n    WHERE jp.is_active = TRUE\n        AND jp.industry IS NOT NULL\n    GROUP BY jp.industry\n),\ngeographic_breakdown AS (\n    -- Fifth CTE: Geographic breakdown\n    SELECT\n        jp.location_state,\n        COUNT(DISTINCT jp.job_id) AS state_jobs,\n        COUNT(DISTINCT jp.company_id) AS state_companies,\n        AVG((jp.salary_min + jp.salary_max) / 2) AS state_avg_salary,\n        COUNT(DISTINCT jp.location_city) AS state_cities\n    FROM job_postings jp\n    WHERE jp.is_active = TRUE\n        AND jp.location_state IS NOT NULL\n    GROUP BY jp.location_state\n),\ndata_source_health AS (\n    -- Sixth CTE: Data source health\n    SELECT\n        dsm.source_name,\n        COUNT(DISTINCT dsm.metadata_id) AS total_extractions,\n        COUNT(DISTINCT CASE WHEN dsm.extraction_status = 'success' THEN dsm.metadata_id END) AS successful_extractions,\n        SUM(dsm.records_extracted) AS total_records,\n        MAX(dsm.extraction_date) AS last_extraction_date\n    FROM data_source_metadata dsm\n    GROUP BY dsm.source_name\n),\nexecutive_summary AS (\n    -- Seventh CTE: Executive summary\n    SELECT\n        mom.total_active_jobs,\n        mom.total_companies,\n        mom.total_industries,\n        mom.total_states,\n        ROUND(mom.market_avg_salary, 0) AS market_avg_salary,\n        mom.remote_jobs_count,\n        ROUND((mom.remote_jobs_count::NUMERIC / NULLIF(mom.total_active_jobs, 0)) * 100, 2) AS remote_jobs_pct,\n        mom.recent_jobs_30d,\n        uem.total_active_users,\n        uem.total_applications,\n        uem.successful_applications,\n        CASE\n            WHEN uem.total_applications > 0 THEN\n                ROUND((uem.successful_applications::NUMERIC / uem.total_applications) * 100, 2)\n            ELSE NULL\n        END AS application_success_rate_pct,\n        uem.total_recommendations,\n        uem.total_searches,\n        ROUND(uem.avg_profile_completeness, 2) AS avg_profile_completeness,\n        smm.total_skills,\n        smm.jobs_with_skills,\n        ROUND(smm.avg_skill_importance, 2) AS avg_skill_importance,\n        smm.required_skills_count,\n        -- Top industries\n        (\n            SELECT JSON_OBJECT_AGG(ib.industry, ib.industry_jobs)\n            FROM (\n                SELECT industry, industry_jobs\n                FROM industry_breakdown\n                ORDER BY industry_jobs DESC\n                LIMIT 5\n            ) ib\n        ) AS top_industries,\n        -- Top states\n        (\n            SELECT JSON_OBJECT_AGG(gb.location_state, gb.state_jobs)\n            FROM (\n                SELECT location_state, state_jobs\n                FROM geographic_breakdown\n                ORDER BY state_jobs DESC\n                LIMIT 5\n            ) gb\n        ) AS top_states,\n        -- Data source status\n        (\n            SELECT JSON_OBJECT_AGG(dsh.source_name, JSON_OBJECT(\n                'success_rate', ROUND((dsh.successful_extractions::NUMERIC / NULLIF(dsh.total_extractions, 0)) * 100, 2),\n                'total_records', dsh.total_records,\n                'last_extraction', dsh.last_extraction_date\n            ))\n            FROM data_source_health dsh\n        ) AS data_source_status\n    FROM market_overview_metrics mom\n    CROSS JOIN user_engagement_metrics uem\n    CROSS JOIN skill_market_metrics smm\n)\nSELECT\n    es.total_active_jobs,\n    es.total_companies,\n    es.total_industries,\n    es.total_states,\n    es.market_avg_salary,\n    es.remote_jobs_count,\n    es.remote_jobs_pct,\n    es.recent_jobs_30d,\n    es.total_active_users,\n    es.total_applications,\n    es.successful_applications,\n    es.application_success_rate_pct,\n    es.total_recommendations,\n    es.total_searches,\n    es.avg_profile_completeness,\n    es.total_skills,\n    es.jobs_with_skills,\n    es.avg_skill_importance,\n    es.required_skills_count,\n    es.top_industries,\n    es.top_states,\n    es.data_source_status,\n    -- Market health score\n    ROUND(\n        (\n            LEAST(es.total_active_jobs / 10000.0, 1) * 25 +\n            LEAST(es.recent_jobs_30d / 1000.0, 1) * 25 +\n            LEAST(es.application_success_rate_pct / 30.0, 1) * 25 +\n            LEAST(es.avg_profile_completeness / 100.0, 1) * 25\n        ) * 100,\n        2\n    ) AS market_health_score\nFROM executive_summary es;",
       "line_number": 5456
     }
-  ]
+  ],
+  "metadata": {
+    "total_queries": 30,
+    "extraction_timestamp": "20260209-2302",
+    "format_date": "20260210-0053"
+  }
 }

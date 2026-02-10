@@ -35,7 +35,7 @@
 The ETL/ELT pipeline notebook provides:
 1. **Extract**: Load data from government sources (NOAA, USCG, MARAD, Data.gov)
 2. **Transform**: Clean, validate, and transform maritime data
-3. **Load**: Load transformed data into target databases (PostgreSQL, Databricks, Snowflake)
+3. **Load**: Load transformed data into target databases (PostgreSQL)
 4. **Validate**: Verify data quality and completeness
 5. **Monitor**: Track pipeline performance and errors
 

@@ -1,5 +1,5 @@
 {
-  "validation_date": "2026-02-04T21:13:15.913292",
+  "validation_date": "2026-02-09T23:38:18.763265",
   "database": "db-11",
   "file": "/Users/machine/Documents/AQ/db/db-11/queries/queries.md",
   "total_queries": 30,
@@ -189,7 +189,7 @@
         }
       ]
     },
-    "snowflake": {
+    "databricks": {
       "available": false,
       "queries": []
     },

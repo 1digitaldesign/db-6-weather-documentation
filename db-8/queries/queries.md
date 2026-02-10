@@ -49,7 +49,7 @@ Tracks user search behavior for recommendation improvement
 
 ---
 
-This file contains 30 extremely complex SQL queries focused on job market intelligence, targeted applications, and AI-powered recommendations. All queries are designed to work across PostgreSQL, Databricks, and Snowflake.
+This file contains 30 extremely complex SQL queries focused on job market intelligence, targeted applications, and AI-powered recommendations. All queries are designed to work across PostgreSQL.
 
 ## Query 1: Production-Grade AI Job Matching Engine with Multi-Dimensional Scoring and Skill Alignment Analysis
 
@@ -129,17 +129,17 @@ active_job_postings AS (
         c.industry,
         c.company_size,
         c.company_rating,
-        DATE_PART('day', CURRENT_TIMESTAMP() - jp.posted_date) AS days_since_posted,
+        DATE_PART('day', CURRENT_TIMESTAMP - jp.posted_date) AS days_since_posted,
         CASE
-            WHEN jp.posted_date >= CURRENT_TIMESTAMP() - INTERVAL '7 days' THEN 1.2
-            WHEN jp.posted_date >= CURRENT_TIMESTAMP() - INTERVAL '14 days' THEN 1.1
-            WHEN jp.posted_date >= CURRENT_TIMESTAMP() - INTERVAL '30 days' THEN 1.0
+            WHEN jp.posted_date >= CURRENT_TIMESTAMP - INTERVAL '7 days' THEN 1.2
+            WHEN jp.posted_date >= CURRENT_TIMESTAMP - INTERVAL '14 days' THEN 1.1
+            WHEN jp.posted_date >= CURRENT_TIMESTAMP - INTERVAL '30 days' THEN 1.0
             ELSE 0.9
         END AS recency_multiplier
     FROM job_postings jp
     INNER JOIN companies c ON jp.company_id = c.company_id
     WHERE jp.is_active = TRUE
-        AND (jp.expiration_date IS NULL OR jp.expiration_date > CURRENT_TIMESTAMP())
+        AND (jp.expiration_date IS NULL OR jp.expiration_date > CURRENT_TIMESTAMP)
 ),
 job_skills_aggregated AS (
     -- Fourth CTE: Aggregate required and preferred skills for each job
@@ -409,8 +409,8 @@ WITH RECURSIVE skill_hierarchy AS (
         s.skill_type,
         s.parent_skill_id,
         0 AS hierarchy_level,
-        ARRAY[s.skill_id] AS skill_path,
-        s.skill_name AS full_path_name
+        ARRAY[s.skill_id]::varchar(255)[] AS skill_path,
+        s.skill_name::varchar(255) AS full_path_name
     FROM skills s
     WHERE s.parent_skill_id IS NULL
     
@@ -424,8 +424,8 @@ WITH RECURSIVE skill_hierarchy AS (
         s.skill_type,
         s.parent_skill_id,
         sh.hierarchy_level + 1,
-        sh.skill_path || s.skill_id,
-        sh.full_path_name || ' -> ' || s.skill_name
+        (sh.skill_path || s.skill_id)::varchar(255)[],
+        (sh.full_path_name || ' -> ' || s.skill_name)::varchar(255)
     FROM skills s
     INNER JOIN skill_hierarchy sh ON s.parent_skill_id = sh.skill_id
     WHERE sh.hierarchy_level < 10  -- Prevent infinite recursion
@@ -453,16 +453,20 @@ user_skill_gaps AS (
         tjs.job_title,
         tjs.total_required_skills,
         ARRAY_AGG(DISTINCT us.skill_id) AS user_skill_ids,
-        -- Missing required skills
-        ARRAY_AGG(DISTINCT req_skill.skill_id) FILTER (
-            WHERE req_skill.skill_id != ALL(COALESCE(ARRAY_AGG(DISTINCT us.skill_id), ARRAY[]::VARCHAR[]))
+        -- Missing required skills: skills in required list that user doesn't have
+        (
+            SELECT ARRAY_AGG(rs.skill_id)
+            FROM UNNEST(tjs.required_skill_ids) AS rs(skill_id)
+            WHERE NOT EXISTS (
+                SELECT 1 FROM user_skills us2
+                WHERE us2.user_id = up.user_id AND us2.skill_id = rs.skill_id
+            )
         ) AS missing_skill_ids
     FROM user_profiles up
     CROSS JOIN target_job_skills tjs
     LEFT JOIN user_skills us ON up.user_id = us.user_id
-    CROSS JOIN UNNEST(tjs.required_skill_ids) AS req_skill(skill_id)
     WHERE up.is_active = TRUE
-    GROUP BY up.user_id, tjs.job_id, tjs.job_title, tjs.total_required_skills
+    GROUP BY up.user_id, tjs.job_id, tjs.job_title, tjs.total_required_skills, tjs.required_skill_ids
 ),
 missing_skill_dependencies AS (
     -- CTE: Find all prerequisite skills for missing skills using recursive hierarchy
@@ -735,17 +739,20 @@ skill_demand_projection AS (
         gm.trend_direction,
         -- Aggregate skill requirements from active job postings
         (
-            SELECT ARRAY_AGG(DISTINCT s.skill_name ORDER BY COUNT(*) DESC)
-            FROM job_postings jp
-            INNER JOIN job_skills_requirements jsr ON jp.job_id = jsr.job_id
-            INNER JOIN skills s ON jsr.skill_id = s.skill_id
-            WHERE jp.location_state = gm.location_state
-                AND jp.industry = gm.industry
-                AND DATE_TRUNC('month', jp.posted_date) = gm.trend_month
-                AND jsr.requirement_type = 'required'
-            GROUP BY s.skill_name
-            ORDER BY COUNT(*) DESC
-            LIMIT 10
+            SELECT ARRAY_AGG(skill_name)
+            FROM (
+                SELECT s.skill_name
+                FROM job_postings jp
+                INNER JOIN job_skills_requirements jsr ON jp.job_id = jsr.job_id
+                INNER JOIN skills s ON jsr.skill_id = s.skill_id
+                WHERE jp.location_state = gm.location_state
+                    AND jp.industry = gm.industry
+                    AND DATE_TRUNC('month', jp.posted_date) = gm.trend_month
+                    AND jsr.requirement_type = 'required'
+                GROUP BY s.skill_name
+                ORDER BY COUNT(*) DESC
+                LIMIT 10
+            ) sub
         ) AS top_skills,
         -- Skill demand growth
         (
@@ -934,9 +941,9 @@ conversion_funnel AS (
         ROUND((ca.pending_applications::NUMERIC / NULLIF(ca.total_applications, 0)) * 100, 2) AS pending_rate_pct,
         -- Time metrics
         ROUND(ca.avg_days_to_update, 2) AS avg_days_to_update,
-        ROUND(ca.median_days_to_update, 2) AS median_days_to_update,
+        ROUND((ca.median_days_to_update)::NUMERIC, 2) AS median_days_to_update,
         ROUND(ca.avg_days_to_success, 2) AS avg_days_to_success,
-        ROUND(ca.median_days_to_success, 2) AS median_days_to_success,
+        ROUND((ca.median_days_to_success)::NUMERIC, 2) AS median_days_to_success,
         ROUND(ca.avg_days_to_rejection, 2) AS avg_days_to_rejection
     FROM cohort_aggregations ca
 ),
@@ -1079,9 +1086,16 @@ company_skill_demand AS (
         jp.company_id,
         COUNT(DISTINCT jsr.skill_id) AS unique_skills_demanded,
         ARRAY_AGG(DISTINCT s.skill_category) AS skill_categories,
-        ARRAY_AGG(DISTINCT s.skill_name ORDER BY COUNT(*) DESC) FILTER (
-            WHERE jsr.requirement_type = 'required'
-        ) AS top_required_skills
+        (SELECT ARRAY_AGG(skill_name) FROM (
+            SELECT s2.skill_name
+            FROM job_skills_requirements jsr2
+            INNER JOIN job_postings jp2 ON jsr2.job_id = jp2.job_id
+            INNER JOIN skills s2 ON jsr2.skill_id = s2.skill_id
+            WHERE jp2.company_id = jp.company_id AND jsr2.requirement_type = 'required'
+            GROUP BY s2.skill_name
+            ORDER BY COUNT(*) DESC
+            LIMIT 20
+        ) sub) AS top_required_skills
     FROM job_postings jp
     INNER JOIN job_skills_requirements jsr ON jp.job_id = jsr.job_id
     INNER JOIN skills s ON jsr.skill_id = s.skill_id
@@ -1089,11 +1103,11 @@ company_skill_demand AS (
     GROUP BY jp.company_id
 ),
 industry_market_share AS (
-    -- Fourth CTE: Calculate market share by industry
+    -- Fourth CTE: Calculate market share by industry (per-company rows with industry totals)
     SELECT
         cjm.industry,
-        SUM(cjm.total_job_postings) AS industry_total_postings,
-        SUM(cjm.recent_job_postings_30d) AS industry_recent_postings_30d,
+        SUM(cjm.total_job_postings) OVER (PARTITION BY cjm.industry) AS industry_total_postings,
+        SUM(cjm.recent_job_postings_30d) OVER (PARTITION BY cjm.industry) AS industry_recent_postings_30d,
         cjm.company_id,
         cjm.company_name,
         cjm.total_job_postings,
@@ -1396,8 +1410,8 @@ final_location_ranking AS (
         las.recent_postings_30d,
         las.unique_companies,
         las.unique_industries,
-        ROUND(las.avg_salary_midpoint, 0) AS avg_salary_midpoint,
-        ROUND(las.median_salary, 0) AS median_salary,
+        ROUND(las.avg_salary_midpoint::numeric, 0) AS avg_salary_midpoint,
+        ROUND(las.median_salary::numeric, 0) AS median_salary,
         las.remote_work_pct,
         las.competition_index,
         las.application_success_rate_pct,
@@ -1579,15 +1593,15 @@ role_market_positioning AS (
     SELECT
         rsa.job_title,
         rsa.job_count,
-        ROUND(rsa.avg_salary_midpoint, 0) AS avg_salary_midpoint,
-        ROUND(rsa.p10_salary, 0) AS p10_salary,
-        ROUND(rsa.p25_salary, 0) AS p25_salary,
-        ROUND(rsa.p50_salary, 0) AS p50_salary,
-        ROUND(rsa.p75_salary, 0) AS p75_salary,
-        ROUND(rsa.p90_salary, 0) AS p90_salary,
-        ROUND(rsa.min_salary, 0) AS min_salary,
-        ROUND(rsa.max_salary, 0) AS max_salary,
-        ROUND(rsa.salary_stddev, 0) AS salary_stddev,
+        ROUND(rsa.avg_salary_midpoint::numeric, 0) AS avg_salary_midpoint,
+        ROUND(rsa.p10_salary::numeric, 0) AS p10_salary,
+        ROUND(rsa.p25_salary::numeric, 0) AS p25_salary,
+        ROUND(rsa.p50_salary::numeric, 0) AS p50_salary,
+        ROUND(rsa.p75_salary::numeric, 0) AS p75_salary,
+        ROUND(rsa.p90_salary::numeric, 0) AS p90_salary,
+        ROUND(rsa.min_salary::numeric, 0) AS min_salary,
+        ROUND(rsa.max_salary::numeric, 0) AS max_salary,
+        ROUND(rsa.salary_stddev::numeric, 0) AS salary_stddev,
         -- Market positioning
         CASE
             WHEN rsa.p50_salary >= (SELECT AVG(p50_salary) FROM role_salary_aggregations) * 1.2 THEN 'premium'
@@ -1596,7 +1610,7 @@ role_market_positioning AS (
             ELSE 'below_market'
         END AS market_positioning,
         -- Salary range spread
-        ROUND(((rsa.p75_salary - rsa.p25_salary) / NULLIF(rsa.p50_salary, 0)) * 100, 2) AS salary_range_spread_pct
+        ROUND((((rsa.p75_salary - rsa.p25_salary)::numeric / NULLIF(rsa.p50_salary, 0)::numeric) * 100), 2) AS salary_range_spread_pct
     FROM role_salary_aggregations rsa
     WHERE rsa.job_count >= 5  -- Minimum jobs for reliable benchmark
 ),
@@ -1610,12 +1624,12 @@ role_industry_comparison AS (
         PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY sdn.annual_salary_midpoint) AS role_industry_median_salary,
         -- Compare to industry average
         ROUND(
-            ((AVG(sdn.annual_salary_midpoint) - isb.industry_avg_salary) / NULLIF(isb.industry_avg_salary, 0)) * 100,
+            (((AVG(sdn.annual_salary_midpoint) - isb.industry_avg_salary) / NULLIF(isb.industry_avg_salary, 0)) * 100)::numeric,
             2
         ) AS vs_industry_avg_pct,
         -- Compare to role average
         ROUND(
-            ((AVG(sdn.annual_salary_midpoint) - rmp.avg_salary_midpoint) / NULLIF(rmp.avg_salary_midpoint, 0)) * 100,
+            (((AVG(sdn.annual_salary_midpoint) - rmp.avg_salary_midpoint) / NULLIF(rmp.avg_salary_midpoint, 0)) * 100)::numeric,
             2
         ) AS vs_role_avg_pct
     FROM salary_data_normalization sdn
@@ -1634,12 +1648,12 @@ role_location_comparison AS (
         PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY sdn.annual_salary_midpoint) AS role_location_median_salary,
         -- Compare to location average
         ROUND(
-            ((AVG(sdn.annual_salary_midpoint) - lsb.location_avg_salary) / NULLIF(lsb.location_avg_salary, 0)) * 100,
+            (((AVG(sdn.annual_salary_midpoint) - lsb.location_avg_salary) / NULLIF(lsb.location_avg_salary, 0)) * 100)::numeric,
             2
         ) AS vs_location_avg_pct,
         -- Compare to role average
         ROUND(
-            ((AVG(sdn.annual_salary_midpoint) - rmp.avg_salary_midpoint) / NULLIF(rmp.avg_salary_midpoint, 0)) * 100,
+            (((AVG(sdn.annual_salary_midpoint) - rmp.avg_salary_midpoint) / NULLIF(rmp.avg_salary_midpoint, 0)) * 100)::numeric,
             2
         ) AS vs_role_avg_pct
     FROM salary_data_normalization sdn
@@ -1663,32 +1677,37 @@ SELECT
     rmp.market_positioning,
     -- Industry comparison summary
     (
-        SELECT JSON_OBJECT_AGG(
-            ric.industry,
-            JSON_OBJECT(
-                'avg_salary', ROUND(ric.role_industry_avg_salary, 0),
-                'vs_industry_pct', ric.vs_industry_avg_pct,
-                'vs_role_pct', ric.vs_role_avg_pct
-            )
-        )
-        FROM role_industry_comparison ric
-        WHERE ric.job_title = rmp.job_title
-        LIMIT 5
+        SELECT json_object_agg(sub.industry, sub.obj)
+        FROM (
+            SELECT
+                ric.industry,
+                json_build_object(
+                    'avg_salary', ROUND(ric.role_industry_avg_salary::numeric, 0),
+                    'vs_industry_pct', ric.vs_industry_avg_pct,
+                    'vs_role_pct', ric.vs_role_avg_pct
+                ) AS obj
+            FROM role_industry_comparison ric
+            WHERE ric.job_title = rmp.job_title
+            ORDER BY ric.role_industry_avg_salary DESC
+            LIMIT 5
+        ) sub
     ) AS top_industries,
     -- Location comparison summary
     (
-        SELECT JSON_OBJECT_AGG(
-            CONCAT(rlc.location_city, ', ', rlc.location_state),
-            JSON_OBJECT(
-                'avg_salary', ROUND(rlc.role_location_avg_salary, 0),
-                'vs_location_pct', rlc.vs_location_avg_pct,
-                'vs_role_pct', rlc.vs_role_avg_pct
-            )
-        )
-        FROM role_location_comparison rlc
-        WHERE rlc.job_title = rmp.job_title
-        ORDER BY rlc.role_location_avg_salary DESC
-        LIMIT 5
+        SELECT json_object_agg(sub.loc_key, sub.obj)
+        FROM (
+            SELECT
+                CONCAT(rlc.location_city, ', ', rlc.location_state) AS loc_key,
+                json_build_object(
+                    'avg_salary', ROUND(rlc.role_location_avg_salary::numeric, 0),
+                    'vs_location_pct', rlc.vs_location_avg_pct,
+                    'vs_role_pct', rlc.vs_role_avg_pct
+                ) AS obj
+            FROM role_location_comparison rlc
+            WHERE rlc.job_title = rmp.job_title
+            ORDER BY rlc.role_location_avg_salary DESC
+            LIMIT 5
+        ) sub
     ) AS top_locations,
     -- Overall ranking
     RANK() OVER (ORDER BY rmp.avg_salary_midpoint DESC) AS salary_rank
@@ -1840,24 +1859,26 @@ cohort_progression_metrics AS (
         ) AS users_with_below_avg_experience,
         -- Average time to first application
         (
-            SELECT AVG(EXTRACT(EPOCH FROM (MIN(ja.submitted_at) - up.created_at)) / 86400)
-            FROM user_profiles up
-            INNER JOIN job_applications ja ON up.user_id = ja.user_id
-            WHERE DATE_TRUNC('month', up.created_at) = cra.registration_month
-            GROUP BY up.user_id
+            SELECT AVG(days_to_first)
+            FROM (
+                SELECT EXTRACT(EPOCH FROM (MIN(ja.submitted_at) - up.created_at)) / 86400 AS days_to_first
+                FROM user_profiles up
+                INNER JOIN job_applications ja ON up.user_id = ja.user_id
+                WHERE DATE_TRUNC('month', up.created_at) = cra.registration_month
+                GROUP BY up.user_id, up.created_at
+            ) sub
         ) AS avg_days_to_first_application,
-        -- Success rate by cohort
+        -- Success rate by cohort (fraction of users with at least one success)
         (
-            SELECT AVG(
-                CASE
-                    WHEN COUNT(DISTINCT CASE WHEN ja.application_status IN ('interview', 'offer') THEN ja.application_id END) > 0 THEN 1
-                    ELSE 0
-                END
-            )
-            FROM user_profiles up
-            LEFT JOIN job_applications ja ON up.user_id = ja.user_id
-            WHERE DATE_TRUNC('month', up.created_at) = cra.registration_month
-            GROUP BY up.user_id
+            SELECT AVG(has_success)
+            FROM (
+                SELECT
+                    CASE WHEN COUNT(DISTINCT CASE WHEN ja.application_status IN ('interview', 'offer') THEN ja.application_id END) > 0 THEN 1.0 ELSE 0.0 END AS has_success
+                FROM user_profiles up
+                LEFT JOIN job_applications ja ON up.user_id = ja.user_id
+                WHERE DATE_TRUNC('month', up.created_at) = cra.registration_month
+                GROUP BY up.user_id
+            ) sub
         ) AS success_rate_per_user
     FROM cohort_retention_analysis cra
 )
@@ -2193,18 +2214,18 @@ grade_level_analysis AS (
     GROUP BY fja.grade_level
 ),
 geographic_federal_distribution AS (
-    -- Fifth CTE: Analyze geographic distribution
+    -- Fifth CTE: Analyze geographic distribution by agency and location
     SELECT
+        fja.agency_name,
         fja.location_state,
         fja.location_city,
         COUNT(DISTINCT fja.job_id) AS total_federal_jobs,
-        COUNT(DISTINCT fja.agency_name) AS agencies_present,
         COUNT(DISTINCT fja.job_title) AS unique_job_titles,
-        AVG((fja.salary_min + fja.salary_max) / 2) AS avg_salary_midpoint,
-        COUNT(DISTINCT CASE WHEN fja.posted_date >= CURRENT_DATE - INTERVAL '30 days' THEN fja.job_id END) AS recent_jobs_30d
+        COUNT(DISTINCT CASE WHEN fja.posted_date >= CURRENT_DATE - INTERVAL '30 days' THEN fja.job_id END) AS recent_jobs_30d,
+        ARRAY_AGG(fja.agency_name) AS agencies_present
     FROM federal_job_aggregations fja
-    WHERE fja.location_state IS NOT NULL
-    GROUP BY fja.location_state, fja.location_city
+    WHERE fja.location_state IS NOT NULL AND fja.agency_name IS NOT NULL
+    GROUP BY fja.agency_name, fja.location_state, fja.location_city
 ),
 federal_trend_analysis AS (
     -- Sixth CTE: Analyze federal hiring trends
@@ -2233,18 +2254,18 @@ SELECT
     ahp.cities_active,
     ahp.pay_plans_used,
     ahp.grade_levels_used,
-    ROUND(ahp.avg_salary_midpoint, 0) AS avg_salary_midpoint,
+    ROUND(ahp.avg_salary_midpoint::numeric, 0) AS avg_salary_midpoint,
     -- Agency ranking
     RANK() OVER (ORDER BY ahp.total_job_postings DESC) AS agency_rank_by_postings,
     RANK() OVER (ORDER BY ahp.recent_postings_30d DESC) AS agency_rank_by_recent,
     -- Pay plan distribution
     (
-        SELECT JSON_OBJECT_AGG(
+        SELECT json_object_agg(
             ppa.pay_plan,
-            JSON_OBJECT(
+            json_build_object(
                 'total_jobs', ppa.total_jobs,
-                'avg_salary', ROUND(ppa.avg_salary_midpoint, 0),
-                'median_salary', ROUND(ppa.median_salary, 0)
+                'avg_salary', ROUND((ppa.avg_salary_midpoint)::NUMERIC, 0),
+                'median_salary', ROUND((ppa.median_salary)::NUMERIC, 0)
             )
         )
         FROM pay_plan_analysis ppa
@@ -2253,33 +2274,35 @@ SELECT
     ) AS top_pay_plans,
     -- Grade level distribution
     (
-        SELECT JSON_OBJECT_AGG(
-            gla.grade_level,
-            JSON_OBJECT(
-                'total_jobs', gla.total_jobs,
-                'avg_salary', ROUND(gla.avg_salary_midpoint, 0),
-                'unique_titles', gla.unique_job_titles
-            )
-        )
-        FROM grade_level_analysis gla
-        WHERE gla.total_jobs > 0
-        ORDER BY gla.total_jobs DESC
-        LIMIT 5
+        SELECT json_object_agg(gla_sub.grade_level, gla_sub.obj)
+        FROM (
+            SELECT gla.grade_level,
+                json_build_object(
+                    'total_jobs', gla.total_jobs,
+                    'avg_salary', ROUND(gla.avg_salary_midpoint::numeric, 0),
+                    'unique_titles', gla.unique_job_titles
+                ) AS obj
+            FROM grade_level_analysis gla
+            WHERE gla.total_jobs > 0
+            ORDER BY gla.total_jobs DESC
+            LIMIT 5
+        ) gla_sub
     ) AS top_grade_levels,
     -- Geographic distribution
     (
-        SELECT JSON_OBJECT_AGG(
-            CONCAT(gfd.location_city, ', ', gfd.location_state),
-            JSON_OBJECT(
-                'total_jobs', gfd.total_federal_jobs,
-                'recent_jobs', gfd.recent_jobs_30d,
-                'agencies', gfd.agencies_present
-            )
-        )
-        FROM geographic_federal_distribution gfd
-        WHERE gfd.agency_name = ahp.agency_name
-        ORDER BY gfd.total_federal_jobs DESC
-        LIMIT 5
+        SELECT json_object_agg(gfd_sub.loc_key, gfd_sub.obj)
+        FROM (
+            SELECT CONCAT(gfd.location_city, ', ', gfd.location_state) AS loc_key,
+                json_build_object(
+                    'total_jobs', gfd.total_federal_jobs,
+                    'recent_jobs', gfd.recent_jobs_30d,
+                    'agencies', gfd.agencies_present
+                ) AS obj
+            FROM geographic_federal_distribution gfd
+            WHERE gfd.agency_name = ahp.agency_name
+            ORDER BY gfd.total_federal_jobs DESC
+            LIMIT 5
+        ) gfd_sub
     ) AS top_locations
 FROM agency_hiring_patterns ahp
 WHERE ahp.total_job_postings >= 5
@@ -2446,7 +2469,7 @@ SELECT
     ubs.total_searches,
     ubs.active_search_days,
     ubs.unique_queries,
-    ROUND(ubs.avg_results_per_search, 0) AS avg_results_per_search,
+    ROUND(ubs.avg_results_per_search::numeric, 0) AS avg_results_per_search,
     ubs.location_filter_usage_pct,
     ubs.salary_filter_usage_pct,
     ubs.work_model_filter_usage_pct,
@@ -2454,12 +2477,12 @@ SELECT
     ubs.total_recommendations_received,
     ubs.applied_recommendations,
     ubs.recommendation_engagement_rate_pct,
-    ROUND(ubs.searches_per_day, 2) AS searches_per_day,
+    ROUND(ubs.searches_per_day::numeric, 2) AS searches_per_day,
     ubs.behavior_segment,
     ubs.search_sophistication_score,
     -- Comparison metrics
-    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY ubs.total_searches) OVER () AS median_total_searches,
-    PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY ubs.total_searches) OVER () AS p75_total_searches,
+    (SELECT PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY ubs2.total_searches) FROM user_behavior_segmentation ubs2) AS median_total_searches,
+    (SELECT PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY ubs2.total_searches) FROM user_behavior_segmentation ubs2) AS p75_total_searches,
     -- Ranking
     RANK() OVER (ORDER BY ubs.total_searches DESC) AS search_activity_rank,
     RANK() OVER (ORDER BY ubs.recommendation_engagement_rate_pct DESC NULLS LAST) AS engagement_rank
@@ -2509,6 +2532,14 @@ WITH application_stages AS (
             WHEN ja.application_status = 'withdrawn' THEN 0
             ELSE 0
         END AS stage_number,
+        CASE
+            WHEN ja.application_status = 'draft' THEN 'draft'
+            WHEN ja.application_status = 'submitted' THEN 'submitted'
+            WHEN ja.application_status = 'under_review' THEN 'under_review'
+            WHEN ja.application_status = 'interview' THEN 'interview'
+            WHEN ja.application_status = 'offer' THEN 'offer'
+            ELSE 'other'
+        END AS stage_name,
         -- Time at each stage
         EXTRACT(EPOCH FROM (ja.status_updated_at - ja.submitted_at)) / 86400 AS days_to_status_update
     FROM job_applications ja
@@ -2545,8 +2576,8 @@ funnel_conversion_rates AS (
         fsc.stage_name,
         fsc.applications_at_stage,
         fsc.unique_users_at_stage,
-        ROUND(fsc.avg_days_at_stage, 2) AS avg_days_at_stage,
-        ROUND(fsc.median_days_at_stage, 2) AS median_days_at_stage,
+        ROUND(fsc.avg_days_at_stage::numeric, 2) AS avg_days_at_stage,
+        ROUND(fsc.median_days_at_stage::numeric, 2) AS median_days_at_stage,
         -- Previous stage count
         LAG(fsc.applications_at_stage, 1) OVER (ORDER BY fsc.stage_number) AS prev_stage_applications,
         -- Conversion rate from previous stage
@@ -2611,9 +2642,9 @@ funnel_optimization_insights AS (
         ROUND(
             (
                 fcr.drop_off_rate_pct * 0.5 +
-                LEAST(sta.median_time_at_stage / 30.0, 1) * 50 * 0.3 +
+                LEAST(sta.median_time_at_stage::numeric / 30.0, 1) * 50 * 0.3 +
                 (100 - fcr.overall_conversion_rate_pct) * 0.2
-            ),
+            )::numeric,
             2
         ) AS optimization_priority_score
     FROM funnel_conversion_rates fcr
@@ -2627,9 +2658,9 @@ SELECT
     foi.conversion_rate_from_prev_pct,
     foi.drop_off_rate_pct,
     foi.overall_conversion_rate_pct,
-    ROUND(foi.avg_time_at_stage, 1) AS avg_time_at_stage_days,
-    ROUND(foi.median_time_at_stage, 1) AS median_time_at_stage_days,
-    ROUND(foi.p90_time_at_stage, 1) AS p90_time_at_stage_days,
+    ROUND(foi.avg_time_at_stage::numeric, 1) AS avg_time_at_stage_days,
+    ROUND(foi.median_time_at_stage::numeric, 1) AS median_time_at_stage_days,
+    ROUND(foi.p90_time_at_stage::numeric, 1) AS p90_time_at_stage_days,
     foi.drop_off_severity,
     foi.stage_speed_category,
     foi.optimization_priority_score,
@@ -2947,12 +2978,12 @@ market_efficiency_indicators AS (
         ita.industry,
         ita.total_jobs,
         ita.filled_jobs,
-        ROUND(ita.avg_time_to_fill, 1) AS avg_time_to_fill,
-        ROUND(ita.median_time_to_fill, 1) AS median_time_to_fill,
-        ROUND(ita.p25_time_to_fill, 1) AS p25_time_to_fill,
-        ROUND(ita.p75_time_to_fill, 1) AS p75_time_to_fill,
-        ROUND(ita.avg_application_velocity, 2) AS avg_application_velocity,
-        ROUND(ita.avg_success_rate, 2) AS avg_success_rate,
+        ROUND(ita.avg_time_to_fill::numeric, 1) AS avg_time_to_fill,
+        ROUND(ita.median_time_to_fill::numeric, 1) AS median_time_to_fill,
+        ROUND(ita.p25_time_to_fill::numeric, 1) AS p25_time_to_fill,
+        ROUND(ita.p75_time_to_fill::numeric, 1) AS p75_time_to_fill,
+        ROUND(ita.avg_application_velocity::numeric, 2) AS avg_application_velocity,
+        ROUND(ita.avg_success_rate::numeric, 2) AS avg_success_rate,
         -- Fill rate
         CASE
             WHEN ita.total_jobs > 0 THEN
@@ -2963,13 +2994,13 @@ market_efficiency_indicators AS (
         CASE
             WHEN ita.median_time_to_fill IS NOT NULL THEN
                 ROUND(
-                    CASE
+                    (CASE
                         WHEN ita.median_time_to_fill <= 7 THEN 100
                         WHEN ita.median_time_to_fill <= 14 THEN 90 - ((ita.median_time_to_fill - 7) * 5)
                         WHEN ita.median_time_to_fill <= 30 THEN 75 - ((ita.median_time_to_fill - 14) * 2)
                         WHEN ita.median_time_to_fill <= 60 THEN 50 - ((ita.median_time_to_fill - 30) * 1)
                         ELSE GREATEST(0, 20 - ((ita.median_time_to_fill - 60) * 0.5))
-                    END,
+                    END)::numeric,
                     2
                 )
             ELSE NULL
@@ -3172,33 +3203,35 @@ SELECT
     END AS remote_pct_change,
     -- Top remote-friendly locations
     (
-        SELECT JSON_OBJECT_AGG(
-            CONCAT(grd.location_city, ', ', grd.location_state),
-            JSON_OBJECT(
-                'remote_pct', grd.remote_pct,
-                'total_jobs', grd.total_jobs,
-                'avg_salary', ROUND(grd.avg_remote_salary, 0)
-            )
-        )
-        FROM geographic_remote_distribution grd
-        WHERE grd.total_jobs >= 20
-        ORDER BY grd.remote_pct DESC
-        LIMIT 5
+        SELECT json_object_agg(gr_sub.loc_key, gr_sub.obj)
+        FROM (
+            SELECT CONCAT(grd.location_city, ', ', grd.location_state) AS loc_key,
+                json_build_object(
+                    'remote_pct', grd.remote_pct,
+                    'total_jobs', grd.total_jobs,
+                    'avg_salary', ROUND(grd.avg_remote_salary::numeric, 0)
+                ) AS obj
+            FROM geographic_remote_distribution grd
+            WHERE grd.total_jobs >= 20
+            ORDER BY grd.remote_pct DESC
+            LIMIT 5
+        ) gr_sub
     ) AS top_remote_locations,
     -- Top remote-friendly industries
     (
-        SELECT JSON_OBJECT_AGG(
-            ira.industry,
-            JSON_OBJECT(
-                'remote_adoption_pct', ira.remote_adoption_pct,
-                'total_jobs', ira.total_jobs,
-                'avg_salary', ROUND(ira.avg_remote_salary, 0)
-            )
-        )
-        FROM industry_remote_adoption ira
-        WHERE ira.total_jobs >= 50
-        ORDER BY ira.remote_adoption_pct DESC
-        LIMIT 5
+        SELECT json_object_agg(ir_sub.industry, ir_sub.obj)
+        FROM (
+            SELECT ira.industry,
+                json_build_object(
+                    'remote_adoption_pct', ira.remote_adoption_pct,
+                    'total_jobs', ira.total_jobs,
+                    'avg_salary', ROUND(ira.avg_remote_salary::numeric, 0)
+                ) AS obj
+            FROM industry_remote_adoption ira
+            WHERE ira.total_jobs >= 50
+            ORDER BY ira.remote_adoption_pct DESC
+            LIMIT 5
+        ) ir_sub
     ) AS top_remote_industries
 FROM work_model_trend_analysis wmta
 ORDER BY wmta.posting_month DESC
@@ -3284,17 +3317,25 @@ source_quality_metrics AS (
         END AS avg_records_per_extraction
     FROM data_source_extraction_summary dses
 ),
+extraction_gaps AS (
+    -- Sub-CTE: Compute gaps between consecutive extractions per source
+    SELECT
+        dsm.source_name,
+        dsm.extraction_date,
+        LEAD(dsm.extraction_date, 1) OVER (PARTITION BY dsm.source_name ORDER BY dsm.extraction_date) - dsm.extraction_date AS gap_interval
+    FROM data_source_metadata dsm
+),
 source_freshness_analysis AS (
     -- Third CTE: Analyze data freshness
     SELECT
-        dsm.source_name,
-        MAX(dsm.extraction_date) AS last_extraction_date,
-        MIN(dsm.extraction_date) AS first_extraction_date,
-        COUNT(DISTINCT DATE_TRUNC('day', dsm.extraction_date)) AS extraction_days,
-        EXTRACT(EPOCH FROM (CURRENT_TIMESTAMP - MAX(dsm.extraction_date))) / 86400 AS days_since_last_extraction,
-        AVG(EXTRACT(EPOCH FROM (LEAD(dsm.extraction_date, 1) OVER (PARTITION BY dsm.source_name ORDER BY dsm.extraction_date) - dsm.extraction_date)) / 86400) AS avg_days_between_extractions
-    FROM data_source_metadata dsm
-    GROUP BY dsm.source_name
+        eg.source_name,
+        MAX(eg.extraction_date) AS last_extraction_date,
+        MIN(eg.extraction_date) AS first_extraction_date,
+        COUNT(DISTINCT DATE_TRUNC('day', eg.extraction_date)) AS extraction_days,
+        EXTRACT(EPOCH FROM (CURRENT_TIMESTAMP - MAX(eg.extraction_date))) / 86400 AS days_since_last_extraction,
+        AVG(EXTRACT(EPOCH FROM eg.gap_interval) / 86400) FILTER (WHERE eg.gap_interval IS NOT NULL) AS avg_days_between_extractions
+    FROM extraction_gaps eg
+    GROUP BY eg.source_name
 ),
 source_reliability_scoring AS (
     -- Fourth CTE: Calculate reliability scores
@@ -4326,7 +4367,7 @@ optimal_timing_recommendations AS (
         tsa.successful_applications,
         tsa.success_rate_pct,
         ROUND(tsa.avg_days_after_posting, 1) AS avg_days_after_posting,
-        ROUND(tsa.median_days_after_posting, 1) AS median_days_after_posting,
+        ROUND((tsa.median_days_after_posting)::NUMERIC, 1) AS median_days_after_posting,
         -- Timing score
         ROUND(
             (
@@ -4576,17 +4617,17 @@ negotiation_recommendations AS (
         nlf.user_id,
         nlf.job_title,
         nlf.industry,
-        ROUND(nlf.market_median, 0) AS market_median,
-        ROUND(nlf.market_p75, 0) AS market_p75,
-        ROUND(nlf.market_p90, 0) AS market_p90,
-        ROUND(nlf.recommended_salary_target, 0) AS recommended_salary_target,
+        ROUND(nlf.market_median::numeric, 0) AS market_median,
+        ROUND(nlf.market_p75::numeric, 0) AS market_p75,
+        ROUND(nlf.market_p90::numeric, 0) AS market_p90,
+        ROUND(nlf.recommended_salary_target::numeric, 0) AS recommended_salary_target,
         nlf.competing_offers_count,
         nlf.skill_proficiency_avg,
         nlf.matching_skills_count,
         nlf.leverage_level,
         -- Negotiation range
-        ROUND(nlf.recommended_salary_target * 0.95, 0) AS negotiation_min,
-        ROUND(nlf.recommended_salary_target * 1.15, 0) AS negotiation_max,
+        ROUND(nlf.recommended_salary_target::numeric * 0.95, 0) AS negotiation_min,
+        ROUND(nlf.recommended_salary_target::numeric * 1.15, 0) AS negotiation_max,
         -- Negotiation strategy
         CASE
             WHEN nlf.leverage_level = 'high_leverage' AND nlf.skill_proficiency_avg >= 8 THEN 'aggressive'
@@ -4908,7 +4949,7 @@ WITH RECURSIVE job_hierarchy_base AS (
         AVG((jp.salary_min + jp.salary_max) / 2) AS avg_salary,
         COUNT(*) AS job_count,
         0 AS hierarchy_level,
-        ARRAY[jp.job_title] AS career_path,
+        ARRAY[jp.job_title]::varchar(255)[] AS career_path,
         jp.job_title AS path_description
     FROM job_postings jp
     WHERE jp.is_active = TRUE
@@ -4922,21 +4963,29 @@ WITH RECURSIVE job_hierarchy_base AS (
     
     UNION ALL
     
-    -- Recursive: Build career progression paths
+    -- Recursive: Build career progression paths (salary filter applied via subquery to avoid aggregate in recursive term)
     SELECT
         jp2.job_title,
         jp2.industry,
         jp2.location_state,
-        AVG((jp2.salary_min + jp2.salary_max) / 2) AS avg_salary,
-        COUNT(*) AS job_count,
+        jp2_agg.avg_salary,
+        jp2_agg.job_count,
         jhb.hierarchy_level + 1,
-        jhb.career_path || jp2.job_title,
-        jhb.path_description || ' -> ' || jp2.job_title
+        (jhb.career_path || jp2.job_title)::varchar(255)[],
+        (jhb.path_description || ' -> ' || jp2.job_title)::varchar(255)
     FROM job_postings jp2
+    INNER JOIN (
+        SELECT jp.job_title, jp.industry, jp.location_state,
+            AVG((jp.salary_min + jp.salary_max) / 2) AS avg_salary,
+            COUNT(*) AS job_count
+        FROM job_postings jp
+        WHERE jp.is_active = TRUE
+        GROUP BY jp.job_title, jp.industry, jp.location_state
+    ) jp2_agg ON jp2.job_title = jp2_agg.job_title AND jp2.industry = jp2_agg.industry AND jp2.location_state = jp2_agg.location_state
     INNER JOIN job_hierarchy_base jhb ON jp2.industry = jhb.industry
         AND jp2.location_state = jhb.location_state
+        AND jp2_agg.avg_salary > jhb.avg_salary * 1.1  -- Salary progression
         AND (
-            -- Progression logic: senior roles follow junior roles
             (jhb.job_title LIKE '%junior%' AND jp2.job_title LIKE '%senior%')
             OR (jhb.job_title LIKE '%associate%' AND jp2.job_title LIKE '%engineer%')
             OR (jhb.job_title LIKE '%engineer%' AND jp2.job_title LIKE '%senior%engineer%')
@@ -4947,10 +4996,8 @@ WITH RECURSIVE job_hierarchy_base AS (
             OR (jhb.job_title LIKE '%lead%' AND jp2.job_title LIKE '%principal%')
             OR (jhb.job_title LIKE '%principal%' AND jp2.job_title LIKE '%director%')
         )
-        AND AVG((jp2.salary_min + jp2.salary_max) / 2) > jhb.avg_salary * 1.1  -- Salary progression
-    WHERE jhb.hierarchy_level < 5  -- Prevent infinite recursion
-        AND NOT (jp2.job_title = ANY(jhb.career_path))  -- Prevent cycles
-    GROUP BY jp2.job_title, jp2.industry, jp2.location_state, jhb.hierarchy_level, jhb.career_path, jhb.path_description, jhb.avg_salary
+    WHERE jhb.hierarchy_level < 5
+        AND NOT (jp2.job_title = ANY(jhb.career_path))
 ),
 career_path_analysis AS (
     -- CTE: Analyze career paths
@@ -4961,7 +5008,7 @@ career_path_analysis AS (
         jhb.hierarchy_level,
         jhb.career_path,
         jhb.path_description,
-        ROUND(jhb.avg_salary, 0) AS avg_salary,
+        ROUND(jhb.avg_salary::numeric, 0) AS avg_salary,
         jhb.job_count,
         -- Path metrics
         ARRAY_LENGTH(jhb.career_path, 1) AS path_length,
@@ -4989,29 +5036,42 @@ career_path_analysis AS (
     WHERE jhb.hierarchy_level > 0
 )
 SELECT
-    cpa.job_title,
-    cpa.industry,
-    cpa.location_state,
-    cpa.hierarchy_level,
-    cpa.path_description,
-    cpa.avg_salary,
-    cpa.job_count,
-    cpa.path_length,
-    ROUND(cpa.total_salary_increase, 0) AS total_salary_increase,
-    cpa.path_frequency,
-    -- Path score
-    ROUND(
-        (
-            LEAST(cpa.path_length / 5.0, 1) * 30 +
-            LEAST(cpa.total_salary_increase / 100000.0, 1) * 40 +
-            LEAST(cpa.path_frequency / 10.0, 1) * 30
-        ) * 100,
-        2
-    ) AS path_score,
-    RANK() OVER (PARTITION BY cpa.industry ORDER BY cpa.path_score DESC) AS industry_path_rank
-FROM career_path_analysis cpa
-WHERE cpa.path_length >= 2
-ORDER BY cpa.path_score DESC, cpa.total_salary_increase DESC
+    sub.job_title,
+    sub.industry,
+    sub.location_state,
+    sub.hierarchy_level,
+    sub.path_description,
+    sub.avg_salary,
+    sub.job_count,
+    sub.path_length,
+    sub.total_salary_increase,
+    sub.path_frequency,
+    sub.path_score,
+    RANK() OVER (PARTITION BY sub.industry ORDER BY sub.path_score DESC) AS industry_path_rank
+FROM (
+    SELECT
+        cpa.job_title,
+        cpa.industry,
+        cpa.location_state,
+        cpa.hierarchy_level,
+        cpa.path_description,
+        cpa.avg_salary,
+        cpa.job_count,
+        cpa.path_length,
+        ROUND(cpa.total_salary_increase::numeric, 0) AS total_salary_increase,
+        cpa.path_frequency,
+        ROUND(
+            (
+                LEAST(cpa.path_length / 5.0, 1) * 30 +
+                LEAST(COALESCE(cpa.total_salary_increase, 0) / 100000.0, 1) * 40 +
+                LEAST(cpa.path_frequency / 10.0, 1) * 30
+            )::numeric,
+            2
+        ) AS path_score
+    FROM career_path_analysis cpa
+    WHERE cpa.path_length >= 2
+) sub
+ORDER BY sub.path_score DESC, sub.total_salary_increase DESC
 LIMIT 100;
 ```
 
@@ -5078,9 +5138,9 @@ segment_profiling AS (
         da.work_model,
         da.job_type,
         da.segment_job_count,
-        ROUND(da.segment_avg_salary, 0) AS segment_avg_salary,
-        ROUND(da.segment_median_salary, 0) AS segment_median_salary,
-        ROUND(da.segment_avg_skills, 1) AS segment_avg_skills,
+        ROUND(da.segment_avg_salary::numeric, 0) AS segment_avg_salary,
+        ROUND(da.segment_median_salary::numeric, 0) AS segment_median_salary,
+        ROUND(da.segment_avg_skills::numeric, 1) AS segment_avg_skills,
         da.segment_unique_titles,
         da.segment_cities,
         da.segment_skill_categories,
@@ -5364,6 +5424,7 @@ unified_job_matching AS (
     SELECT
         sd.job_id,
         sd.job_title,
+        sd.job_fingerprint,
         sd.company_id,
         sd.company_name,
         sd.industry,
@@ -5552,7 +5613,7 @@ executive_summary AS (
         mom.total_companies,
         mom.total_industries,
         mom.total_states,
-        ROUND(mom.market_avg_salary, 0) AS market_avg_salary,
+        ROUND(mom.market_avg_salary::numeric, 0) AS market_avg_salary,
         mom.remote_jobs_count,
         ROUND((mom.remote_jobs_count::NUMERIC / NULLIF(mom.total_active_jobs, 0)) * 100, 2) AS remote_jobs_pct,
         mom.recent_jobs_30d,
@@ -5573,7 +5634,7 @@ executive_summary AS (
         smm.required_skills_count,
         -- Top industries
         (
-            SELECT JSON_OBJECT_AGG(ib.industry, ib.industry_jobs)
+            SELECT json_object_agg(ib.industry, ib.industry_jobs)
             FROM (
                 SELECT industry, industry_jobs
                 FROM industry_breakdown
@@ -5583,7 +5644,7 @@ executive_summary AS (
         ) AS top_industries,
         -- Top states
         (
-            SELECT JSON_OBJECT_AGG(gb.location_state, gb.state_jobs)
+            SELECT json_object_agg(gb.location_state, gb.state_jobs)
             FROM (
                 SELECT location_state, state_jobs
                 FROM geographic_breakdown
@@ -5593,7 +5654,7 @@ executive_summary AS (
         ) AS top_states,
         -- Data source status
         (
-            SELECT JSON_OBJECT_AGG(dsh.source_name, JSON_OBJECT(
+            SELECT json_object_agg(dsh.source_name, json_build_object(
                 'success_rate', ROUND((dsh.successful_extractions::NUMERIC / NULLIF(dsh.total_extractions, 0)) * 100, 2),
                 'total_records', dsh.total_records,
                 'last_extraction', dsh.last_extraction_date

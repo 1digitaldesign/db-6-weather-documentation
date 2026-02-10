@@ -242,7 +242,7 @@
     "usajobs": "JSON with HTML-formatted descriptions",
     "bls": "JSON time series data",
     "dol": "CSV, JSON, XML (varies by dataset)",
-    "target_database": "PostgreSQL and Databricks Delta Lake"
+    "target_database": "PostgreSQL Delta Lake"
   },
   "best_practices": [
     "Respect rate limits - implement exponential backoff retry logic",

@@ -345,7 +345,7 @@ Exact numeric with specified precision and scale. Example: NUMERIC(5, 2) stores 
 True/false value.
 
 ### TIMESTAMP_NTZ
-Timestamp without timezone. Compatible across PostgreSQL, Databricks, and Snowflake.
+Timestamp without timezone. Compatible across PostgreSQL.
 
 ### DATE
 Date value (year, month, day).

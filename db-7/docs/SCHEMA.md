@@ -242,8 +242,8 @@ The database integrates data from multiple government sources:
 
 The database schema is compatible with:
 - PostgreSQL (with PostGIS for spatial operations)
-- Databricks (Delta Lake)
-- Snowflake
+ (Delta Lake)
+
 
 ---
 **Last Updated:** 2026-02-04

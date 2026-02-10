@@ -288,7 +288,7 @@ def main():
     else:
         print(f"Requirement: Minimum {report['requirement']['min_gb']:.1f} GB")
     print(f"\nFile Data:")
-    print(f"  Generated: {report['file_volumes']['total_generated_gb']:.2f} GB")
+    print(f"  Rebuilt: {report['file_volumes']['total_generated_gb']:.2f} GB")
     print(f"  Transformed: {report['file_volumes']['total_transformed_gb']:.2f} GB")
     print(f"  Internet Pulled: {report['file_volumes']['total_internet_pulled_gb']:.2f} GB")
     print(f"  Internet Transformed: {report['file_volumes']['total_internet_transformed_gb']:.2f} GB")

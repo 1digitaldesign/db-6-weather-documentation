@@ -1,4 +1,55 @@
-# SQL Queries for db-16
+# Database 16 - Flood Risk Assessment - Extremely Complex SQL Queries
+
+# Database Schema: DB16
+
+**Description:** Flood Risk Assessment Database for M&A Due Diligence
+**Created:** 2026-02-04
+
+## Overview
+
+This database contains flood risk assessment data for real estate M&A due diligence, integrating federal data sources including FEMA National Flood Hazard Layer (NFHL), NOAA sea level rise projections, USGS streamflow gauges and observations, and NASA flood model outputs. The database supports multi-factor risk scoring, spatial analysis, temporal projections, portfolio-level aggregation, and financial impact modeling for properties under acquisition consideration.
+
+## Tables
+
+### `fema_flood_zones`
+FEMA NFHL flood zone designations and Base Flood Elevations with spatial boundaries
+
+### `noaa_sea_level_rise`
+NOAA sea level rise projections and high tide flooding data by coastal station
+
+### `usgs_streamflow_gauges`
+USGS streamflow gauge locations and flood stage thresholds
+
+### `usgs_streamflow_observations`
+Real-time and historical streamflow measurements from USGS gauges
+
+### `nasa_flood_models`
+NASA flood model predictions (GFMS, VIIRS, MODIS) and inundation extents
+
+### `real_estate_properties`
+Properties under M&A evaluation with location, value, and elevation data
+
+### `flood_risk_assessments`
+Composite multi-factor flood risk scores per property across time horizons
+
+### `property_flood_zone_intersections`
+Spatial join results linking properties to intersecting flood zones
+
+### `portfolio_risk_summaries`
+Aggregated portfolio-level risk metrics for M&A decision-making
+
+### `historical_flood_events`
+Historical flood records with damage estimates and affected areas
+
+### `model_performance_metrics`
+Model accuracy tracking for flood prediction validation
+
+### `data_quality_metrics`
+Data pipeline quality monitoring and freshness tracking
+
+---
+
+This file contains 30 extremely complex SQL queries focused on flood risk assessment for M&A due diligence. All queries are designed to work across PostgreSQL (with PostGIS).
 
 ## Query 1: Pre-Acquisition Multi-Factor Flood Risk Assessment with Spatial Analysis and Temporal Projections
 

@@ -1,4 +1,4 @@
-# Database 10 - Shopping Aggregator Database - Extremely Complex SQL Queries
+# Database 10 - Marketing Intelligence Database - Extremely Complex SQL Queries
 
 # Database Schema: DB10
 
@@ -49,7 +49,7 @@ ETL pipeline execution tracking and error logging
 
 ---
 
-This file contains 30 extremely complex SQL queries focused on business-oriented use cases for client deliverables. All queries are designed to work across PostgreSQL, Databricks, and Snowflake.
+This file contains 30 extremely complex SQL queries focused on business-oriented use cases for client deliverables. All queries are designed to work across PostgreSQL.
 
 ## Query 1: Multi-Retailer Price Comparison with Geographic Filtering and Temporal Trend Analysis
 

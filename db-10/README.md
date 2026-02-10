@@ -92,8 +92,8 @@ Target data size: **~2GB** with balanced coverage:
 
 All queries are designed to work across:
 - PostgreSQL (with PostGIS for spatial data)
-- Databricks (Delta Lake)
-- Snowflake
+ (Delta Lake)
+
 
 ## Usage
 

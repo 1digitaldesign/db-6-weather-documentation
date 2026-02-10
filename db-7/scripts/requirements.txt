@@ -3,7 +3,6 @@
 
 # Database connectors
 psycopg2-binary>=2.9.0
-databricks-sql-connector>=2.0.0
 
 # Data processing
 pandas>=2.0.0

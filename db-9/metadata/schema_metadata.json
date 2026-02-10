@@ -76,7 +76,7 @@
         "compatible": true,
         "notes": "Uses VARIANT type for JSON data, TIMESTAMP_NTZ compatible"
       },
-      "snowflake": {
+      "databricks": {
         "version": "Any",
         "compatible": true,
         "notes": "Native TIMESTAMP_NTZ support, VARIANT for JSON"

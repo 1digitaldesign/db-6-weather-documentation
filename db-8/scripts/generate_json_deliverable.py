@@ -99,7 +99,7 @@ def main():
     with open(output_file, 'w') as f:
         json.dump(deliverable, f, indent=2, ensure_ascii=False)
     
-    print(f"JSON deliverable generated: {output_file}")
+    print(f"JSON deliverable Rebuilt: {output_file}")
 
 if __name__ == '__main__':
     main()

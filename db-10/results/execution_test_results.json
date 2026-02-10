@@ -5,7 +5,7 @@
     "available": false,
     "queries": []
   },
-  "snowflake": {
+  "databricks": {
     "available": false,
     "queries": []
   },
@@ -17,7 +17,7 @@
       "failed": 0,
       "success_rate": 0
     },
-    "snowflake": {
+    "databricks": {
       "tested": 0,
       "successful": 0,
       "failed": 0,

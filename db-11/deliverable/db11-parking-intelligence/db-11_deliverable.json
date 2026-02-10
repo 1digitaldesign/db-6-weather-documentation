@@ -1,9 +1,9 @@
 {
   "database": {
     "id": "db-11",
-    "name": "Parking Intelligence Database",
-    "description": "Comprehensive parking intelligence database with 30 production queries for market analysis, competitive intelligence, and revenue optimization.",
-    "created_date": "2026-02-04",
+    "name": "Database db-11",
+    "description": "Database db-11",
+    "created_date": "2026-02-09",
     "version": "1.0"
   },
   "schema": {
@@ -11,59 +11,1479 @@
     "tables": [
       {
         "name": "metropolitan_areas",
-        "description": "metropolitan_areas table"
+        "description": "",
+        "columns": [
+          {
+            "name": "msa_id",
+            "data_type": "VARCHAR(50)",
+            "constraints": "PRIMARY KEY",
+            "description": ""
+          },
+          {
+            "name": "msa_name",
+            "data_type": "VARCHAR(255)",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "msa_type",
+            "data_type": "VARCHAR(50)",
+            "constraints": "NOT NULL",
+            "description": "'MSA', 'CSA', 'Micropolitan'"
+          },
+          {
+            "name": "state_codes",
+            "data_type": "VARCHAR(100)",
+            "constraints": "",
+            "description": "Comma-separated state codes"
+          },
+          {
+            "name": "principal_city",
+            "data_type": "VARCHAR(255)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "population_estimate",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "land_area_sq_miles",
+            "data_type": "NUMERIC(12",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "population_density",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "median_household_income",
+            "data_type": "NUMERIC(12",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "gdp_billions",
+            "data_type": "NUMERIC(12",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "msa_geom",
+            "data_type": "GEOGRAPHY",
+            "constraints": "",
+            "description": "Polygon geometry for MSA boundary"
+          },
+          {
+            "name": "spatial_extent_west",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "spatial_extent_south",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "spatial_extent_east",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "spatial_extent_north",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "data_year",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "load_timestamp",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "",
+            "description": ""
+          }
+        ]
       },
       {
         "name": "cities",
-        "description": "cities table"
+        "description": "",
+        "columns": [
+          {
+            "name": "city_id",
+            "data_type": "VARCHAR(50)",
+            "constraints": "PRIMARY KEY",
+            "description": ""
+          },
+          {
+            "name": "city_name",
+            "data_type": "VARCHAR(255)",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "state_code",
+            "data_type": "VARCHAR(2)",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "county_name",
+            "data_type": "VARCHAR(255)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "msa_id",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "population",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "land_area_sq_miles",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "population_density",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "median_household_income",
+            "data_type": "NUMERIC(12",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "median_age",
+            "data_type": "NUMERIC(5",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "employment_total",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "unemployment_rate",
+            "data_type": "NUMERIC(5",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "city_geom",
+            "data_type": "GEOGRAPHY",
+            "constraints": "",
+            "description": "Point geometry for city center"
+          },
+          {
+            "name": "city_latitude",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "city_longitude",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "timezone",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "data_year",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "load_timestamp",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (msa_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          }
+        ]
       },
       {
         "name": "airports",
-        "description": "airports table"
+        "description": "",
+        "columns": [
+          {
+            "name": "airport_id",
+            "data_type": "VARCHAR(10)",
+            "constraints": "PRIMARY KEY",
+            "description": "IATA code"
+          },
+          {
+            "name": "airport_name",
+            "data_type": "VARCHAR(255)",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "city_id",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "state_code",
+            "data_type": "VARCHAR(2)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "airport_type",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": "'Commercial', 'Cargo', 'General Aviation'"
+          },
+          {
+            "name": "latitude",
+            "data_type": "NUMERIC(10",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "longitude",
+            "data_type": "NUMERIC(10",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "airport_geom",
+            "data_type": "GEOGRAPHY",
+            "constraints": "",
+            "description": "Point geometry"
+          },
+          {
+            "name": "annual_passengers",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "annual_cargo_tons",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "parking_spaces_total",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "parking_facilities_count",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "valet_available",
+            "data_type": "BOOLEAN",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "long_term_parking",
+            "data_type": "BOOLEAN",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "short_term_parking",
+            "data_type": "BOOLEAN",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "data_year",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "load_timestamp",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (city_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          }
+        ]
       },
       {
         "name": "stadiums_venues",
-        "description": "stadiums_venues table"
+        "description": "",
+        "columns": [
+          {
+            "name": "venue_id",
+            "data_type": "VARCHAR(50)",
+            "constraints": "PRIMARY KEY",
+            "description": ""
+          },
+          {
+            "name": "venue_name",
+            "data_type": "VARCHAR(255)",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "venue_type",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": "'Stadium', 'Arena', 'Convention Center', 'Amphitheater'"
+          },
+          {
+            "name": "city_id",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "latitude",
+            "data_type": "NUMERIC(10",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "longitude",
+            "data_type": "NUMERIC(10",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "venue_geom",
+            "data_type": "GEOGRAPHY",
+            "constraints": "",
+            "description": "Point geometry"
+          },
+          {
+            "name": "capacity",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "parking_spaces_total",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "parking_facilities_count",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "primary_sport",
+            "data_type": "VARCHAR(100)",
+            "constraints": "",
+            "description": "'NFL', 'MLB', 'NBA', 'NHL', 'Soccer', 'Concert'"
+          },
+          {
+            "name": "team_name",
+            "data_type": "VARCHAR(255)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "annual_events_count",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "peak_attendance",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "data_year",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "load_timestamp",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (city_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          }
+        ]
       },
       {
         "name": "parking_facilities",
-        "description": "parking_facilities table"
+        "description": "",
+        "columns": [
+          {
+            "name": "facility_id",
+            "data_type": "VARCHAR(100)",
+            "constraints": "PRIMARY KEY",
+            "description": ""
+          },
+          {
+            "name": "facility_name",
+            "data_type": "VARCHAR(255)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "facility_type",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": "'Surface Lot', 'Garage', 'Structure', 'Valet', 'Street'"
+          },
+          {
+            "name": "city_id",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "latitude",
+            "data_type": "NUMERIC(10",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "longitude",
+            "data_type": "NUMERIC(10",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "facility_geom",
+            "data_type": "GEOGRAPHY",
+            "constraints": "",
+            "description": "Point geometry"
+          },
+          {
+            "name": "total_spaces",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "accessible_spaces",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "ev_charging_stations",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "covered_spaces",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "uncovered_spaces",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "height_restriction_feet",
+            "data_type": "NUMERIC(5",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "operator_name",
+            "data_type": "VARCHAR(255)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "operator_type",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": "'Public', 'Private', 'Municipal', 'Airport', 'Venue'"
+          },
+          {
+            "name": "airport_id",
+            "data_type": "VARCHAR(10)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "venue_id",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "is_event_parking",
+            "data_type": "BOOLEAN",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "is_monthly_parking",
+            "data_type": "BOOLEAN",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "is_hourly_parking",
+            "data_type": "BOOLEAN",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "accepts_reservations",
+            "data_type": "BOOLEAN",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "payment_methods",
+            "data_type": "VARCHAR(255)",
+            "constraints": "",
+            "description": "Comma-separated: 'Cash', 'Credit', 'Mobile', 'App'"
+          },
+          {
+            "name": "amenities",
+            "data_type": "VARCHAR(500)",
+            "constraints": "",
+            "description": "Comma-separated amenities"
+          },
+          {
+            "name": "load_timestamp",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (city_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (airport_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (venue_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          }
+        ]
       },
       {
         "name": "parking_pricing",
-        "description": "parking_pricing table"
+        "description": "",
+        "columns": [
+          {
+            "name": "pricing_id",
+            "data_type": "VARCHAR(100)",
+            "constraints": "PRIMARY KEY",
+            "description": ""
+          },
+          {
+            "name": "facility_id",
+            "data_type": "VARCHAR(100)",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "pricing_type",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": "'Hourly', 'Daily', 'Monthly', 'Event', 'Early Bird'"
+          },
+          {
+            "name": "base_rate_hourly",
+            "data_type": "NUMERIC(8",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "base_rate_daily",
+            "data_type": "NUMERIC(8",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "base_rate_monthly",
+            "data_type": "NUMERIC(8",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "event_rate",
+            "data_type": "NUMERIC(8",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "max_daily_rate",
+            "data_type": "NUMERIC(8",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "currency",
+            "data_type": "VARCHAR(3)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "effective_date",
+            "data_type": "DATE",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "expiration_date",
+            "data_type": "DATE",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "day_of_week",
+            "data_type": "VARCHAR(20)",
+            "constraints": "",
+            "description": "'Monday', 'Tuesday', etc., or 'All'"
+          },
+          {
+            "name": "time_range_start",
+            "data_type": "TIME",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "time_range_end",
+            "data_type": "TIME",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "is_active",
+            "data_type": "BOOLEAN",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "load_timestamp",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (facility_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          }
+        ]
       },
       {
         "name": "traffic_volume_data",
-        "description": "traffic_volume_data table"
+        "description": "",
+        "columns": [
+          {
+            "name": "traffic_id",
+            "data_type": "VARCHAR(100)",
+            "constraints": "PRIMARY KEY",
+            "description": ""
+          },
+          {
+            "name": "location_id",
+            "data_type": "VARCHAR(100)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "city_id",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "latitude",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "longitude",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "location_geom",
+            "data_type": "GEOGRAPHY",
+            "constraints": "",
+            "description": "Point geometry"
+          },
+          {
+            "name": "road_name",
+            "data_type": "VARCHAR(255)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "road_type",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": "'Highway', 'Arterial', 'Collector', 'Local'"
+          },
+          {
+            "name": "annual_average_daily_traffic",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "peak_hour_volume",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "direction",
+            "data_type": "VARCHAR(20)",
+            "constraints": "",
+            "description": "'Northbound', 'Southbound', 'Eastbound', 'Westbound', 'Both'"
+          },
+          {
+            "name": "data_year",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "data_month",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "load_timestamp",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (city_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          }
+        ]
       },
       {
         "name": "events",
-        "description": "events table"
+        "description": "",
+        "columns": [
+          {
+            "name": "event_id",
+            "data_type": "VARCHAR(100)",
+            "constraints": "PRIMARY KEY",
+            "description": ""
+          },
+          {
+            "name": "event_name",
+            "data_type": "VARCHAR(255)",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "event_type",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": "'Sports', 'Concert', 'Convention', 'Festival', 'Conference'"
+          },
+          {
+            "name": "venue_id",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "city_id",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "event_date",
+            "data_type": "DATE",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "event_time",
+            "data_type": "TIME",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "attendance",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "parking_demand_multiplier",
+            "data_type": "NUMERIC(5",
+            "constraints": "",
+            "description": "Multiplier for parking demand"
+          },
+          {
+            "name": "is_recurring",
+            "data_type": "BOOLEAN",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "recurrence_pattern",
+            "data_type": "VARCHAR(100)",
+            "constraints": "",
+            "description": "'Weekly', 'Monthly', 'Seasonal'"
+          },
+          {
+            "name": "load_timestamp",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (venue_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (city_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          }
+        ]
       },
       {
         "name": "market_intelligence_metrics",
-        "description": "market_intelligence_metrics table"
+        "description": "",
+        "columns": [
+          {
+            "name": "metric_id",
+            "data_type": "VARCHAR(100)",
+            "constraints": "PRIMARY KEY",
+            "description": ""
+          },
+          {
+            "name": "city_id",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "msa_id",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "metric_type",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": "'Demand', 'Supply', 'Utilization', 'Revenue', 'Competition'"
+          },
+          {
+            "name": "metric_name",
+            "data_type": "VARCHAR(100)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "metric_value",
+            "data_type": "NUMERIC(15",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "metric_unit",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "calculation_date",
+            "data_type": "DATE",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "time_period",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": "'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Annual'"
+          },
+          {
+            "name": "data_year",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "data_month",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "load_timestamp",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (city_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (msa_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          }
+        ]
       },
       {
         "name": "parking_utilization",
-        "description": "parking_utilization table"
+        "description": "",
+        "columns": [
+          {
+            "name": "utilization_id",
+            "data_type": "VARCHAR(100)",
+            "constraints": "PRIMARY KEY",
+            "description": ""
+          },
+          {
+            "name": "facility_id",
+            "data_type": "VARCHAR(100)",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "utilization_date",
+            "data_type": "DATE",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "utilization_hour",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": "0-23"
+          },
+          {
+            "name": "occupancy_rate",
+            "data_type": "NUMERIC(5",
+            "constraints": "",
+            "description": "Percentage 0-100"
+          },
+          {
+            "name": "spaces_occupied",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "spaces_available",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "revenue_generated",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "reservation_count",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "walk_in_count",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "data_source",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": "'Sensor', 'Manual', 'App', 'Estimated'"
+          },
+          {
+            "name": "load_timestamp",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (facility_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          }
+        ]
       },
       {
         "name": "competitive_analysis",
-        "description": "competitive_analysis table"
+        "description": "",
+        "columns": [
+          {
+            "name": "analysis_id",
+            "data_type": "VARCHAR(100)",
+            "constraints": "PRIMARY KEY",
+            "description": ""
+          },
+          {
+            "name": "facility_id",
+            "data_type": "VARCHAR(100)",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "competitor_facility_id",
+            "data_type": "VARCHAR(100)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "analysis_date",
+            "data_type": "DATE",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "price_difference_pct",
+            "data_type": "NUMERIC(5",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "distance_miles",
+            "data_type": "NUMERIC(8",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "utilization_difference_pct",
+            "data_type": "NUMERIC(5",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "amenity_comparison",
+            "data_type": "VARCHAR(500)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "competitive_score",
+            "data_type": "NUMERIC(5",
+            "constraints": "",
+            "description": "0-100"
+          },
+          {
+            "name": "load_timestamp",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (facility_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (competitor_facility_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          }
+        ]
       },
       {
         "name": "business_districts",
-        "description": "business_districts table"
+        "description": "",
+        "columns": [
+          {
+            "name": "district_id",
+            "data_type": "VARCHAR(50)",
+            "constraints": "PRIMARY KEY",
+            "description": ""
+          },
+          {
+            "name": "district_name",
+            "data_type": "VARCHAR(255)",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "city_id",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "district_type",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": "'Downtown', 'Financial', 'Retail', 'Entertainment', 'Airport', 'Medical'"
+          },
+          {
+            "name": "latitude",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "longitude",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "district_geom",
+            "data_type": "GEOGRAPHY",
+            "constraints": "",
+            "description": "Polygon geometry"
+          },
+          {
+            "name": "employment_total",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "businesses_count",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "parking_demand_score",
+            "data_type": "NUMERIC(5",
+            "constraints": "",
+            "description": "0-100"
+          },
+          {
+            "name": "spatial_extent_west",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "spatial_extent_south",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "spatial_extent_east",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "spatial_extent_north",
+            "data_type": "NUMERIC(10",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "data_year",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "load_timestamp",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (city_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          }
+        ]
       },
       {
         "name": "facility_district_mapping",
-        "description": "facility_district_mapping table"
+        "description": "",
+        "columns": [
+          {
+            "name": "mapping_id",
+            "data_type": "VARCHAR(100)",
+            "constraints": "PRIMARY KEY",
+            "description": ""
+          },
+          {
+            "name": "facility_id",
+            "data_type": "VARCHAR(100)",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "district_id",
+            "data_type": "VARCHAR(50)",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "distance_miles",
+            "data_type": "NUMERIC(8",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "is_primary_district",
+            "data_type": "BOOLEAN",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "load_timestamp",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (facility_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          },
+          {
+            "name": "FOREIGN",
+            "data_type": "KEY (district_id)",
+            "constraints": "FOREIGN KEY",
+            "description": ""
+          }
+        ]
       },
       {
         "name": "data_source_metadata",
-        "description": "data_source_metadata table"
+        "description": "",
+        "columns": [
+          {
+            "name": "source_id",
+            "data_type": "VARCHAR(100)",
+            "constraints": "PRIMARY KEY",
+            "description": ""
+          },
+          {
+            "name": "source_name",
+            "data_type": "VARCHAR(255)",
+            "constraints": "NOT NULL",
+            "description": ""
+          },
+          {
+            "name": "source_type",
+            "data_type": "VARCHAR(50)",
+            "constraints": "",
+            "description": "'API', 'CSV', 'Shapefile', 'Database', 'Web Scrape'"
+          },
+          {
+            "name": "source_url",
+            "data_type": "VARCHAR(1000)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "api_endpoint",
+            "data_type": "VARCHAR(500)",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "extraction_date",
+            "data_type": "DATE",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "extraction_timestamp",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "records_extracted",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "data_quality_score",
+            "data_type": "NUMERIC(5",
+            "constraints": "",
+            "description": "0-100"
+          },
+          {
+            "name": "completeness_pct",
+            "data_type": "NUMERIC(5",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "error_count",
+            "data_type": "INTEGER",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "load_timestamp",
+            "data_type": "TIMESTAMP_NTZ",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          },
+          {
+            "name": "CREATE",
+            "data_type": "INDEX",
+            "constraints": "",
+            "description": ""
+          }
+        ]
       }
     ]
   },
@@ -332,11 +1752,16 @@
     {
       "number": 30,
       "title": "Cross-Database Performance Optimization Analysis with Query Efficiency Metrics",
-      "description": "Description: Analyzes cross-database performance using CTEs for query efficiency metrics, optimization recommendations, and performance benchmarking. Use Case: Optimize query performance across PostgreSQL, Databricks, and Snowflake. Business Value: Performance optimization report with efficiency metrics and optimization recommendations. Purpose: Enables data-driven decision making through advanced analytics and business intelligence. Complexity: Performance CTEs (7+ levels), efficiency metrics, ",
+      "description": "Description: Analyzes cross-database performance using CTEs for query efficiency metrics, optimization recommendations, and performance benchmarking. Use Case: Optimize query performance across PostgreSQL. Business Value: Performance optimization report with efficiency metrics and optimization recommendations. Purpose: Enables data-driven decision making through advanced analytics and business intelligence. Complexity: Performance CTEs (7+ levels), efficiency metrics, ",
       "complexity": "Performance CTEs (7+ levels), efficiency metrics, optimization analysis",
       "expected_output": "Query results with analysis and recommendations.",
       "sql": "WITH facility_base_data AS (\n    SELECT\n        pf.facility_id,\n        pf.facility_name,\n        pf.city_id,\n        pf.total_spaces,\n        pf.facility_type,\n        pf.operator_type,\n        pf.latitude,\n        pf.longitude,\n        pf.is_event_parking,\n        pf.is_monthly_parking,\n        pf.accepts_reservations,\n        c.city_name,\n        c.state_code,\n        c.population,\n        c.population_density,\n        c.median_household_income,\n        c.employment_total,\n        ma.msa_name,\n        ma.gdp_billions,\n        ma.population_estimate AS msa_population\n    FROM parking_facilities pf\n    INNER JOIN cities c ON pf.city_id = c.city_id\n    INNER JOIN metropolitan_areas ma ON c.msa_id = ma.msa_id\n    WHERE pf.is_hourly_parking = TRUE\n),\nutilization_aggregations AS (\n    SELECT\n        pu.facility_id,\n        pu.utilization_date,\n        pu.utilization_hour,\n        AVG(pu.occupancy_rate) AS avg_occupancy_rate,\n        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY pu.occupancy_rate) AS median_occupancy_rate,\n        PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY pu.occupancy_rate) AS p75_occupancy_rate,\n        PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY pu.occupancy_rate) AS p95_occupancy_rate,\n        SUM(pu.revenue_generated) AS total_revenue,\n        AVG(pu.revenue_generated) AS avg_revenue_per_record,\n        COUNT(*) AS utilization_records,\n        COUNT(DISTINCT pu.utilization_date) AS days_with_data,\n        DATE_PART('dow', pu.utilization_date) AS day_of_week\n    FROM parking_utilization pu\n    WHERE pu.utilization_date >= CURRENT_DATE - INTERVAL '90 days'\n    GROUP BY pu.facility_id, pu.utilization_date, pu.utilization_hour, DATE_PART('dow', pu.utilization_date)\n),\npricing_analysis AS (\n    SELECT\n        pp.facility_id,\n        AVG(pp.base_rate_hourly) AS avg_hourly_rate,\n        AVG(pp.base_rate_daily) AS avg_daily_rate,\n        AVG(pp.base_rate_monthly) AS avg_monthly_rate,\n        MIN(pp.base_rate_hourly) AS min_hourly_rate,\n        MAX(pp.base_rate_hourly) AS max_hourly_rate,\n        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY pp.base_rate_hourly) AS median_hourly_rate,\n        PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY pp.base_rate_hourly) AS p75_hourly_rate,\n        COUNT(*) AS pricing_records\n    FROM parking_pricing pp\n    WHERE pp.is_active = TRUE\n    AND pp.pricing_type IN ('Hourly', 'Daily', 'Monthly')\n    GROUP BY pp.facility_id\n),\ncompetitive_landscape AS (\n    SELECT\n        fbd1.facility_id,\n        fbd1.city_id,\n        COUNT(DISTINCT fbd2.facility_id) AS competitor_count,\n        AVG(fbd2.total_spaces) AS avg_competitor_spaces,\n        SUM(fbd2.total_spaces) AS total_competitor_spaces,\n        AVG(pa2.avg_hourly_rate) AS avg_competitor_rate,\n        MIN(pa2.avg_hourly_rate) AS min_competitor_rate,\n        MAX(pa2.avg_hourly_rate) AS max_competitor_rate,\n        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY pa2.avg_hourly_rate) AS median_competitor_rate,\n        AVG(\n            CASE\n                WHEN ST_DISTANCE(\n                    ST_POINT(fbd1.longitude, fbd1.latitude),\n                    ST_POINT(fbd2.longitude, fbd2.latitude)\n                ) < 500 THEN ST_DISTANCE(\n                    ST_POINT(fbd1.longitude, fbd1.latitude),\n                    ST_POINT(fbd2.longitude, fbd2.latitude)\n                )\n                ELSE NULL\n            END\n        ) AS avg_distance_to_competitors\n    FROM facility_base_data fbd1\n    LEFT JOIN facility_base_data fbd2 ON fbd1.city_id = fbd2.city_id\n        AND fbd2.facility_id != fbd1.facility_id\n        AND ST_DISTANCE(\n            ST_POINT(fbd1.longitude, fbd1.latitude),\n            ST_POINT(fbd2.longitude, fbd2.latitude)\n        ) < 1000\n    LEFT JOIN pricing_analysis pa2 ON fbd2.facility_id = pa2.facility_id\n    GROUP BY fbd1.facility_id, fbd1.city_id, fbd1.latitude, fbd1.longitude\n),\nmarket_intelligence AS (\n    SELECT\n        fbd.facility_id,\n        fbd.facility_name,\n        fbd.city_id,\n        fbd.city_name,\n        fbd.state_code,\n        fbd.msa_name,\n        fbd.total_spaces,\n        fbd.facility_type,\n        fbd.operator_type,\n        fbd.population,\n        fbd.population_density,\n        fbd.median_household_income,\n        fbd.msa_population,\n        COALESCE(ua.avg_occupancy_rate, 0) AS avg_occupancy_rate,\n        COALESCE(ua.median_occupancy_rate, 0) AS median_occupancy_rate,\n        COALESCE(ua.p95_occupancy_rate, 0) AS p95_occupancy_rate,\n        COALESCE(ua.total_revenue, 0) AS total_revenue,\n        COALESCE(ua.avg_revenue_per_record, 0) AS avg_revenue_per_record,\n        COALESCE(ua.days_with_data, 0) AS days_with_data,\n        COALESCE(pa.avg_hourly_rate, 0) AS avg_hourly_rate,\n        COALESCE(pa.median_hourly_rate, 0) AS median_hourly_rate,\n        COALESCE(pa.p75_hourly_rate, 0) AS p75_hourly_rate,\n        COALESCE(cl.competitor_count, 0) AS competitor_count,\n        COALESCE(cl.avg_competitor_rate, 0) AS avg_competitor_rate,\n        COALESCE(cl.median_competitor_rate, 0) AS median_competitor_rate,\n        COALESCE(cl.avg_distance_to_competitors, 0) AS avg_distance_to_competitors,\n        -- Market opportunity score\n        (\n            LEAST(fbd.population_density / 10000.0, 1.0) * 25 +\n            LEAST(COALESCE(ua.avg_occupancy_rate, 0) / 100.0, 1.0) * 25 +\n            LEAST(fbd.median_household_income / 100000.0, 1.0) * 20 +\n            LEAST(COALESCE(cl.competitor_count, 0) / 10.0, 1.0) * 15 +\n            LEAST(fbd.total_spaces / 500.0, 1.0) * 15\n        ) AS market_opportunity_score,\n        -- Competitive advantage score\n        (\n            CASE WHEN COALESCE(pa.avg_hourly_rate, 0) < COALESCE(cl.avg_competitor_rate, 999) THEN 30 ELSE 0 END +\n            CASE WHEN COALESCE(ua.avg_occupancy_rate, 0) > 80 THEN 25 ELSE COALESCE(ua.avg_occupancy_rate, 0) * 0.3125 END +\n            CASE WHEN COALESCE(cl.competitor_count, 0) < 3 THEN 25 ELSE GREATEST(25 - COALESCE(cl.competitor_count, 0) * 2, 0) END +\n            CASE WHEN fbd.accepts_reservations THEN 20 ELSE 0 END\n        ) AS competitive_advantage_score\n    FROM facility_base_data fbd\n    LEFT JOIN utilization_aggregations ua ON fbd.facility_id = ua.facility_id\n    LEFT JOIN pricing_analysis pa ON fbd.facility_id = pa.facility_id\n    LEFT JOIN competitive_landscape cl ON fbd.facility_id = cl.facility_id\n),\nranked_analysis AS (\n    SELECT\n        mi.*,\n        ROW_NUMBER() OVER (PARTITION BY mi.city_id ORDER BY mi.market_opportunity_score DESC) AS city_rank,\n        ROW_NUMBER() OVER (ORDER BY mi.total_revenue DESC) AS revenue_rank,\n        ROW_NUMBER() OVER (ORDER BY mi.competitive_advantage_score DESC) AS competitive_rank,\n        PERCENT_RANK() OVER (ORDER BY mi.market_opportunity_score) AS opportunity_percentile,\n        PERCENT_RANK() OVER (ORDER BY mi.total_revenue) AS revenue_percentile,\n        PERCENT_RANK() OVER (ORDER BY mi.competitive_advantage_score) AS competitive_percentile,\n        LAG(mi.market_opportunity_score) OVER (ORDER BY mi.market_opportunity_score DESC) AS prev_opportunity_score,\n        LEAD(mi.market_opportunity_score) OVER (ORDER BY mi.market_opportunity_score DESC) AS next_opportunity_score,\n        AVG(mi.market_opportunity_score) OVER (PARTITION BY mi.city_id) AS city_avg_opportunity_score,\n        STDDEV(mi.market_opportunity_score) OVER (PARTITION BY mi.city_id) AS city_stddev_opportunity_score,\n        AVG(mi.total_revenue) OVER (PARTITION BY mi.city_id) AS city_avg_revenue,\n        AVG(mi.avg_occupancy_rate) OVER (PARTITION BY mi.city_id) AS city_avg_occupancy_rate\n    FROM market_intelligence mi\n),\noptimization_recommendations AS (\n    SELECT\n        ra.*,\n        CASE\n            WHEN ra.market_opportunity_score >= ra.city_avg_opportunity_score + ra.city_stddev_opportunity_score THEN 'High Priority'\n            WHEN ra.market_opportunity_score >= ra.city_avg_opportunity_score THEN 'Medium Priority'\n            ELSE 'Low Priority'\n        END AS optimization_priority,\n        CASE\n            WHEN ra.avg_occupancy_rate > 85 AND ra.avg_hourly_rate < ra.avg_competitor_rate THEN\n                ra.avg_hourly_rate * 1.15  -- Increase price if high demand and underpriced\n            WHEN ra.avg_occupancy_rate < 50 AND ra.avg_hourly_rate > ra.avg_competitor_rate THEN\n                ra.avg_hourly_rate * 0.90  -- Decrease price if low demand and overpriced\n            WHEN ra.avg_hourly_rate < ra.median_competitor_rate * 0.9 THEN\n                ra.median_competitor_rate * 0.95  -- Price slightly below median if significantly underpriced\n            ELSE ra.avg_hourly_rate  -- Keep current price\n        END AS recommended_rate,\n        -- Revenue impact estimate\n        (\n            CASE\n                WHEN ra.avg_occupancy_rate > 85 AND ra.avg_hourly_rate < ra.avg_competitor_rate THEN\n                    ra.avg_hourly_rate * 1.15 * ra.total_spaces * ra.avg_occupancy_rate / 100.0 * ra.days_with_data\n                WHEN ra.avg_occupancy_rate < 50 AND ra.avg_hourly_rate > ra.avg_competitor_rate THEN\n                    ra.avg_hourly_rate * 0.90 * ra.total_spaces * ra.avg_occupancy_rate / 100.0 * ra.days_with_data\n                ELSE ra.total_revenue\n            END - ra.total_revenue\n        ) AS estimated_revenue_impact,\n        -- Market share estimate\n        CASE\n            WHEN ra.competitor_count > 0 AND ra.total_spaces > 0 THEN\n                (ra.total_spaces * ra.avg_occupancy_rate / 100.0) /\n                NULLIF(\n                    (ra.total_spaces * ra.avg_occupancy_rate / 100.0) +\n                    (ra.competitor_count * COALESCE(ra.avg_competitor_rate, 0) * 50),  -- Estimate competitor spaces\n                    1\n                ) * 100\n            ELSE 100.0\n        END AS estimated_market_share_pct\n    FROM ranked_analysis ra\n)\nSELECT\n    or_rec.facility_id,\n    or_rec.facility_name,\n    or_rec.city_name,\n    or_rec.state_code,\n    or_rec.msa_name,\n    or_rec.total_spaces,\n    or_rec.facility_type,\n    or_rec.operator_type,\n    or_rec.avg_occupancy_rate,\n    or_rec.median_occupancy_rate,\n    or_rec.p95_occupancy_rate,\n    or_rec.total_revenue,\n    or_rec.avg_hourly_rate AS current_rate,\n    or_rec.recommended_rate,\n    or_rec.competitor_count,\n    or_rec.avg_competitor_rate,\n    or_rec.median_competitor_rate,\n    or_rec.market_opportunity_score,\n    or_rec.competitive_advantage_score,\n    or_rec.opportunity_percentile,\n    or_rec.revenue_percentile,\n    or_rec.competitive_percentile,\n    or_rec.optimization_priority,\n    or_rec.estimated_revenue_impact,\n    or_rec.estimated_market_share_pct,\n    CASE\n        WHEN or_rec.estimated_revenue_impact > 1000 THEN 'High Impact'\n        WHEN or_rec.estimated_revenue_impact > 0 THEN 'Medium Impact'\n        ELSE 'Low Impact'\n    END AS impact_category\nFROM optimization_recommendations or_rec\nWHERE or_rec.competitor_count > 0 OR or_rec.total_revenue > 0\nORDER BY or_rec.market_opportunity_score DESC, or_rec.total_revenue DESC\nLIMIT 200;",
       "line_number": 6620
     }
-  ]
+  ],
+  "metadata": {
+    "total_queries": 30,
+    "extraction_timestamp": "20260204-2113",
+    "format_date": "20260210-0053"
+  }
 }

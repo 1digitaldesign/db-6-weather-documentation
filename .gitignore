@@ -32,6 +32,7 @@ test_outputs/
 *.tmp
 *.log
 *.bak
+extract_from_db_zip/
 
 # Environment
 .env

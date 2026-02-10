@@ -54,4 +54,4 @@ All spatial columns use the `GEOGRAPHY` type (WGS84/EPSG:4326):
 
 - **PostgreSQL**: Full support with PostGIS extension for spatial operations
 - **Databricks**: Delta Lake with spatial extensions
-- **Snowflake**: GEOGRAPHY data type support
+- **Databricks**: GEOGRAPHY data type support
