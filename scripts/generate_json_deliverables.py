@@ -199,7 +199,7 @@ def generate_json_deliverable(db_num, root_dir=None):
     try:
         with open(output_file, 'w', encoding='utf-8') as f:
             json.dump(deliverable, f, indent=2, ensure_ascii=False)
-        logger.info(f"✓ Generated: {output_file.name}")
+        logger.info(f"✓ Rebuilt: {output_file.name}")
         return True
     except Exception as e:
         logger.error(f"Error writing JSON deliverable: {e}")

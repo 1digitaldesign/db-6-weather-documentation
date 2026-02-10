@@ -118,7 +118,7 @@
       "available": false,
       "queries": []
     },
-    "snowflake": {
+    "databricks": {
       "available": false,
       "queries": []
     },

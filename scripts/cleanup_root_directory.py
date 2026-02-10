@@ -79,7 +79,7 @@ def cleanup_root_directory(root_dir=None):
         "iterative_query_fixer.py",
         "rewrite_queries_to_match_schema.py",
         "rewrite_template_queries.py",
-        "test_queries_postgres_snowflake.py",
+        "test_queries_postgres.py",
         "run_comprehensive_tests.py",
         "generate_test_summary.py",
         "organize_archives.py",

@@ -183,7 +183,7 @@ def generate_upload_script():
     
     script_content = f'''#!/bin/bash
 # Upload updated files back to Google Drive
-# Generated: {datetime.now().isoformat()}
+# Rebuilt: {datetime.now().isoformat()}
 
 DRIVE_FOLDER_ID="{DRIVE_FOLDER_ID}"
 UPDATED_DIR="{UPDATED_DIR}"
@@ -286,7 +286,7 @@ After uploading, verify:
 3. Test notebooks in Drive
 4. Update local repository if needed
 
-Generated: {datetime.now().isoformat()}
+Rebuilt: {datetime.now().isoformat()}
 '''
     
     instructions.write_text(content)
@@ -303,7 +303,7 @@ def create_summary_report():
     
     content = f'''# Update Summary Report
 
-**Generated:** {datetime.now().isoformat()}
+**Rebuilt:** {datetime.now().isoformat()}
 **Drive Folder:** {DRIVE_URL}
 **Download Directory:** {DOWNLOAD_DIR}
 **Updated Directory:** {UPDATED_DIR}

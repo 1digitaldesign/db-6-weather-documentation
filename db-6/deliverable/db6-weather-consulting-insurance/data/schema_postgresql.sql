@@ -1,28 +1,16 @@
--- PostgreSQL-specific schema file
--- Generated from schema.sql
--- Generated: 2026-02-05 19:10:03
--- Database: db-6
--- 
--- This file contains PostgreSQL-specific SQL syntax.
--- Use this file when setting up the database in PostgreSQL.
---
-
 -- Weather Data Pipeline Database Schema
--- Compatible with PostgreSQL, Databricks, and Snowflake
+-- Compatible with PostgreSQL
 -- Production schema for weather data pipeline system
 
 -- GRIB2 Forecasts Table
 -- Stores gridded forecast data from NDFD (National Digital Forecast Database)
--- Enable PostGIS extension for spatial data
-CREATE EXTENSION IF NOT EXISTS postgis;
-
 CREATE TABLE grib2_forecasts (
     forecast_id VARCHAR(255) PRIMARY KEY,
     parameter_name VARCHAR(100) NOT NULL,
     forecast_time TIMESTAMP NOT NULL,
     grid_cell_latitude NUMERIC(10, 7) NOT NULL,
     grid_cell_longitude NUMERIC(10, 7) NOT NULL,
-    grid_cell_geom GEOGRAPHY,  -- Point geometry for grid cell center (PostgreSQL/Snowflake)
+    grid_cell_geom TEXT,  -- Point geometry for grid cell center (PostgreSQL/Databricks)
     parameter_value NUMERIC(10, 2),
     source_file VARCHAR(500),
     source_crs VARCHAR(50),
@@ -33,7 +21,7 @@ CREATE TABLE grib2_forecasts (
     spatial_extent_south NUMERIC(10, 6),
     spatial_extent_east NUMERIC(10, 6),
     spatial_extent_north NUMERIC(10, 6),
-    load_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
+    load_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     transformation_status VARCHAR(50)
 );
 
@@ -44,7 +32,7 @@ CREATE TABLE shapefile_boundaries (
     feature_type VARCHAR(50) NOT NULL,  -- 'CWA', 'FireZone', 'MarineZone', 'RiverBasin', 'County'
     feature_name VARCHAR(255),
     feature_identifier VARCHAR(100),
-    boundary_geom GEOGRAPHY,  -- Polygon geometry
+    boundary_geom TEXT,  -- Polygon geometry
     source_shapefile VARCHAR(500),
     source_crs VARCHAR(50),
     target_crs VARCHAR(50),
@@ -53,7 +41,7 @@ CREATE TABLE shapefile_boundaries (
     spatial_extent_south NUMERIC(10, 6),
     spatial_extent_east NUMERIC(10, 6),
     spatial_extent_north NUMERIC(10, 6),
-    load_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
+    load_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     transformation_status VARCHAR(50),
     state_code VARCHAR(2),
     office_code VARCHAR(10)
@@ -68,7 +56,7 @@ CREATE TABLE weather_observations (
     observation_time TIMESTAMP NOT NULL,
     station_latitude NUMERIC(10, 7) NOT NULL,
     station_longitude NUMERIC(10, 7) NOT NULL,
-    station_geom GEOGRAPHY,  -- Point geometry
+    station_geom TEXT,  -- Point geometry
     temperature NUMERIC(6, 2),
     dewpoint NUMERIC(6, 2),
     humidity NUMERIC(5, 2),
@@ -79,7 +67,7 @@ CREATE TABLE weather_observations (
     sky_cover VARCHAR(50),
     precipitation_amount NUMERIC(8, 2),
     data_freshness_minutes INTEGER,
-    load_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
+    load_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     data_source VARCHAR(50) DEFAULT 'NWS_API'
 );
 
@@ -102,7 +90,7 @@ CREATE TABLE grib2_transformation_log (
     spatial_extent_east NUMERIC(10, 6),
     spatial_extent_north NUMERIC(10, 6),
     transformation_status VARCHAR(50),
-    snowflake_table VARCHAR(255),
+    target_table VARCHAR(255),
     load_timestamp TIMESTAMP,
     processing_duration_seconds INTEGER,
     records_processed INTEGER,
@@ -126,7 +114,7 @@ CREATE TABLE shapefile_integration_log (
     spatial_extent_east NUMERIC(10, 6),
     spatial_extent_north NUMERIC(10, 6),
     transformation_status VARCHAR(50),
-    snowflake_table VARCHAR(255),
+    target_table VARCHAR(255),
     load_timestamp TIMESTAMP,
     processing_duration_seconds INTEGER,
     error_message VARCHAR(2000)
@@ -144,7 +132,7 @@ CREATE TABLE spatial_join_results (
     features_total INTEGER,
     match_percentage NUMERIC(5, 2),
     output_file VARCHAR(1000),
-    join_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
+    join_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     forecast_id VARCHAR(255),
     boundary_id VARCHAR(255)
 );
@@ -184,15 +172,15 @@ CREATE TABLE data_quality_metrics (
     spatial_coverage_km2 NUMERIC(15, 2),
     temporal_coverage_hours INTEGER,
     data_freshness_minutes INTEGER,
-    calculation_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP()
+    calculation_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Snowflake Load Status Table
--- Tracks data loading operations to Snowflake
-CREATE TABLE snowflake_load_status (
+- Load Status Table
+-- Tracks data loading operations to Databricks
+CREATE TABLE load_status (
     load_id VARCHAR(255) PRIMARY KEY,
     source_file VARCHAR(1000),
-    snowflake_table VARCHAR(255) NOT NULL,
+    target_table VARCHAR(255) NOT NULL,
     load_start_time TIMESTAMP NOT NULL,
     load_end_time TIMESTAMP,
     load_duration_seconds INTEGER,
@@ -201,7 +189,7 @@ CREATE TABLE snowflake_load_status (
     load_rate_mb_per_sec NUMERIC(10, 2),
     load_status VARCHAR(50),  -- 'Success', 'Failed', 'Partial'
     error_message VARCHAR(2000),
-    snowflake_warehouse VARCHAR(255),
+    warehouse VARCHAR(255),
     data_source_type VARCHAR(50)
 );
 
@@ -220,7 +208,7 @@ CREATE TABLE weather_forecast_aggregations (
     median_value NUMERIC(10, 2),
     std_dev_value NUMERIC(10, 2),
     grid_cells_count INTEGER,
-    aggregation_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP()
+    aggregation_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Weather Station Metadata Table
@@ -230,7 +218,7 @@ CREATE TABLE weather_stations (
     station_name VARCHAR(255),
     station_latitude NUMERIC(10, 7) NOT NULL,
     station_longitude NUMERIC(10, 7) NOT NULL,
-    station_geom GEOGRAPHY,
+    station_geom TEXT,
     elevation_meters NUMERIC(8, 2),
     state_code VARCHAR(2),
     county_name VARCHAR(100),

@@ -109,7 +109,7 @@ def generate_postgresql_sql_files(db_num, root_dir=None):
             # Add header comment
             header = f"""-- PostgreSQL-specific schema file
 -- Generated from {schema_file.name}
--- Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+-- Rebuilt: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 -- Database: db-{db_num}
 -- 
 -- This file contains PostgreSQL-specific SQL syntax.
@@ -153,7 +153,7 @@ def generate_postgresql_sql_files(db_num, root_dir=None):
             # Read and convert in chunks for large files
             header = f"""-- PostgreSQL-specific data file
 -- Generated from {data_file.name}
--- Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+-- Rebuilt: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 -- Database: db-{db_num}
 -- 
 -- This file contains PostgreSQL-specific SQL syntax for data inserts.

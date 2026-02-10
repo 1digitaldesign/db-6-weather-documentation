@@ -285,7 +285,7 @@
       "total_rows_returned": 0
     }
   },
-  "snowflake": {
+  "databricks": {
     "available": true,
     "queries": []
   }

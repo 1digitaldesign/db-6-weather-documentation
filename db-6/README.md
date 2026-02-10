@@ -7,7 +7,7 @@
 
 ## Overview
 
-This database contains weather data from NOAA sources including GRIB2 gridded forecasts, shapefile boundaries (CWA, Fire Zones, Marine Zones), real-time observations, transformation logs, spatial joins, CRS transformations, data quality metrics, and Snowflake load status.
+This database contains weather data from NOAA sources including GRIB2 gridded forecasts, shapefile boundaries (CWA, Fire Zones, Marine Zones), real-time observations, transformation logs, spatial joins, CRS transformations, data quality metrics load status.
 
 **Insurance Extension:** The database has been extended to support insurance rate table determination using 7-14 day forecasts from December 3-17, 2025. This enables insurance companies to calculate dynamic rates based on forecasted weather risks.
 
@@ -52,7 +52,7 @@ db-6/
 - `spatial_join_results` - Spatial join operations documentation
 - `crs_transformation_parameters` - CRS transformation parameters
 - `data_quality_metrics` - Data quality tracking
-- `snowflake_load_status` - Snowflake load operations tracking
+- `load_status`  load operations tracking
 - `weather_forecast_aggregations` - Pre-aggregated forecast data
 - `weather_stations` - Weather station metadata
 
@@ -128,8 +128,8 @@ See `data/insurance_schema.sql` for insurance schema extensions.
 
 All queries are designed to work across:
 - PostgreSQL (with PostGIS)
-- Databricks (Delta Lake)
-- Snowflake
+ (Delta Lake)
+
 
 ---
 **Last Updated:** 2026-02-03

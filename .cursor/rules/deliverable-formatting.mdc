@@ -85,8 +85,7 @@ All formatted deliverables must include:
 
 2. **Servers Section**:
    - PostgreSQL server URL
-   - Databricks server URL
-   - Snowflake server URL
+    server URL
 
 3. **Tags Section**:
    - `schema`: Database schema information

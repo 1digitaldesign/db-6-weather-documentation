@@ -230,8 +230,8 @@ class DeliverableFormatter:
             deliverable_output = deliverable_dir / f'db-{db_num}.md'
             deliverable_output.write_text(comprehensive_deliverable, encoding='utf-8')
 
-            # Generate OpenAPI specification (optional)
-            openapi_spec = self.generate_openapi_spec(db_num, deliverable_content, queries_data)
+            # Generate OpenAPI specification (optional) - use comprehensive deliverable for up-to-date content
+            openapi_spec = self.generate_openapi_spec(db_num, comprehensive_deliverable, queries_data)
             openapi_output = deliverable_dir / 'deliverable.openapi.yaml'
             openapi_output.write_text(
                 yaml.dump(openapi_spec, default_flow_style=False, sort_keys=False, allow_unicode=True),
@@ -283,14 +283,6 @@ class DeliverableFormatter:
                     'url': f'postgresql://localhost:5432/db_{db_num}',
                     'description': 'PostgreSQL Server' + (' with PostGIS' if is_spatial else '')
                 },
-                {
-                    'url': 'databricks://workspace.cloud.databricks.com',
-                    'description': 'Databricks Workspace'
-                },
-                {
-                    'url': 'https://account.snowflakecomputing.com',
-                    'description': 'Snowflake Account'
-                }
             ],
             'tags': self.generate_tags(is_spatial),
             'paths': self.generate_paths(is_spatial),
@@ -564,7 +556,7 @@ class DeliverableFormatter:
                     'supported_platforms': {
                         'type': 'array',
                         'items': {'type': 'string'},
-                        'example': ['PostgreSQL', 'Databricks', 'Snowflake']
+                        'example': ['PostgreSQL']
                     },
                     'table_groups': {
                         'type': 'array',
@@ -676,9 +668,7 @@ class DeliverableFormatter:
                     'database_compatibility': {
                         'type': 'object',
                         'properties': {
-                            'postgresql': {'type': 'boolean', 'example': True},
-                            'databricks': {'type': 'boolean', 'example': True},
-                            'snowflake': {'type': 'boolean', 'example': True}
+                            'postgresql': {'type': 'boolean', 'example': True}
                         }
                     }
                 }
@@ -710,7 +700,7 @@ class DeliverableFormatter:
                     'supported_platforms': {
                         'type': 'array',
                         'items': {'type': 'string'},
-                        'example': ['PostgreSQL (PostGIS)', 'Databricks', 'Snowflake']
+                        'example': ['PostgreSQL (PostGIS)']
                     }
                 }
             }
@@ -888,6 +878,7 @@ Every query in this database was created to solve a specific business problem fo
 
         # Add overview section (content only, header already added)
         if overview_section:
+            overview_section = self.remove_databricks_references(overview_section)
             # Clean up any duplicate headers in the section (more aggressive)
             # Remove all instances of "## Database Overview" header (standalone or with content after)
             overview_section = re.sub(r'^##+\s+Database Overview\s*$', '', overview_section, flags=re.MULTILINE | re.IGNORECASE)
@@ -1070,6 +1061,7 @@ Every query in this database was created to solve a specific business problem fo
         # Add usage instructions if present
         usage_section = self.extract_section(deliverable_content, '## Usage Instructions', '##', include_header=False)
         if usage_section:
+            usage_section = self.remove_databricks_references(usage_section)
             usage_section = usage_section.strip()
             # Remove any "Business Context" headers from usage section
             usage_section = re.sub(r'^##+\s+Business Context\s*$', '', usage_section, flags=re.MULTILINE | re.IGNORECASE)
@@ -1086,10 +1078,8 @@ Every query in this database was created to solve a specific business problem fo
 All queries in this database are designed to work across multiple database platforms:
 
 - **PostgreSQL**: Full support with standard SQL features
-- **Databricks**: Compatible with Delta Lake and Spark SQL
-- **Snowflake**: Full support with Snowflake SQL syntax
 
-Queries use standard SQL syntax and avoid platform-specific features to ensure cross-platform compatibility.
+Queries use standard SQL syntax and avoid platform-specific features to ensure compatibility.
 
 ---
 
@@ -1111,6 +1101,19 @@ Queries use standard SQL syntax and avoid platform-specific features to ensure c
         doc = self.clean_generated_markdown(doc)
 
         return doc
+
+    def remove_databricks_references(self, content: str) -> str:
+        """Remove Databricks references from content (PostgreSQL-only)"""
+        if not content:
+            return content
+        # Remove lines containing Databricks
+        lines = content.split('\n')
+        cleaned = []
+        for line in lines:
+            if 'databricks' in line.lower() or 'Databricks' in line:
+                continue
+            cleaned.append(line)
+        return '\n'.join(cleaned)
 
     def clean_generated_markdown(self, content: str) -> str:
         """Clean generated markdown to ensure lint-free output"""
@@ -1180,7 +1183,7 @@ This folder contains the complete deliverable package for database {db_name}, in
   - Entity-Relationship (ER) diagrams using Mermaid.js
   - SQL queries documentation
   - Usage instructions for data scientists
-  - Platform compatibility information (PostgreSQL, Databricks, Snowflake)
+  - Platform compatibility information (PostgreSQL)
 
 - **deliverable.openapi.yaml**: OpenAPI 3.0.3 specification (machine-readable format)
   - Complete schema definitions
@@ -1196,7 +1199,7 @@ This folder contains the complete deliverable package for database {db_name}, in
     - **Expected output**: Description of result set
     - **Complexity notes**: Technical details (CTEs, window functions, etc.)
   - All queries are extremely complex (joining multiple tables, aggregations, etc.)
-  - Cross-database compatible (PostgreSQL, Databricks, Snowflake)
+  - Cross-database compatible (PostgreSQL)
 
 - **queries/queries.json**: JSON representation of queries (programmatic access)
   - Structured format for integration
@@ -1237,17 +1240,15 @@ This folder contains the complete deliverable package for database {db_name}, in
 3. Copy the SQL code from the code block
 4. Execute in your database client:
    - **PostgreSQL**: Use `psql` or pgAdmin
-   - **Databricks**: Use Databricks SQL editor or notebook
-   - **Snowflake**: Use Snowflake web interface or SnowSQL
 
-### Notebook Integration (Databricks)
+### Notebook Integration
 
-If using Databricks notebooks:
+If using Jupyter or SQL notebooks:
 
 1. Create a new notebook
 2. Set the language to SQL
 3. Copy the query SQL into a cell
-4. Add markdown cells above for context:
+4. Add markdown cells above for context (optional):
    ```markdown
    # Query 1: User Activity Analysis
 
@@ -1285,7 +1286,7 @@ The database schema is fully documented in `DELIVERABLE.md` including:
 ✅ **Fully runnable**: No placeholders - ready to execute
 ✅ **Expected output**: Each query includes expected output description
 ✅ **Complex queries**: All queries join multiple tables and use complex SQL patterns
-✅ **Cross-database compatible**: Work on PostgreSQL, Databricks, and Snowflake
+✅ **Cross-database compatible**: Work on PostgreSQL
 ✅ **Data scientist friendly**: Includes context for unfamiliar users
 
 ---

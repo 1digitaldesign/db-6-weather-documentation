@@ -1,4 +1,4 @@
-# ID: db-6 - Name: Weather Consulting Database
+# ID: db-6 - Name: Weather Data Pipeline System
 
 This document provides comprehensive documentation for database db-6, including complete schema documentation, all SQL queries with business context, and usage instructions. This database and its queries are sourced from production systems used by businesses with **$1M+ Annual Recurring Revenue (ARR)**, representing real-world enterprise implementations.
 
@@ -26,898 +26,724 @@ This document provides comprehensive documentation for database db-6, including 
    - Data types and constraints
    - Column descriptions and business context
 
+### SQL Queries (30 Production Queries)
+
+1. [Query 1: Production-Grade Spatial Weather Forecast Analysis with Multi-Level CTE Nesting and Geospatial Aggregations](#query-1)
+    - **Use Case:** Custom Weather Impact Modeling - Regional Forecast Accuracy Assessment for Insurance Risk Modeling
+    - *What it does:* Enterprise-level spatial weather forecast analysis with multi-level CTE nesting, spatial aggregations within boundaries, forecast accuracy metrics, te...
+    - *Business Value:* Forecast accuracy report by geographic boundary (CWA, Fire Zones) showing forecast reliability metri...
+    - *Purpose:* Quantifies forecast reliability for specific geographic regions, enabling data-driven risk assessmen...
+
+2. [Query 2: Recursive Spatial Boundary Hierarchy Analysis with Multi-Hop Geospatial Traversal](#query-2)
+    - **Use Case:** Custom Map Development - Multi-Level Geographic Hierarchy Visualization for Agriculture Insurance
+    - *What it does:* Enterprise-level recursive spatial analysis using recursive CTE for multi-level boundary relationships, spatial hierarchy traversal, boundary intersec...
+    - *Business Value:* Spatial hierarchy relationships showing nested boundaries (states → counties → fire zones) with fore...
+    - *Purpose:* Provides multi-scale geographic analysis enabling clients to understand relationships between admini...
+
+3. [Query 3: Multi-Parameter Weather Correlation Analysis with Cross-Parameter Temporal Patterns](#query-3)
+    - **Use Case:** Physical Climate Risk Assessment - Multi-Parameter Risk Correlation for Renewable Energy Planning
+    - *What it does:* Enterprise-level multi-parameter weather correlation analysis with cross-parameter temporal pattern detection, correlation matrices, lag analysis, and...
+    - *Business Value:* Correlation analysis between temperature, precipitation, and wind patterns with temporal lag indicat...
+    - *Purpose:* Identifies compound weather risks (e.g., high temp + low precip = drought risk) and enables predicti...
+
+4. [Query 4: Spatial Join Optimization Analysis with Boundary-Forecast Matching Efficiency Metrics](#query-4)
+    - **Use Case:** Custom Weather Impact Modeling - Boundary-Forecast Matching Efficiency for Logistics Optimization
+    - *What it does:* Enterprise-level spatial join optimization analysis evaluating boundary-forecast matching efficiency, spatial index utilization, join performance metr...
+    - *Business Value:* Optimizes forecast-to-boundary matching for faster client deliverables and improved operational effi...
+    - *Purpose:* Analysis of how efficiently forecasts match to client-defined boundaries with optimization recommend...
+
+5. [Query 5: Weather Station Network Coverage Analysis with Spatial Gap Detection and Coverage Optimization](#query-5)
+    - **Use Case:** Supply Chain and Fleet Management - Station Coverage Gap Analysis for Route Planning
+    - *What it does:* Enterprise-level weather station network analysis identifying coverage gaps, station density metrics, spatial interpolation opportunities, and network...
+    - *Business Value:* Map showing gaps in weather station coverage along routes with coverage density metrics. Fleet manag...
+    - *Purpose:* Identifies areas where additional weather monitoring may be needed to ensure adequate coverage for l...
+
+6. [Query 6: Forecast Accuracy Trend Analysis with Temporal Error Pattern Detection](#query-6)
+    - **Use Case:** Forensic Meteorology - Historical Forecast Accuracy Assessment for Legal Cases
+    - *What it does:* Enterprise-level forecast accuracy trend analysis identifying temporal error patterns, accuracy degradation over time, seasonal variations, and foreca...
+    - *Business Value:* Provides quantitative evidence of forecast reliability for legal proceedings and insurance claim val...
+    - *Purpose:* Trend analysis showing forecast accuracy over time with error pattern detection. Provides evidence o...
+
+7. [Query 7: Boundary Forecast Aggregation Analysis with Multi-Level Spatial Summarization](#query-7)
+    - **Use Case:** Custom Weather Impact Modeling - Aggregated Forecasts by Boundary for Retail Operations
+    - *What it does:* Enterprise-level boundary forecast aggregation analysis with multi-level spatial summarization, hierarchical aggregations, and comprehensive statistic...
+    - *Business Value:* Summary forecasts aggregated by client-defined boundaries (counties, zones). Retail chains can get a...
+    - *Purpose:* Provides simplified forecasts for specific geographic areas enabling location-based business decisio...
+
+8. [Query 8: Observation Forecast Validation Analysis with Accuracy Scoring](#query-8)
+    - **Use Case:** Forensic Meteorology - Forecast vs. Observation Validation for Legal Evidence
+    - *What it does:* Enterprise-level observation-forecast validation analysis comparing actual observations with forecasts, calculating accuracy scores, identifying syste...
+    - *Business Value:* Provides evidence of forecast accuracy for legal proceedings and insurance claim validation.
+    - *Purpose:* Validation report comparing forecasts to actual observations with accuracy scoring. Legal cases requ...
+
+9. [Query 9: Multi-Boundary Spatial Intersection Analysis with Overlap Detection](#query-9)
+    - **Use Case:** Custom Map Development - Boundary Overlap Detection for Real Estate Development
+    - *What it does:* Enterprise-level multi-boundary spatial intersection analysis identifying overlapping boundaries, intersection areas, coverage gaps, and spatial relat...
+    - *Business Value:* Analysis of overlapping boundaries (e.g., fire zones overlapping counties) with intersection metrics...
+    - *Purpose:* Helps clients understand complex geographic relationships for property and risk assessment.
+
+10. [Query 10: Parameter Forecast Distribution Analysis with Statistical Profiling](#query-10)
+    - **Use Case:** Physical Climate Risk Assessment - Statistical Weather Profiling for Insurance Underwriting
+    - *What it does:* Enterprise-level parameter forecast distribution analysis with statistical profiling, distribution shape analysis, outlier detection, and distribution...
+    - *Business Value:* Identifies normal vs. extreme weather patterns for risk assessment and insurance pricing.
+    - *Purpose:* Statistical distribution analysis of forecast parameters with percentile rankings. Insurance compani...
+
+11. [Query 11: Geospatial Forecast Interpolation Analysis with Spatial Gradient Detection](#query-11)
+    - **Use Case:** Custom Weather Impact Modeling - Spatial Gradient Detection for Precision Agriculture
+    - *What it does:* Enterprise-level geospatial forecast interpolation analysis identifying spatial gradients, interpolation opportunities, spatial patterns, and interpol...
+    - *Business Value:* Analysis of how weather parameters change across space with gradient calculations. Agriculture compa...
+    - *Purpose:* Identifies spatial gradients for precise location-specific forecasts enabling precision agriculture.
+
+12. [Query 12: Weather Pattern Clustering Analysis with Spatial-Temporal Pattern Detection](#query-12)
+    - **Use Case:** Physical Climate Risk Assessment - Pattern-Based Risk Identification for Renewable Energy
+    - *What it does:* Enterprise-level weather pattern clustering analysis identifying spatial-temporal patterns, clustering similar weather conditions, and detecting patte...
+    - *Business Value:* Helps predict future weather patterns based on historical clusters for energy planning.
+    - *Purpose:* Identification of recurring weather patterns with clustering metrics. Energy companies can identify...
+
+13. [Query 13: Forecast Model Performance Comparison with Multi-Model Analysis](#query-13)
+    - **Use Case:** Forensic Meteorology - Multi-Model Analysis for Comprehensive Legal Evidence
+    - *What it does:* This SQL query performs comprehensive forecast model performance comparison for a weather consulting firm. It identifies forecast models (NDFD, GFS, N...
+    - *Business Value:* Comparison of different forecast models' performance with accuracy metrics. Court cases require comp...
+    - *Purpose:* Provides comprehensive analysis using multiple models for legal evidence and risk assessment.
+
+14. [Query 14: Boundary Forecast Anomaly Detection with Statistical Outlier Identification](#query-14)
+    - **Use Case:** Physical Climate Risk Assessment - Extreme Event Detection for Emergency Management
+    - *What it does:* Enterprise-level boundary forecast anomaly detection identifying statistical outliers, anomalies in boundary aggregations, and unusual forecast patter...
+    - *Business Value:* Early warning system for extreme weather events enabling proactive risk management.
+    - *Purpose:* Identification of anomalous weather patterns within boundaries with outlier metrics. Emergency manag...
+
+15. [Query 15: Insurance Risk Factor Calculation from 7-14 Day Forecasts](#query-15)
+    - **Use Case:** Insurance Underwriting - Multi-Day Forecast Risk Assessment for Rate Determination
+    - *What it does:* Calculates comprehensive risk factors for insurance policy areas based on 7-14 day forecasts from December 3-17, 2025. Analyzes multiple weather param...
+    - *Business Value:* Risk factor analysis report showing forecast-based risk scores for each policy area and forecast day...
+    - *Purpose:* Enables insurance companies to adjust rates dynamically based on forecasted weather risks, improving...
+
+16. [Query 16: Insurance Rate Table Generation from Forecast Risk Factors](#query-16)
+    - **Use Case:** Insurance Underwriting - Dynamic Rate Table Calculation Based on 7-14 Day Forecasts
+    - *What it does:* Generates insurance rate tables for December 3-17, 2025 period using risk factors calculated from 7-14 day forecasts. Calculates base rates, risk-adju...
+    - *Business Value:* Enables dynamic pricing based on forecasted weather risks, allowing insurance companies to adjust ra...
+    - *Purpose:* Complete rate table showing rates for each policy area, forecast day (7-14 days), and coverage type...
+
+17. [Query 17: Rate Table Comparison Across 7-14 Day Forecasts](#query-17)
+    - **Use Case:** Insurance Underwriting - Multi-Day Forecast Rate Comparison for Optimal Rate Selection
+    - *What it does:* Compares insurance rates across all forecast days (7-14 days ahead) for December 3-17, 2025 period. Calculates rate statistics, volatility, trends, an...
+    - *Business Value:* Rate comparison report showing rates by forecast day with volatility metrics and recommended rates.
+    - *Purpose:* Enables insurance companies to select optimal forecast day balancing accuracy (shorter forecast) wit...
+
+18. [Query 18: Historical Claims Validation Against Forecast Risk Factors](#query-18)
+    - **Use Case:** Insurance Underwriting - Forecast Accuracy Validation Using Historical Claims Data
+    - *What it does:* Validates forecast-based risk factors against historical claims data for December 3-17, 2025 period. Compares forecast risk scores with actual claims...
+    - *Business Value:* Enables insurance companies to validate and improve forecast-based rate models using historical data...
+    - *Purpose:* Validation report showing forecast risk vs actual claims with accuracy metrics and improvement recom...
+
+19. [Query 19: Rate Volatility and Stability Analysis](#query-19)
+    - **Use Case:** Insurance Underwriting - Rate Stability Assessment for Pricing Consistency
+    - *What it does:* Analyzes rate volatility and stability across 7-14 day forecasts for December 3-17, 2025. Identifies areas with high rate volatility and recommends st...
+    - *Business Value:* Rate volatility analysis report with stability metrics and recommendations for consistent pricing.
+    - *Purpose:* Helps insurance companies identify pricing inconsistencies and implement stable pricing strategies,...
+
+20. [Query 20: Policy Area Risk Ranking and Comparison](#query-20)
+    - **Use Case:** Insurance Underwriting - Geographic Risk Ranking for Portfolio Management
+    - *What it does:* Ranks policy areas by forecast-based risk scores for December 3-17, 2025 period. Provides comparative risk analysis across geographic areas to support...
+    - *Business Value:* Enables insurance companies to identify high-risk areas, allocate underwriting resources effectively...
+    - *Purpose:* Risk ranking report showing policy areas ordered by risk level with comparative metrics.  **Business...
+
+21. [Query 21: Forecast-to-Rate Impact Analysis](#query-21)
+    - **Use Case:** Insurance Underwriting - Forecast Parameter Impact on Rate Determination
+    - *What it does:* Analyzes how individual forecast parameters (temperature, precipitation, wind) impact insurance rates for December 3-17, 2025. Quantifies the contribu...
+    - *Business Value:* Parameter impact analysis showing which forecast parameters drive rate changes and their relative co...
+    - *Purpose:* Enables insurance companies to understand which weather parameters most significantly affect rates,...
+
+22. [Query 22: Multi-Day Forecast Ensemble Rate Analysis](#query-22)
+    - **Use Case:** Insurance Underwriting - Ensemble Forecast Rate Analysis for Robust Pricing
+    - *What it does:* Analyzes rates across multiple forecast days (7-14 days) as an ensemble to determine robust, consensus rates. Uses ensemble statistics to reduce forec...
+    - *Business Value:* Provides more robust rate determination by combining multiple forecast days, reducing impact of indi...
+    - *Purpose:* Ensemble rate analysis showing consensus rates across forecast days with confidence intervals.  **Bu...
+
+23. [Query 23: Forecast Day Selection Optimization](#query-23)
+    - **Use Case:** Insurance Underwriting - Optimal Forecast Day Selection for Rate Determination
+    - *What it does:* Determines optimal forecast day (7-14 days) for rate determination based on accuracy, confidence, and business requirements. Balances forecast accurac...
+    - *Business Value:* Forecast day optimization report recommending optimal forecast day for each policy area with justifi...
+    - *Purpose:* Enables insurance companies to select optimal forecast day balancing accuracy and planning needs, im...
+
+24. [Query 24: Comprehensive Insurance Rate Modeling Summary](#query-24)
+    - **Use Case:** Insurance Underwriting - Comprehensive Rate Modeling Summary Dashboard
+    - *What it does:* Provides comprehensive summary of insurance rate modeling for December 3-17, 2025 period. Aggregates risk factors, rates, comparisons, validations, an...
+    - *Business Value:* Provides insurance companies with single-source-of-truth dashboard for rate modeling decisions, impr...
+    - *Purpose:* Comprehensive rate modeling summary dashboard with all key metrics and recommendations.  **Business...
+
+25. [Query 25: US-Wide NEXRAD Reflectivity Composite Generation](#query-25)
+    - **Use Case:** Real-Time Weather Monitoring - Nationwide Radar Composite for Severe Weather Detection
+    - *What it does:* Generates US-wide composite reflectivity from all NEXRAD radar sites. Combines Level II radar data from multiple sites to create seamless nationwide c...
+    - *Business Value:* US-wide reflectivity composite showing precipitation intensity across entire United States with seam...
+    - *Purpose:* Provides comprehensive real-time precipitation monitoring across the entire US, enabling severe weat...
+
+26. [Query 26: NEXRAD Storm Cell Tracking and Movement Analysis](#query-26)
+    - **Use Case:** Severe Weather Forecasting - Multi-Site Storm Cell Tracking for Tornado and Severe Thunderstorm Prediction
+    - *What it does:* Tracks storm cells across multiple NEXRAD radar sites and analyzes their movement, intensity changes, and development patterns. Handles storm cell mer...
+    - *Business Value:* Enables severe weather prediction and warning systems by tracking storm development and movement pat...
+    - *Purpose:* Storm cell tracking report showing storm movement, intensity trends, and predicted paths across mult...
+
+27. [Query 27: US-Wide Satellite Imagery Cloud Composite Generation](#query-27)
+    - **Use Case:** Cloud Monitoring - Nationwide Cloud Coverage Analysis from GOES Satellite Imagery
+    - *What it does:* Generates US-wide cloud composite from decompressed GOES satellite imagery. Combines multiple satellite bands and products to create seamless cloud co...
+    - *Business Value:* US-wide cloud composite showing cloud coverage, cloud top heights, and cloud properties across entir...
+    - *Purpose:* Provides comprehensive cloud monitoring for solar energy forecasting, aviation weather, and climate...
+
+28. [Query 28: NEXRAD-Satellite Data Fusion for Precipitation Estimation](#query-28)
+    - **Use Case:** Precipitation Monitoring - Multi-Source Precipitation Estimation Combining Radar and Satellite Data
+    - *What it does:* Fuses NEXRAD radar reflectivity and satellite precipitation estimates to create improved US-wide precipitation maps. Combines strengths of both data s...
+    - *Business Value:* Provides more accurate and comprehensive precipitation estimates by combining radar (high resolution...
+    - *Purpose:* Fused precipitation product combining NEXRAD and satellite data with improved accuracy and coverage....
+
+29. [Query 29: Satellite Fire Detection and Monitoring Across US](#query-29)
+    - **Use Case:** Wildfire Monitoring - Nationwide Fire Detection from GOES Satellite Imagery
+    - *What it does:* Detects and monitors fires across the entire United States using decompressed GOES satellite imagery. Analyzes fire radiative power, temperature, and...
+    - *Business Value:* US-wide fire detection report showing fire locations, intensity, and development trends from satelli...
+    - *Purpose:* Enables early wildfire detection and monitoring at national scale, supporting fire management and em...
+
+30. [Query 30: US-Wide Composite Product Generation (NEXRAD + Satellite)](#query-30)
+    - **Use Case:** Comprehensive Weather Monitoring - Multi-Source Composite Products for National Weather Analysis
+    - *What it does:* Generates US-wide composite products combining NEXRAD radar and satellite imagery data. Creates seamless nationwide weather products with improved cov...
+    - *Purpose:* US-wide composite products combining radar and satellite data for comprehensive weather monitoring....
+
+### Additional Information
+
+- [Usage Instructions](#usage-instructions)
+- [Platform Compatibility](#platform-compatibility)
+- [Business Context](#business-context)
+
+---
+
+## Business Context
+
+**Enterprise-Grade Database System**
+
+This database and all associated queries are sourced from production systems used by businesses with **$1M+ Annual Recurring Revenue (ARR)**. These are not academic examples or toy databases—they represent real-world implementations that power critical business operations, serve paying customers, and generate significant revenue.
+
+**What This Means:**
+
+- **Production-Ready**: All queries have been tested and optimized in production environments
+- **Business-Critical**: These queries solve real business problems for revenue-generating companies
+- **Scalable**: Designed to handle enterprise-scale data volumes and query loads
+- **Proven**: Each query addresses a specific business need that has been validated through actual customer use
+
+**Business Value:**
+
+Every query in this database was created to solve a specific business problem for a company generating $1M+ ARR. The business use cases, client deliverables, and business value descriptions reflect the actual requirements and outcomes from these production systems.
+
+---
+
+## Database Overview
+
+This database contains weather data from NOAA sources including GRIB2 gridded forecasts, shapefile boundaries (CWA, Fire Zones, Marine Zones), real-time observations, transformation logs, spatial joins, CRS transformations, data quality metrics load status. The system is designed for weather forecasting, spatial analysis, and climate risk assessment applications.
+
+- **GRIB2 Forecast Data**: Gridded numerical weather forecasts from NDFD (National Digital Forecast Database)
+- **Geographic Boundaries**: Shapefile data for CWAs (County Warning Areas), Fire Zones, Marine Zones, and River Basins
+- **Real-Time Observations**: Point observations from NWS API
+- **Data Quality Tracking**: Comprehensive metrics for data quality monitoring
+- **Transformation Logging**: Complete audit trail for data transformations
+- **Multi-Source Integration**: Integration of multiple NOAA data sources
+
+- **PostgreSQL**: Full support with PostGIS extension for spatial operations
+
+- **GRIB2 Files**: National Digital Forecast Database (NDFD) from `tgftp.nws.noaa.gov`
+- **Shapefiles**: NWS GIS Portal shapefiles from `weather.gov/gis`
+- **Observations**: NWS API (`api.weather.gov`)
+
+---
+
+---
+
 ### Data Dictionary
 
 This section provides a comprehensive data dictionary for all tables in the database, including column names, data types, constraints, and descriptions. Tables are organized by functional category for easier navigation.
 
-### Composite Products
-
-#### Table: `us_wide_composite_products`
-
-*US-Wide Composite Products Table*
-
-| Column Name | Data Type | Constraints | Description |
-|-------------|-----------|-------------|-------------|
-| `composite_id` | `VARCHAR(255)` | PRIMARY KEY | - |
-| `product_type` | `VARCHAR(100)` | NOT NULL | 'Precipitation', 'Cloud', 'Storm', 'Fire', 'Temperature' |
-| `composite_time` | `TIMESTAMP_NTZ` | NOT NULL | - |
-| `grid_latitude` | `NUMERIC(10, 7)` | NOT NULL | - |
-| `grid_longitude` | `NUMERIC(10, 7)` | NOT NULL | - |
-| `grid_geom` | `GEOGRAPHY` | - | Point geometry |
-| `grid_resolution_km` | `NUMERIC(8, 2)` | DEFAULT 1.0 | - |
-| `nexrad_reflectivity_dbz` | `NUMERIC(6, 2)` | - | - |
-| `nexrad_velocity_ms` | `NUMERIC(6, 2)` | - | - |
-| `nexrad_precipitation_rate_mmh` | `NUMERIC(8, 2)` | - | - |
-| `nexrad_contribution_weight` | `NUMERIC(5, 3)` | - | Weight of NEXRAD data in composite |
-| `satellite_brightness_temperature_k` | `NUMERIC(8, 2)` | - | - |
-| `satellite_reflectance_percent` | `NUMERIC(6, 2)` | - | - |
-| `satellite_cloud_top_height_m` | `NUMERIC(8, 2)` | - | - |
-| `satellite_precipitation_rate_mmh` | `NUMERIC(8, 2)` | - | - |
-| `satellite_contribution_weight` | `NUMERIC(5, 3)` | - | Weight of satellite data in composite |
-| `composite_precipitation_rate_mmh` | `NUMERIC(8, 2)` | - | - |
-| `composite_cloud_fraction` | `NUMERIC(5, 2)` | - | - |
-| `composite_storm_severity` | `VARCHAR(50)` | - | - |
-| `data_quality_score` | `NUMERIC(5, 2)` | - | Overall data quality (0-100) |
-| `coverage_percentage` | `NUMERIC(5, 2)` | - | Percentage of expected data coverage |
-| `nexrad_sites_count` | `INTEGER` | - | Number of NEXRAD sites contributing |
-| `satellite_sources_count` | `INTEGER` | - | Number of satellite sources contributing |
-| `composite_generation_timestamp` | `TIMESTAMP_NTZ` | DEFAULT CURRENT_TIMESTAMP | - |
-| `composite_method` | `VARCHAR(100)` | - | 'WeightedAverage', 'Maximum', 'Minimum', 'Median', etc. |
-
-### Core Weather Data
-
-#### Table: `grib2_forecasts`
-
-*Stores gridded forecast data from NDFD (National Digital Forecast Database)*
-
-| Column Name | Data Type | Constraints | Description |
-|-------------|-----------|-------------|-------------|
-| `forecast_id` | `VARCHAR(255)` | PRIMARY KEY | - |
-| `parameter_name` | `VARCHAR(100)` | NOT NULL | - |
-| `forecast_time` | `TIMESTAMP_NTZ` | NOT NULL | - |
-| `grid_cell_latitude` | `NUMERIC(10, 7)` | NOT NULL | - |
-| `grid_cell_longitude` | `NUMERIC(10, 7)` | NOT NULL | - |
-| `grid_cell_geom` | `GEOGRAPHY` | - | Point geometry for grid cell center (PostgreSQL/Snowflake) |
-| `parameter_value` | `NUMERIC(10, 2)` | - | - |
-| `source_file` | `VARCHAR(500)` | - | - |
-| `source_crs` | `VARCHAR(50)` | - | - |
-| `target_crs` | `VARCHAR(50)` | - | - |
-| `grid_resolution_x` | `NUMERIC(10, 6)` | - | - |
-| `grid_resolution_y` | `NUMERIC(10, 6)` | - | - |
-| `spatial_extent_west` | `NUMERIC(10, 6)` | - | - |
-| `spatial_extent_south` | `NUMERIC(10, 6)` | - | - |
-| `spatial_extent_east` | `NUMERIC(10, 6)` | - | - |
-| `spatial_extent_north` | `NUMERIC(10, 6)` | - | - |
-| `load_timestamp` | `TIMESTAMP_NTZ` | DEFAULT CURRENT_TIMESTAMP | - |
-| `transformation_status` | `VARCHAR(50)` | - | - |
-
-#### Table: `weather_forecast_aggregations`
-
-*Weather Forecast Aggregations Table*
-
-| Column Name | Data Type | Constraints | Description |
-|-------------|-----------|-------------|-------------|
-| `aggregation_id` | `VARCHAR(255)` | PRIMARY KEY | - |
-| `parameter_name` | `VARCHAR(100)` | NOT NULL | - |
-| `forecast_time` | `TIMESTAMP_NTZ` | NOT NULL | - |
-| `boundary_id` | `VARCHAR(255)` | - | - |
-| `feature_type` | `VARCHAR(50)` | - | - |
-| `feature_name` | `VARCHAR(255)` | - | - |
-| `min_value` | `NUMERIC(10, 2)` | - | - |
-| `max_value` | `NUMERIC(10, 2)` | - | - |
-| `avg_value` | `NUMERIC(10, 2)` | - | - |
-| `median_value` | `NUMERIC(10, 2)` | - | - |
-| `std_dev_value` | `NUMERIC(10, 2)` | - | - |
-| `grid_cells_count` | `INTEGER` | - | - |
-| `aggregation_timestamp` | `TIMESTAMP_NTZ` | DEFAULT CURRENT_TIMESTAMP | - |
-
-#### Table: `weather_observations`
-
-*Stores point observations from NWS API*
-
-| Column Name | Data Type | Constraints | Description |
-|-------------|-----------|-------------|-------------|
-| `observation_id` | `VARCHAR(255)` | PRIMARY KEY | - |
-| `station_id` | `VARCHAR(50)` | NOT NULL | - |
-| `station_name` | `VARCHAR(255)` | - | - |
-| `observation_time` | `TIMESTAMP_NTZ` | NOT NULL | - |
-| `station_latitude` | `NUMERIC(10, 7)` | NOT NULL | - |
-| `station_longitude` | `NUMERIC(10, 7)` | NOT NULL | - |
-| `station_geom` | `GEOGRAPHY` | - | Point geometry |
-| `temperature` | `NUMERIC(6, 2)` | - | - |
-| `dewpoint` | `NUMERIC(6, 2)` | - | - |
-| `humidity` | `NUMERIC(5, 2)` | - | - |
-| `wind_speed` | `NUMERIC(6, 2)` | - | - |
-| `wind_direction` | `INTEGER` | - | - |
-| `pressure` | `NUMERIC(8, 2)` | - | - |
-| `visibility` | `NUMERIC(6, 2)` | - | - |
-| `sky_cover` | `VARCHAR(50)` | - | - |
-| `precipitation_amount` | `NUMERIC(8, 2)` | - | - |
-| `data_freshness_minutes` | `INTEGER` | - | - |
-| `load_timestamp` | `TIMESTAMP_NTZ` | DEFAULT CURRENT_TIMESTAMP | - |
-| `data_source` | `VARCHAR(50)` | DEFAULT 'NWS_API' | - |
-
-#### Table: `weather_stations`
-
-*Metadata about weather observation stations*
-
-| Column Name | Data Type | Constraints | Description |
-|-------------|-----------|-------------|-------------|
-| `station_id` | `VARCHAR(50)` | PRIMARY KEY | - |
-| `station_name` | `VARCHAR(255)` | - | - |
-| `station_latitude` | `NUMERIC(10, 7)` | NOT NULL | - |
-| `station_longitude` | `NUMERIC(10, 7)` | NOT NULL | - |
-| `station_geom` | `GEOGRAPHY` | - | - |
-| `elevation_meters` | `NUMERIC(8, 2)` | - | - |
-| `state_code` | `VARCHAR(2)` | - | - |
-| `county_name` | `VARCHAR(100)` | - | - |
-| `cwa_code` | `VARCHAR(10)` | - | - |
-| `station_type` | `VARCHAR(50)` | - | - |
-| `active_status` | `BOOLEAN` | DEFAULT TRUE | - |
-| `first_observation_date` | `DATE` | - | - |
-| `last_observation_date` | `DATE` | - | - |
-| `update_frequency_minutes` | `INTEGER` | - | - |
-
-### Data Processing & Logging
-
-#### Table: `aws_data_source_log`
-
-*Tracks data ingestion from AWS Open Data Registry*
-
-| Column Name | Data Type | Constraints | Description |
-|-------------|-----------|-------------|-------------|
-| `source_id` | `VARCHAR(255)` | PRIMARY KEY | - |
-| `source_name` | `VARCHAR(500)` | NOT NULL | - |
-| `source_type` | `VARCHAR(100)` | NOT NULL | 'noaa_gfs', 'noaa_hrrr', 'noaa_nexrad', etc. |
-| `bucket_name` | `VARCHAR(255)` | NOT NULL | - |
-| `file_path` | `VARCHAR(1000)` | NOT NULL | - |
-| `format` | `VARCHAR(50)` | - | 'grib2', 'netcdf', 'binary', etc. |
-| `ingestion_timestamp` | `TIMESTAMP_NTZ` | DEFAULT CURRENT_TIMESTAMP | - |
-| `status` | `VARCHAR(50)` | DEFAULT 'Success' | 'Success', 'Failed', 'Pending' |
-| `metadata` | `VARIANT` | - | JSON metadata (Snowflake) or JSONB (PostgreSQL) - Use OBJECT for cross-database compatibility |
-| `file_size_bytes` | `BIGINT` | - | - |
-| `forecast_date` | `DATE` | - | - |
-| `forecast_cycle` | `VARCHAR(2)` | - | '00', '06', '12', '18' |
-| `forecast_hour` | `INTEGER` | - | - |
-
-#### Table: `crs_transformation_parameters`
-
-*Documents coordinate reference system transformations and parameters*
-
-| Column Name | Data Type | Constraints | Description |
-|-------------|-----------|-------------|-------------|
-| `transformation_id` | `VARCHAR(255)` | PRIMARY KEY | - |
-| `source_crs` | `VARCHAR(50)` | NOT NULL | - |
-| `target_crs` | `VARCHAR(50)` | NOT NULL | - |
-| `source_crs_name` | `VARCHAR(255)` | - | - |
-| `target_crs_name` | `VARCHAR(255)` | - | - |
-| `transformation_method` | `VARCHAR(50)` | - | 'GDAL', 'PROJ', 'Custom' |
-| `central_meridian` | `NUMERIC(10, 6)` | - | - |
-| `false_easting` | `NUMERIC(12, 2)` | - | - |
-| `false_northing` | `NUMERIC(12, 2)` | - | - |
-| `scale_factor` | `NUMERIC(10, 8)` | - | - |
-| `latitude_of_origin` | `NUMERIC(10, 6)` | - | - |
-| `units` | `VARCHAR(50)` | - | 'degrees', 'meters', 'feet' |
-| `accuracy_meters` | `NUMERIC(10, 2)` | - | - |
-| `usage_count` | `INTEGER` | DEFAULT 0 | - |
-
-#### Table: `data_quality_metrics`
-
-*Tracks data quality metrics for weather products*
-
-| Column Name | Data Type | Constraints | Description |
-|-------------|-----------|-------------|-------------|
-| `metric_id` | `VARCHAR(255)` | PRIMARY KEY | - |
-| `metric_date` | `DATE` | NOT NULL | - |
-| `data_source` | `VARCHAR(50)` | NOT NULL | 'GRIB2', 'Shapefile', 'API' |
-| `files_processed` | `INTEGER` | DEFAULT 0 | - |
-| `files_successful` | `INTEGER` | DEFAULT 0 | - |
-| `files_failed` | `INTEGER` | DEFAULT 0 | - |
-| `success_rate` | `NUMERIC(5, 2)` | - | - |
-| `total_records` | `INTEGER` | DEFAULT 0 | - |
-| `records_with_errors` | `INTEGER` | DEFAULT 0 | - |
-| `error_rate` | `NUMERIC(5, 2)` | - | - |
-| `spatial_coverage_km2` | `NUMERIC(15, 2)` | - | - |
-| `temporal_coverage_hours` | `INTEGER` | - | - |
-| `data_freshness_minutes` | `INTEGER` | - | - |
-| `calculation_timestamp` | `TIMESTAMP_NTZ` | DEFAULT CURRENT_TIMESTAMP | - |
-
-#### Table: `geoplatform_dataset_log`
-
-*Tracks geospatial datasets discovered from geoplatform.gov*
-
-| Column Name | Data Type | Constraints | Description |
-|-------------|-----------|-------------|-------------|
-| `dataset_id` | `VARCHAR(255)` | PRIMARY KEY | - |
-| `title` | `VARCHAR(500)` | - | - |
-| `description` | `VARCHAR(2000)` | - | - |
-| `url` | `VARCHAR(1000)` | - | - |
-| `search_term` | `VARCHAR(100)` | - | - |
-| `ingestion_timestamp` | `TIMESTAMP_NTZ` | DEFAULT CURRENT_TIMESTAMP | - |
-| `status` | `VARCHAR(50)` | DEFAULT 'Discovered' | 'Discovered', 'Ingested', 'Failed' |
-| `dataset_type` | `VARCHAR(100)` | - | 'boundary', 'elevation', 'imagery', etc. |
-| `spatial_extent_west` | `NUMERIC(10, 6)` | - | - |
-| `spatial_extent_south` | `NUMERIC(10, 6)` | - | - |
-| `spatial_extent_east` | `NUMERIC(10, 6)` | - | - |
-| `spatial_extent_north` | `NUMERIC(10, 6)` | - | - |
-| `ALTER` | `TABLE` | DEFAULT 'NDFD'; | - |
-| `ALTER` | `TABLE` | - | 'GFS', 'HRRR', 'RAP', etc. |
-| `ALTER` | `TABLE` | - | - |
-| `ALTER` | `TABLE` | - | - |
-| `ALTER` | `TABLE` | - | For ensemble forecasts |
-| `ALTER` | `TABLE` | - | - |
-| `ALTER` | `TABLE` | - | - |
-
-#### Table: `grib2_transformation_log`
-
-*Tracks GRIB2 file processing and transformation operations*
-
-| Column Name | Data Type | Constraints | Description |
-|-------------|-----------|-------------|-------------|
-| `log_id` | `VARCHAR(255)` | PRIMARY KEY | - |
-| `file_name` | `VARCHAR(500)` | NOT NULL | - |
-| `source_path` | `VARCHAR(1000)` | - | - |
-| `parameter_name` | `VARCHAR(100)` | NOT NULL | - |
-| `forecast_time` | `TIMESTAMP_NTZ` | - | - |
-| `source_crs` | `VARCHAR(50)` | - | - |
-| `target_crs` | `VARCHAR(50)` | - | - |
-| `gdal_command` | `VARCHAR(2000)` | - | - |
-| `output_file` | `VARCHAR(1000)` | - | - |
-| `grid_resolution_x` | `NUMERIC(10, 6)` | - | - |
-| `grid_resolution_y` | `NUMERIC(10, 6)` | - | - |
-| `spatial_extent_west` | `NUMERIC(10, 6)` | - | - |
-| `spatial_extent_south` | `NUMERIC(10, 6)` | - | - |
-| `spatial_extent_east` | `NUMERIC(10, 6)` | - | - |
-| `spatial_extent_north` | `NUMERIC(10, 6)` | - | - |
-| `transformation_status` | `VARCHAR(50)` | - | - |
-| `snowflake_table` | `VARCHAR(255)` | - | - |
-| `load_timestamp` | `TIMESTAMP_NTZ` | - | - |
-| `processing_duration_seconds` | `INTEGER` | - | - |
-| `records_processed` | `INTEGER` | - | - |
-| `error_message` | `VARCHAR(2000)` | - | - |
-
-#### Table: `nexrad_transformation_log`
-
-*Tracks NEXRAD data transformation operations*
-
-| Column Name | Data Type | Constraints | Description |
-|-------------|-----------|-------------|-------------|
-| `transformation_id` | `VARCHAR(255)` | PRIMARY KEY | - |
-| `site_id` | `VARCHAR(4)` | NOT NULL | - |
-| `source_file` | `VARCHAR(1000)` | NOT NULL | - |
-| `transformation_type` | `VARCHAR(100)` | NOT NULL | 'Decompression', 'Gridding', 'StormTracking', 'Composite' |
-| `transformation_start_time` | `TIMESTAMP_NTZ` | NOT NULL | - |
-| `transformation_end_time` | `TIMESTAMP_NTZ` | - | - |
-| `transformation_duration_seconds` | `INTEGER` | - | - |
-| `input_format` | `VARCHAR(50)` | - | - |
-| `input_size_bytes` | `BIGINT` | - | - |
-| `input_records` | `INTEGER` | - | - |
-| `output_format` | `VARCHAR(50)` | - | - |
-| `output_size_bytes` | `BIGINT` | - | - |
-| `output_records` | `INTEGER` | - | - |
-| `transformation_status` | `VARCHAR(50)` | DEFAULT 'Success' | 'Success', 'Failed', 'Partial' |
-| `error_message` | `VARCHAR(2000)` | - | - |
-| `processing_method` | `VARCHAR(100)` | - | 'PyART', 'wradlib', 'Custom', etc. |
-| `processing_parameters` | `VARCHAR(2000)` | - | JSON parameters |
-| `spatial_extent_west` | `NUMERIC(10, 6)` | - | - |
-| `spatial_extent_south` | `NUMERIC(10, 6)` | - | - |
-| `spatial_extent_east` | `NUMERIC(10, 6)` | - | - |
-| `spatial_extent_north` | `NUMERIC(10, 6)` | - | - |
-| `created_timestamp` | `TIMESTAMP_NTZ` | DEFAULT CURRENT_TIMESTAMP | - |
-
-#### Table: `nws_api_observation_log`
-
-*Tracks observations ingested from NWS API*
-
-| Column Name | Data Type | Constraints | Description |
-|-------------|-----------|-------------|-------------|
-| `log_id` | `VARCHAR(255)` | PRIMARY KEY | - |
-| `station_id` | `VARCHAR(50)` | NOT NULL | - |
-| `observation_time` | `TIMESTAMP_NTZ` | NOT NULL | - |
-| `api_endpoint` | `VARCHAR(500)` | - | - |
-| `response_status` | `INTEGER` | - | - |
-| `data_freshness_minutes` | `INTEGER` | - | - |
-| `ingestion_timestamp` | `TIMESTAMP_NTZ` | DEFAULT CURRENT_TIMESTAMP | - |
-| `status` | `VARCHAR(50)` | DEFAULT 'Success' | - |
-| `error_message` | `VARCHAR(2000)` | - | - |
-
-#### Table: `satellite_transformation_log`
-
-*Tracks satellite imagery transformation operations*
-
-| Column Name | Data Type | Constraints | Description |
-|-------------|-----------|-------------|-------------|
-| `transformation_id` | `VARCHAR(255)` | PRIMARY KEY | - |
-| `source_id` | `VARCHAR(255)` | NOT NULL | - |
-| `source_file` | `VARCHAR(1000)` | NOT NULL | - |
-| `transformation_type` | `VARCHAR(100)` | NOT NULL | 'Decompression', 'Reprojection', 'Gridding', 'ProductGeneration' |
-| `transformation_start_time` | `TIMESTAMP_NTZ` | NOT NULL | - |
-| `transformation_end_time` | `TIMESTAMP_NTZ` | - | - |
-| `transformation_duration_seconds` | `INTEGER` | - | - |
-| `input_format` | `VARCHAR(50)` | - | - |
-| `input_size_bytes` | `BIGINT` | - | - |
-| `input_bands` | `INTEGER` | - | - |
-| `input_dimensions` | `VARCHAR(100)` | - | 'width x height' |
-| `output_format` | `VARCHAR(50)` | - | - |
-| `output_size_bytes` | `BIGINT` | - | - |
-| `output_records` | `INTEGER` | - | - |
-| `transformation_status` | `VARCHAR(50)` | DEFAULT 'Success' | - |
-| `error_message` | `VARCHAR(2000)` | - | - |
-| `processing_method` | `VARCHAR(100)` | - | 'xarray', 'rasterio', 'GDAL', 'Custom', etc. |
-| `processing_parameters` | `VARCHAR(2000)` | - | JSON parameters |
-| `crs_transformation` | `VARCHAR(100)` | - | CRS transformation applied |
-| `spatial_extent_west` | `NUMERIC(10, 6)` | - | - |
-| `spatial_extent_south` | `NUMERIC(10, 6)` | - | - |
-| `spatial_extent_east` | `NUMERIC(10, 6)` | - | - |
-| `spatial_extent_north` | `NUMERIC(10, 6)` | - | - |
-| `created_timestamp` | `TIMESTAMP_NTZ` | DEFAULT CURRENT_TIMESTAMP | - |
-
-#### Table: `shapefile_integration_log`
-
-*Tracks shapefile processing and coordinate transformations*
-
-| Column Name | Data Type | Constraints | Description |
-|-------------|-----------|-------------|-------------|
-| `log_id` | `VARCHAR(255)` | PRIMARY KEY | - |
-| `shapefile_name` | `VARCHAR(500)` | NOT NULL | - |
-| `source_path` | `VARCHAR(1000)` | - | - |
-| `feature_type` | `VARCHAR(50)` | NOT NULL | - |
-| `feature_count` | `INTEGER` | - | - |
-| `source_crs` | `VARCHAR(50)` | - | - |
-| `target_crs` | `VARCHAR(50)` | - | - |
-| `ogr2ogr_command` | `VARCHAR(2000)` | - | - |
-| `transformed_path` | `VARCHAR(1000)` | - | - |
-| `spatial_extent_west` | `NUMERIC(10, 6)` | - | - |
-| `spatial_extent_south` | `NUMERIC(10, 6)` | - | - |
-| `spatial_extent_east` | `NUMERIC(10, 6)` | - | - |
-| `spatial_extent_north` | `NUMERIC(10, 6)` | - | - |
-| `transformation_status` | `VARCHAR(50)` | - | - |
-| `snowflake_table` | `VARCHAR(255)` | - | - |
-| `load_timestamp` | `TIMESTAMP_NTZ` | - | - |
-| `processing_duration_seconds` | `INTEGER` | - | - |
-| `error_message` | `VARCHAR(2000)` | - | - |
-
-#### Table: `snowflake_load_status`
-
-*Tracks data loading operations to Snowflake*
-
-| Column Name | Data Type | Constraints | Description |
-|-------------|-----------|-------------|-------------|
-| `load_id` | `VARCHAR(255)` | PRIMARY KEY | - |
-| `source_file` | `VARCHAR(1000)` | - | - |
-| `snowflake_table` | `VARCHAR(255)` | NOT NULL | - |
-| `load_start_time` | `TIMESTAMP_NTZ` | NOT NULL | - |
-| `load_end_time` | `TIMESTAMP_NTZ` | - | - |
-| `load_duration_seconds` | `INTEGER` | - | - |
-| `records_loaded` | `INTEGER` | DEFAULT 0 | - |
-| `file_size_mb` | `NUMERIC(10, 2)` | - | - |
-| `load_rate_mb_per_sec` | `NUMERIC(10, 2)` | - | - |
-| `load_status` | `VARCHAR(50)` | - | 'Success', 'Failed', 'Partial' |
-| `error_message` | `VARCHAR(2000)` | - | - |
-| `snowflake_warehouse` | `VARCHAR(255)` | - | - |
-| `data_source_type` | `VARCHAR(50)` | - | - |
-
-#### Table: `spatial_join_results`
-
-*Documents spatial join operations between GRIB2 grid cells and shapefile boundaries*
-
-| Column Name | Data Type | Constraints | Description |
-|-------------|-----------|-------------|-------------|
-| `join_id` | `VARCHAR(255)` | PRIMARY KEY | - |
-| `grib_file` | `VARCHAR(500)` | - | - |
-| `shapefile_name` | `VARCHAR(500)` | - | - |
-| `join_type` | `VARCHAR(50)` | - | 'Point-in-Polygon', 'Raster-to-Vector', 'Clip' |
-| `gdal_command` | `VARCHAR(2000)` | - | - |
-| `features_matched` | `INTEGER` | - | - |
-| `features_total` | `INTEGER` | - | - |
-| `match_percentage` | `NUMERIC(5, 2)` | - | - |
-| `output_file` | `VARCHAR(1000)` | - | - |
-| `join_timestamp` | `TIMESTAMP_NTZ` | DEFAULT CURRENT_TIMESTAMP | - |
-| `forecast_id` | `VARCHAR(255)` | - | - |
-| `boundary_id` | `VARCHAR(255)` | - | - |
-
-### Geographic Boundaries
-
-#### Table: `shapefile_boundaries`
-
-*Stores geographic boundaries (CWA, Fire Zones, Marine Zones, River Basins)*
-
-| Column Name | Data Type | Constraints | Description |
-|-------------|-----------|-------------|-------------|
-| `boundary_id` | `VARCHAR(255)` | PRIMARY KEY | - |
-| `feature_type` | `VARCHAR(50)` | NOT NULL | 'CWA', 'FireZone', 'MarineZone', 'RiverBasin', 'County' |
-| `feature_name` | `VARCHAR(255)` | - | - |
-| `feature_identifier` | `VARCHAR(100)` | - | - |
-| `boundary_geom` | `GEOGRAPHY` | - | Polygon geometry |
-| `source_shapefile` | `VARCHAR(500)` | - | - |
-| `source_crs` | `VARCHAR(50)` | - | - |
-| `target_crs` | `VARCHAR(50)` | - | - |
-| `feature_count` | `INTEGER` | - | - |
-| `spatial_extent_west` | `NUMERIC(10, 6)` | - | - |
-| `spatial_extent_south` | `NUMERIC(10, 6)` | - | - |
-| `spatial_extent_east` | `NUMERIC(10, 6)` | - | - |
-| `spatial_extent_north` | `NUMERIC(10, 6)` | - | - |
-| `load_timestamp` | `TIMESTAMP_NTZ` | DEFAULT CURRENT_TIMESTAMP | - |
-| `transformation_status` | `VARCHAR(50)` | - | - |
-| `state_code` | `VARCHAR(2)` | - | - |
-| `office_code` | `VARCHAR(10)` | - | - |
-
-### Insurance & Risk Modeling
-
-#### Table: `forecast_rate_mapping`
-
-*Forecast-to-Rate Mapping Table*
-
-| Column Name | Data Type | Constraints | Description |
-|-------------|-----------|-------------|-------------|
-| `mapping_id` | `VARCHAR(255)` | PRIMARY KEY | - |
-| `forecast_id` | `VARCHAR(255)` | NOT NULL | References grib2_forecasts |
-| `rate_table_id` | `VARCHAR(255)` | - | References insurance_rate_tables |
-| `risk_factor_id` | `VARCHAR(255)` | - | References insurance_risk_factors |
-| `policy_area_id` | `VARCHAR(255)` | NOT NULL | References insurance_policy_areas |
-| `forecast_date` | `DATE` | NOT NULL | - |
-| `forecast_day` | `INTEGER` | NOT NULL | 7-14 days ahead |
-| `forecast_time` | `TIMESTAMP_NTZ` | NOT NULL | - |
-| `parameter_name` | `VARCHAR(100)` | NOT NULL | - |
-| `parameter_value` | `NUMERIC(10, 2)` | - | - |
-| `risk_contribution` | `NUMERIC(10, 4)` | - | Contribution to overall risk score |
-| `rate_impact` | `NUMERIC(10, 4)` | - | Impact on rate calculation |
-| `mapping_timestamp` | `TIMESTAMP_NTZ` | DEFAULT CURRENT_TIMESTAMP | - |
-
-#### Table: `insurance_claims_history`
-
-*Insurance Claims History Table*
-
-| Column Name | Data Type | Constraints | Description |
-|-------------|-----------|-------------|-------------|
-| `claim_id` | `VARCHAR(255)` | PRIMARY KEY | - |
-| `policy_area_id` | `VARCHAR(255)` | - | References insurance_policy_areas |
-| `claim_date` | `DATE` | NOT NULL | - |
-| `loss_date` | `DATE` | NOT NULL | Date when loss occurred |
-| `policy_type` | `VARCHAR(50)` | - | - |
-| `coverage_type` | `VARCHAR(100)` | - | - |
-| `claim_type` | `VARCHAR(100)` | - | 'Weather', 'Fire', 'Flood', 'Wind', 'Freeze', etc. |
-| `loss_amount` | `NUMERIC(12, 2)` | - | - |
-| `claim_status` | `VARCHAR(50)` | - | 'Open', 'Closed', 'Denied', 'Pending' |
-| `weather_event_type` | `VARCHAR(100)` | - | 'Hurricane', 'Tornado', 'Flood', 'Freeze', etc. |
-| `weather_event_date` | `DATE` | - | - |
-| `temperature_at_loss` | `NUMERIC(6, 2)` | - | - |
-| `precipitation_at_loss` | `NUMERIC(8, 2)` | - | - |
-| `wind_speed_at_loss` | `NUMERIC(6, 2)` | - | - |
-| `forecast_available` | `BOOLEAN` | DEFAULT FALSE | - |
-| `forecast_day` | `INTEGER` | - | Days ahead forecast was made |
-| `forecast_error` | `NUMERIC(10, 2)` | - | Forecast vs actual error |
-| `created_timestamp` | `TIMESTAMP_NTZ` | DEFAULT CURRENT_TIMESTAMP | - |
-
-#### Table: `insurance_policy_areas`
-
-*Insurance Policy Areas Table*
-
-| Column Name | Data Type | Constraints | Description |
-|-------------|-----------|-------------|-------------|
-| `policy_area_id` | `VARCHAR(255)` | PRIMARY KEY | - |
-| `boundary_id` | `VARCHAR(255)` | NOT NULL | References shapefile_boundaries |
-| `policy_type` | `VARCHAR(50)` | NOT NULL | 'Property', 'Crop', 'Auto', 'Marine', 'General Liability' |
-| `coverage_type` | `VARCHAR(100)` | - | 'Homeowners', 'Commercial Property', 'Crop Insurance', etc. |
-| `policy_area_name` | `VARCHAR(255)` | - | - |
-| `state_code` | `VARCHAR(2)` | - | - |
-| `county_code` | `VARCHAR(5)` | - | - |
-| `cwa_code` | `VARCHAR(10)` | - | - |
-| `risk_zone` | `VARCHAR(50)` | - | 'Low', 'Moderate', 'High', 'Very High' |
-| `base_rate_factor` | `NUMERIC(5, 3)` | DEFAULT 1.000 | Multiplier for base rates |
-| `effective_date` | `DATE` | NOT NULL | - |
-| `expiration_date` | `DATE` | - | - |
-| `is_active` | `BOOLEAN` | DEFAULT TRUE | - |
-| `created_timestamp` | `TIMESTAMP_NTZ` | DEFAULT CURRENT_TIMESTAMP | - |
-| `updated_timestamp` | `TIMESTAMP_NTZ` | DEFAULT CURRENT_TIMESTAMP | - |
-
-#### Table: `insurance_rate_tables`
-
-*Stores calculated rate tables based on forecast risk factors*
-
-| Column Name | Data Type | Constraints | Description |
-|-------------|-----------|-------------|-------------|
-| `rate_table_id` | `VARCHAR(255)` | PRIMARY KEY | - |
-| `policy_area_id` | `VARCHAR(255)` | NOT NULL | References insurance_policy_areas |
-| `policy_type` | `VARCHAR(50)` | NOT NULL | - |
-| `coverage_type` | `VARCHAR(100)` | - | - |
-| `forecast_period_start` | `DATE` | NOT NULL | Dec 3, 2025 |
-| `forecast_period_end` | `DATE` | NOT NULL | Dec 17, 2025 |
-| `forecast_day` | `INTEGER` | NOT NULL | 7-14 days ahead |
-| `forecast_date` | `DATE` | NOT NULL | Date when forecast was made |
-| `base_rate` | `NUMERIC(10, 2)` | - | - |
-| `base_rate_currency` | `VARCHAR(3)` | DEFAULT 'USD' | - |
-| `risk_adjusted_rate` | `NUMERIC(10, 2)` | - | - |
-| `risk_multiplier` | `NUMERIC(5, 3)` | - | Multiplier applied to base rate |
-| `base_component` | `NUMERIC(10, 2)` | - | - |
-| `precipitation_risk_component` | `NUMERIC(10, 2)` | - | - |
-| `temperature_risk_component` | `NUMERIC(10, 2)` | - | - |
-| `wind_risk_component` | `NUMERIC(10, 2)` | - | - |
-| `freeze_risk_component` | `NUMERIC(10, 2)` | - | - |
-| `flood_risk_component` | `NUMERIC(10, 2)` | - | - |
-| `extreme_event_component` | `NUMERIC(10, 2)` | - | - |
-| `rate_tier` | `VARCHAR(50)` | - | 'Standard', 'Preferred', 'Substandard', 'High Risk' |
-| `rate_category` | `VARCHAR(50)` | - | 'Low', 'Moderate', 'High', 'Very High' |
-| `calculation_method` | `VARCHAR(100)` | - | 'Forecast-Based', 'Historical', 'Hybrid' |
-| `confidence_level` | `NUMERIC(5, 2)` | - | Confidence in forecast (0-100) |
-| `effective_date` | `DATE` | NOT NULL | - |
-| `expiration_date` | `DATE` | - | - |
-| `created_timestamp` | `TIMESTAMP_NTZ` | DEFAULT CURRENT_TIMESTAMP | - |
-| `updated_timestamp` | `TIMESTAMP_NTZ` | DEFAULT CURRENT_TIMESTAMP | - |
-
-#### Table: `insurance_risk_factors`
-
-*Stores calculated risk factors based on weather forecasts*
-
-| Column Name | Data Type | Constraints | Description |
-|-------------|-----------|-------------|-------------|
-| `risk_factor_id` | `VARCHAR(255)` | PRIMARY KEY | - |
-| `policy_area_id` | `VARCHAR(255)` | NOT NULL | References insurance_policy_areas |
-| `forecast_period_start` | `DATE` | NOT NULL | Start of forecast period (Dec 3, 2025) |
-| `forecast_period_end` | `DATE` | NOT NULL | End of forecast period (Dec 17, 2025) |
-| `forecast_day` | `INTEGER` | NOT NULL | Days ahead: 7, 8, 9, ..., 14 |
-| `forecast_date` | `DATE` | NOT NULL | Date when forecast was made |
-| `parameter_name` | `VARCHAR(100)` | NOT NULL | 'Temperature', 'Precipitation', 'WindSpeed', etc. |
-| `extreme_event_probability` | `NUMERIC(5, 4)` | - | Probability of extreme event (0-1) |
-| `cumulative_precipitation_risk` | `NUMERIC(10, 2)` | - | Total precipitation risk score |
-| `wind_damage_risk` | `NUMERIC(10, 2)` | - | Wind damage risk score |
-| `freeze_risk` | `NUMERIC(10, 2)` | - | Freeze/frost risk score |
-| `flood_risk` | `NUMERIC(10, 2)` | - | Flood risk score |
-| `min_forecast_value` | `NUMERIC(10, 2)` | - | - |
-| `max_forecast_value` | `NUMERIC(10, 2)` | - | - |
-| `avg_forecast_value` | `NUMERIC(10, 2)` | - | - |
-| `median_forecast_value` | `NUMERIC(10, 2)` | - | - |
-| `stddev_forecast_value` | `NUMERIC(10, 2)` | - | - |
-| `percentile_90_value` | `NUMERIC(10, 2)` | - | - |
-| `percentile_95_value` | `NUMERIC(10, 2)` | - | - |
-| `percentile_99_value` | `NUMERIC(10, 2)` | - | - |
-| `overall_risk_score` | `NUMERIC(5, 2)` | - | - |
-| `risk_category` | `VARCHAR(50)` | - | 'Low', 'Moderate', 'High', 'Very High', 'Extreme' |
-| `calculation_timestamp` | `TIMESTAMP_NTZ` | DEFAULT CURRENT_TIMESTAMP | - |
-| `forecast_model` | `VARCHAR(100)` | - | 'GFS', 'HRRR', 'Ensemble', etc. |
-| `data_quality_score` | `NUMERIC(5, 2)` | - | - |
-
-#### Table: `rate_table_comparison`
-
-*Rate Table Comparison Table*
-
-| Column Name | Data Type | Constraints | Description |
-|-------------|-----------|-------------|-------------|
-| `comparison_id` | `VARCHAR(255)` | PRIMARY KEY | - |
-| `policy_area_id` | `VARCHAR(255)` | NOT NULL | - |
-| `policy_type` | `VARCHAR(50)` | NOT NULL | - |
-| `forecast_period_start` | `DATE` | NOT NULL | Dec 3, 2025 |
-| `forecast_period_end` | `DATE` | NOT NULL | Dec 17, 2025 |
-| `forecast_date` | `DATE` | NOT NULL | Date when forecast was made |
-| `rate_day_7` | `NUMERIC(10, 2)` | - | - |
-| `rate_day_8` | `NUMERIC(10, 2)` | - | - |
-| `rate_day_9` | `NUMERIC(10, 2)` | - | - |
-| `rate_day_10` | `NUMERIC(10, 2)` | - | - |
-| `rate_day_11` | `NUMERIC(10, 2)` | - | - |
-| `rate_day_12` | `NUMERIC(10, 2)` | - | - |
-| `rate_day_13` | `NUMERIC(10, 2)` | - | - |
-| `rate_day_14` | `NUMERIC(10, 2)` | - | - |
-| `min_rate` | `NUMERIC(10, 2)` | - | - |
-| `max_rate` | `NUMERIC(10, 2)` | - | - |
-| `avg_rate` | `NUMERIC(10, 2)` | - | - |
-| `median_rate` | `NUMERIC(10, 2)` | - | - |
-| `rate_volatility` | `NUMERIC(10, 4)` | - | Standard deviation of rates |
-| `rate_trend` | `VARCHAR(50)` | - | 'Increasing', 'Decreasing', 'Stable' |
-| `recommended_rate` | `NUMERIC(10, 2)` | - | - |
-| `recommended_forecast_day` | `INTEGER` | - | Which forecast day to use |
-| `confidence_score` | `NUMERIC(5, 2)` | - | - |
-| `comparison_timestamp` | `TIMESTAMP_NTZ` | DEFAULT CURRENT_TIMESTAMP | - |
-
-### NEXRAD Radar Data
-
-#### Table: `nexrad_level2_data`
-
-*Stores decompressed NEXRAD Level II radar data*
-
-| Column Name | Data Type | Constraints | Description |
-|-------------|-----------|-------------|-------------|
-| `radar_data_id` | `VARCHAR(255)` | PRIMARY KEY | - |
-| `site_id` | `VARCHAR(4)` | NOT NULL | References nexrad_radar_sites |
-| `scan_time` | `TIMESTAMP_NTZ` | NOT NULL | - |
-| `volume_scan_number` | `INTEGER` | - | - |
-| `elevation_angle` | `NUMERIC(5, 2)` | - | Elevation angle in degrees |
-| `azimuth_angle` | `NUMERIC(6, 2)` | - | Azimuth angle in degrees |
-| `range_gate` | `INTEGER` | - | Range gate number |
-| `range_km` | `NUMERIC(8, 2)` | - | Distance from radar in kilometers |
-| `reflectivity_dbz` | `NUMERIC(6, 2)` | - | Reflectivity in dBZ |
-| `reflectivity_geom` | `GEOGRAPHY` | - | Point geometry for reflectivity location |
-| `radial_velocity_ms` | `NUMERIC(6, 2)` | - | Radial velocity in m/s |
-| `velocity_geom` | `GEOGRAPHY` | - | Point geometry for velocity location |
-| `spectrum_width_ms` | `NUMERIC(6, 2)` | - | Spectrum width in m/s |
-| `data_quality_flag` | `INTEGER` | - | Quality flags |
-| `source_file` | `VARCHAR(1000)` | - | Original NEXRAD file path |
-| `aws_bucket` | `VARCHAR(255)` | - | AWS S3 bucket |
-| `aws_key` | `VARCHAR(1000)` | - | AWS S3 key |
-| `file_format` | `VARCHAR(50)` | DEFAULT 'Level2' | 'Level2', 'Level3' |
-| `compression_type` | `VARCHAR(50)` | - | 'bzip2', 'gzip', 'none' |
-| `decompression_status` | `VARCHAR(50)` | DEFAULT 'Success' | 'Success', 'Failed', 'Pending' |
-| `data_type` | `VARCHAR(50)` | - | 'Reflectivity', 'Velocity', 'SpectrumWidth', 'DifferentialReflectivity' |
-| `sweep_mode` | `VARCHAR(50)` | - | 'PPI' (Plan Position Indicator), 'RHI' (Range Height Indicator) |
-| `pulse_repetition_frequency` | `INTEGER` | - | PRF in Hz |
-| `nyquist_velocity_ms` | `NUMERIC(6, 2)` | - | Nyquist velocity in m/s |
-| `spatial_extent_west` | `NUMERIC(10, 6)` | - | - |
-| `spatial_extent_south` | `NUMERIC(10, 6)` | - | - |
-| `spatial_extent_east` | `NUMERIC(10, 6)` | - | - |
-| `spatial_extent_north` | `NUMERIC(10, 6)` | - | - |
-| `ingestion_timestamp` | `TIMESTAMP_NTZ` | DEFAULT CURRENT_TIMESTAMP | - |
-| `processing_duration_seconds` | `INTEGER` | - | - |
-| `records_processed` | `INTEGER` | - | - |
-
-#### Table: `nexrad_radar_sites`
-
-*Metadata for NEXRAD radar sites across the United States*
-
-| Column Name | Data Type | Constraints | Description |
-|-------------|-----------|-------------|-------------|
-| `site_id` | `VARCHAR(4)` | PRIMARY KEY | 4-letter site identifier (e.g., 'KTLX') |
-| `site_name` | `VARCHAR(255)` | NOT NULL | - |
-| `site_latitude` | `NUMERIC(10, 7)` | NOT NULL | - |
-| `site_longitude` | `NUMERIC(10, 7)` | NOT NULL | - |
-| `site_geom` | `GEOGRAPHY` | - | Point geometry |
-| `elevation_meters` | `NUMERIC(8, 2)` | - | - |
-| `state_code` | `VARCHAR(2)` | - | - |
-| `county_name` | `VARCHAR(100)` | - | - |
-| `cwa_code` | `VARCHAR(10)` | - | County Warning Area |
-| `radar_type` | `VARCHAR(50)` | DEFAULT 'WSR-88D' | Weather Surveillance Radar |
-| `operational_status` | `VARCHAR(50)` | DEFAULT 'Operational' | 'Operational', 'Maintenance', 'Offline' |
-| `coverage_radius_km` | `NUMERIC(8, 2)` | DEFAULT 230.0 | Standard NEXRAD coverage radius |
-| `first_operational_date` | `DATE` | - | - |
-| `last_maintenance_date` | `DATE` | - | - |
-| `update_frequency_minutes` | `INTEGER` | DEFAULT 5 | Typical NEXRAD update frequency |
-| `created_timestamp` | `TIMESTAMP_NTZ` | DEFAULT CURRENT_TIMESTAMP | - |
-| `updated_timestamp` | `TIMESTAMP_NTZ` | DEFAULT CURRENT_TIMESTAMP | - |
-
-#### Table: `nexrad_reflectivity_grid`
-
-*NEXRAD Reflectivity Grid Table*
-
-| Column Name | Data Type | Constraints | Description |
-|-------------|-----------|-------------|-------------|
-| `grid_id` | `VARCHAR(255)` | PRIMARY KEY | - |
-| `site_id` | `VARCHAR(4)` | NOT NULL | References nexrad_radar_sites |
-| `scan_time` | `TIMESTAMP_NTZ` | NOT NULL | - |
-| `grid_latitude` | `NUMERIC(10, 7)` | NOT NULL | - |
-| `grid_longitude` | `NUMERIC(10, 7)` | NOT NULL | - |
-| `grid_geom` | `GEOGRAPHY` | - | Point geometry |
-| `grid_resolution_km` | `NUMERIC(6, 2)` | DEFAULT 1.0 | Grid resolution in km |
-| `max_reflectivity_dbz` | `NUMERIC(6, 2)` | - | Maximum reflectivity in grid cell |
-| `mean_reflectivity_dbz` | `NUMERIC(6, 2)` | - | Mean reflectivity in grid cell |
-| `min_reflectivity_dbz` | `NUMERIC(6, 2)` | - | Minimum reflectivity in grid cell |
-| `reflectivity_count` | `INTEGER` | - | Number of observations in grid cell |
-| `composite_reflectivity_dbz` | `NUMERIC(6, 2)` | - | - |
-| `height_of_max_reflectivity_m` | `NUMERIC(8, 2)` | - | - |
-| `precipitation_rate_mmh` | `NUMERIC(8, 2)` | - | Precipitation rate in mm/h |
-| `accumulated_precipitation_mm` | `NUMERIC(8, 2)` | - | Accumulated precipitation in mm |
-| `storm_cell_id` | `VARCHAR(255)` | - | Identifier for storm cell tracking |
-| `storm_severity` | `VARCHAR(50)` | - | 'Weak', 'Moderate', 'Strong', 'Severe', 'Extreme' |
-| `grid_generation_timestamp` | `TIMESTAMP_NTZ` | DEFAULT CURRENT_TIMESTAMP | - |
-| `grid_method` | `VARCHAR(100)` | - | 'NearestNeighbor', 'Bilinear', 'Cressman', etc. |
-
-#### Table: `nexrad_storm_cells`
-
-*Tracks storm cells across multiple scans*
-
-| Column Name | Data Type | Constraints | Description |
-|-------------|-----------|-------------|-------------|
-| `storm_cell_id` | `VARCHAR(255)` | PRIMARY KEY | - |
-| `site_id` | `VARCHAR(4)` | NOT NULL | References nexrad_radar_sites |
-| `first_detection_time` | `TIMESTAMP_NTZ` | NOT NULL | - |
-| `last_detection_time` | `TIMESTAMP_NTZ` | - | - |
-| `storm_center_latitude` | `NUMERIC(10, 7)` | - | - |
-| `storm_center_longitude` | `NUMERIC(10, 7)` | - | - |
-| `storm_center_geom` | `GEOGRAPHY` | - | Point geometry |
-| `storm_polygon_geom` | `GEOGRAPHY` | - | Polygon geometry for storm extent |
-| `max_reflectivity_dbz` | `NUMERIC(6, 2)` | - | - |
-| `max_velocity_ms` | `NUMERIC(6, 2)` | - | - |
-| `storm_area_km2` | `NUMERIC(10, 2)` | - | - |
-| `storm_diameter_km` | `NUMERIC(8, 2)` | - | - |
-| `storm_perimeter_km` | `NUMERIC(8, 2)` | - | - |
-| `storm_speed_ms` | `NUMERIC(6, 2)` | - | Storm movement speed |
-| `storm_direction_deg` | `NUMERIC(6, 2)` | - | Storm movement direction |
-| `storm_severity` | `VARCHAR(50)` | - | 'Weak', 'Moderate', 'Strong', 'Severe', 'Extreme' |
-| `storm_type` | `VARCHAR(50)` | - | 'Thunderstorm', 'Squall Line', 'Supercell', 'Mesocyclone', etc. |
-| `track_duration_minutes` | `INTEGER` | - | - |
-| `scan_count` | `INTEGER` | - | Number of scans where storm was detected |
-| `tracking_status` | `VARCHAR(50)` | DEFAULT 'Active' | 'Active', 'Dissipated', 'Merged' |
-| `tracking_timestamp` | `TIMESTAMP_NTZ` | DEFAULT CURRENT_TIMESTAMP | - |
-
-#### Table: `nexrad_velocity_grid`
-
-*NEXRAD Velocity Grid Table*
-
-| Column Name | Data Type | Constraints | Description |
-|-------------|-----------|-------------|-------------|
-| `grid_id` | `VARCHAR(255)` | PRIMARY KEY | - |
-| `site_id` | `VARCHAR(4)` | NOT NULL | References nexrad_radar_sites |
-| `scan_time` | `TIMESTAMP_NTZ` | NOT NULL | - |
-| `grid_latitude` | `NUMERIC(10, 7)` | NOT NULL | - |
-| `grid_longitude` | `NUMERIC(10, 7)` | NOT NULL | - |
-| `grid_geom` | `GEOGRAPHY` | - | Point geometry |
-| `grid_resolution_km` | `NUMERIC(6, 2)` | DEFAULT 1.0 | - |
-| `radial_velocity_ms` | `NUMERIC(6, 2)` | - | Radial velocity in m/s |
-| `velocity_azimuth` | `NUMERIC(6, 2)` | - | Azimuth angle in degrees |
-| `u_wind_component_ms` | `NUMERIC(6, 2)` | - | East-west wind component |
-| `v_wind_component_ms` | `NUMERIC(6, 2)` | - | North-south wind component |
-| `wind_speed_ms` | `NUMERIC(6, 2)` | - | Wind speed in m/s |
-| `wind_direction_deg` | `NUMERIC(6, 2)` | - | Wind direction in degrees |
-| `spectrum_width_ms` | `NUMERIC(6, 2)` | - | - |
-| `velocity_quality_flag` | `INTEGER` | - | - |
-| `grid_generation_timestamp` | `TIMESTAMP_NTZ` | DEFAULT CURRENT_TIMESTAMP | - |
-
-### Satellite Imagery
-
-#### Table: `satellite_imagery_grid`
-
-*Satellite Imagery Grid Aggregations Table*
-
-| Column Name | Data Type | Constraints | Description |
-|-------------|-----------|-------------|-------------|
-| `grid_id` | `VARCHAR(255)` | PRIMARY KEY | - |
-| `source_id` | `VARCHAR(255)` | NOT NULL | References satellite_imagery_sources |
-| `product_type` | `VARCHAR(100)` | NOT NULL | - |
-| `scan_time` | `TIMESTAMP_NTZ` | NOT NULL | - |
-| `grid_latitude` | `NUMERIC(10, 7)` | NOT NULL | - |
-| `grid_longitude` | `NUMERIC(10, 7)` | NOT NULL | - |
-| `grid_geom` | `GEOGRAPHY` | - | Point geometry |
-| `grid_resolution_km` | `NUMERIC(8, 2)` | - | Grid resolution |
-| `min_value` | `NUMERIC(10, 4)` | - | - |
-| `max_value` | `NUMERIC(10, 4)` | - | - |
-| `mean_value` | `NUMERIC(10, 4)` | - | - |
-| `median_value` | `NUMERIC(10, 4)` | - | - |
-| `stddev_value` | `NUMERIC(10, 4)` | - | - |
-| `pixel_count` | `INTEGER` | - | - |
-| `cloud_fraction` | `NUMERIC(5, 2)` | - | Cloud fraction (0-100%) |
-| `cloud_top_height_m` | `NUMERIC(8, 2)` | - | - |
-| `cloud_top_temperature_k` | `NUMERIC(8, 2)` | - | - |
-| `fire_count` | `INTEGER` | - | - |
-| `total_fire_power_mw` | `NUMERIC(12, 2)` | - | - |
-| `precipitation_rate_mmh` | `NUMERIC(8, 2)` | - | - |
-| `aggregation_timestamp` | `TIMESTAMP_NTZ` | DEFAULT CURRENT_TIMESTAMP | - |
-| `aggregation_method` | `VARCHAR(100)` | - | 'Mean', 'Max', 'Min', 'Median', etc. |
-
-#### Table: `satellite_imagery_products`
-
-*Satellite Imagery Products Table*
-
-| Column Name | Data Type | Constraints | Description |
-|-------------|-----------|-------------|-------------|
-| `product_id` | `VARCHAR(255)` | PRIMARY KEY | - |
-| `source_id` | `VARCHAR(255)` | NOT NULL | References satellite_imagery_sources |
-| `product_name` | `VARCHAR(255)` | NOT NULL | 'ABI L2 Cloud Top Height', 'ABI L2 Cloud Top Temperature', etc. |
-| `product_type` | `VARCHAR(100)` | - | 'Cloud', 'Fire', 'Precipitation', 'Temperature', 'Moisture', etc. |
-| `band_number` | `INTEGER` | - | GOES ABI band number (1-16) |
-| `band_name` | `VARCHAR(100)` | - | 'Visible', 'Near-Infrared', 'Infrared', etc. |
-| `wavelength_um` | `NUMERIC(8, 4)` | - | Wavelength in micrometers |
-| `scan_start_time` | `TIMESTAMP_NTZ` | NOT NULL | - |
-| `scan_end_time` | `TIMESTAMP_NTZ` | - | - |
-| `scan_duration_seconds` | `INTEGER` | - | - |
-| `grid_latitude` | `NUMERIC(10, 7)` | NOT NULL | - |
-| `grid_longitude` | `NUMERIC(10, 7)` | NOT NULL | - |
-| `grid_geom` | `GEOGRAPHY` | - | Point geometry |
-| `grid_resolution_km` | `NUMERIC(8, 2)` | - | Grid resolution in kilometers |
-| `pixel_value` | `NUMERIC(10, 4)` | - | Raw pixel value |
-| `calibrated_value` | `NUMERIC(10, 4)` | - | Calibrated physical value |
-| `brightness_temperature_k` | `NUMERIC(8, 2)` | - | Brightness temperature in Kelvin (for IR bands) |
-| `reflectance_percent` | `NUMERIC(6, 2)` | - | Reflectance percentage (for visible bands) |
-| `cloud_top_height_m` | `NUMERIC(8, 2)` | - | Cloud top height in meters |
-| `cloud_top_temperature_k` | `NUMERIC(8, 2)` | - | Cloud top temperature in Kelvin |
-| `cloud_phase` | `VARCHAR(50)` | - | 'Liquid', 'Ice', 'Mixed', 'Unknown' |
-| `cloud_optical_depth` | `NUMERIC(8, 4)` | - | Cloud optical depth |
-| `fire_detection_confidence` | `NUMERIC(5, 2)` | - | Fire detection confidence (0-100) |
-| `fire_temperature_k` | `NUMERIC(8, 2)` | - | Fire temperature in Kelvin |
-| `fire_power_mw` | `NUMERIC(12, 2)` | - | Fire radiative power in megawatts |
-| `precipitation_rate_mmh` | `NUMERIC(8, 2)` | - | Precipitation rate in mm/h |
-| `source_file` | `VARCHAR(1000)` | - | Original satellite file path |
-| `aws_bucket` | `VARCHAR(255)` | - | AWS S3 bucket |
-| `aws_key` | `VARCHAR(1000)` | - | AWS S3 key |
-| `file_format` | `VARCHAR(50)` | DEFAULT 'NetCDF' | 'NetCDF', 'HDF5', 'GeoTIFF', etc. |
-| `compression_type` | `VARCHAR(50)` | - | Compression type |
-| `decompression_status` | `VARCHAR(50)` | DEFAULT 'Success' | - |
-| `spatial_extent_west` | `NUMERIC(10, 6)` | - | - |
-| `spatial_extent_south` | `NUMERIC(10, 6)` | - | - |
-| `spatial_extent_east` | `NUMERIC(10, 6)` | - | - |
-| `spatial_extent_north` | `NUMERIC(10, 6)` | - | - |
-| `ingestion_timestamp` | `TIMESTAMP_NTZ` | DEFAULT CURRENT_TIMESTAMP | - |
-| `processing_duration_seconds` | `INTEGER` | - | - |
-| `records_processed` | `INTEGER` | - | - |
-
-#### Table: `satellite_imagery_sources`
-
-*Metadata for satellite imagery sources (GOES, etc.)*
-
-| Column Name | Data Type | Constraints | Description |
-|-------------|-----------|-------------|-------------|
-| `source_id` | `VARCHAR(255)` | PRIMARY KEY | - |
-| `satellite_name` | `VARCHAR(100)` | NOT NULL | 'GOES-16', 'GOES-17', 'GOES-18', etc. |
-| `satellite_type` | `VARCHAR(50)` | DEFAULT 'GOES' | 'GOES', 'POES', 'MODIS', etc. |
-| `sensor_name` | `VARCHAR(100)` | - | 'ABI' (Advanced Baseline Imager), etc. |
-| `orbital_position` | `VARCHAR(50)` | - | 'GOES-East', 'GOES-West', etc. |
-| `coverage_area` | `VARCHAR(100)` | DEFAULT 'CONUS' | 'CONUS', 'Full Disk', 'Mesoscale', etc. |
-| `spatial_resolution_km` | `NUMERIC(8, 2)` | - | Spatial resolution in kilometers |
-| `scan_frequency_minutes` | `INTEGER` | - | Scan frequency in minutes |
-| `temporal_resolution_minutes` | `INTEGER` | - | - |
-| `operational_status` | `VARCHAR(50)` | DEFAULT 'Operational' | - |
-| `first_operational_date` | `DATE` | - | - |
-| `last_update_date` | `DATE` | - | - |
-| `created_timestamp` | `TIMESTAMP_NTZ` | DEFAULT CURRENT_TIMESTAMP | - |
-| `updated_timestamp` | `TIMESTAMP_NTZ` | DEFAULT CURRENT_TIMESTAMP | - |
-
-### Weather Alerts & Model Comparisons
-
-#### Table: `data_source_statistics`
-
-*Tracks statistics for each data source*
-
-| Column Name | Data Type | Constraints | Description |
-|-------------|-----------|-------------|-------------|
-| `stat_id` | `VARCHAR(255)` | PRIMARY KEY | - |
-| `source_type` | `VARCHAR(100)` | NOT NULL | 'AWS_GFS', 'NWS_API', 'GEOPLATFORM' |
-| `source_name` | `VARCHAR(500)` | - | - |
-| `stat_date` | `DATE` | NOT NULL | - |
-| `files_ingested` | `INTEGER` | DEFAULT 0 | - |
-| `records_processed` | `INTEGER` | DEFAULT 0 | - |
-| `data_volume_mb` | `NUMERIC(15, 2)` | - | - |
-| `ingestion_duration_seconds` | `INTEGER` | - | - |
-| `success_rate` | `NUMERIC(5, 2)` | - | - |
-| `avg_latency_seconds` | `NUMERIC(10, 2)` | - | - |
-| `error_count` | `INTEGER` | DEFAULT 0 | - |
-| `calculation_timestamp` | `TIMESTAMP_NTZ` | DEFAULT CURRENT_TIMESTAMP | - |
-
-#### Table: `model_forecast_comparison`
-
-*Model Forecast Comparison Table*
-
-| Column Name | Data Type | Constraints | Description |
-|-------------|-----------|-------------|-------------|
-| `comparison_id` | `VARCHAR(255)` | PRIMARY KEY | - |
-| `forecast_time` | `TIMESTAMP_NTZ` | NOT NULL | - |
-| `parameter_name` | `VARCHAR(100)` | NOT NULL | - |
-| `grid_cell_latitude` | `NUMERIC(10, 7)` | NOT NULL | - |
-| `grid_cell_longitude` | `NUMERIC(10, 7)` | NOT NULL | - |
-| `gfs_value` | `NUMERIC(10, 2)` | - | - |
-| `hrrr_value` | `NUMERIC(10, 2)` | - | - |
-| `rap_value` | `NUMERIC(10, 2)` | - | - |
-| `gefs_mean_value` | `NUMERIC(10, 2)` | - | - |
-| `gefs_stddev_value` | `NUMERIC(10, 2)` | - | - |
-| `observation_value` | `NUMERIC(10, 2)` | - | - |
-| `observation_time` | `TIMESTAMP_NTZ` | - | - |
-| `gfs_error` | `NUMERIC(10, 2)` | - | - |
-| `hrrr_error` | `NUMERIC(10, 2)` | - | - |
-| `rap_error` | `NUMERIC(10, 2)` | - | - |
-| `best_model` | `VARCHAR(50)` | - | Model with smallest error |
-| `comparison_timestamp` | `TIMESTAMP_NTZ` | DEFAULT CURRENT_TIMESTAMP | - |
-
-#### Table: `weather_alerts`
-
-*Stores NWS weather alerts and warnings*
-
-| Column Name | Data Type | Constraints | Description |
-|-------------|-----------|-------------|-------------|
-| `alert_id` | `VARCHAR(255)` | PRIMARY KEY | - |
-| `event_type` | `VARCHAR(100)` | NOT NULL | 'Tornado Warning', 'Flood Warning', etc. |
-| `severity` | `VARCHAR(50)` | - | 'Extreme', 'Severe', 'Moderate', 'Minor', 'Unknown' |
-| `urgency` | `VARCHAR(50)` | - | 'Immediate', 'Expected', 'Future', 'Past', 'Unknown' |
-| `certainty` | `VARCHAR(50)` | - | 'Observed', 'Likely', 'Possible', 'Unlikely', 'Unknown' |
-| `headline` | `VARCHAR(500)` | - | - |
-| `description` | `TEXT` | - | - |
-| `instruction` | `TEXT` | - | - |
-| `effective_time` | `TIMESTAMP_NTZ` | - | - |
-| `expires_time` | `TIMESTAMP_NTZ` | - | - |
-| `onset_time` | `TIMESTAMP_NTZ` | - | - |
-| `ends_time` | `TIMESTAMP_NTZ` | - | - |
-| `area_description` | `VARCHAR(1000)` | - | - |
-| `geocode_type` | `VARCHAR(50)` | - | 'FIPS', 'UGC', etc. |
-| `geocode_value` | `VARCHAR(100)` | - | - |
-| `state_code` | `VARCHAR(2)` | - | - |
-| `county_code` | `VARCHAR(5)` | - | - |
-| `cwa_code` | `VARCHAR(10)` | - | - |
-| `ingestion_timestamp` | `TIMESTAMP_NTZ` | DEFAULT CURRENT_TIMESTAMP | - |
-| `alert_geometry` | `GEOGRAPHY` | - | Polygon geometry for alert area |
+The database consists of **11 tables** organized into logical groups:
+
+1. **Forecast Data**: `grib2_forecasts`
+2. **Geographic Boundaries**: `shapefile_boundaries`
+3. **Observations**: `weather_observations`, `weather_stations`
+4. **Transformation Logs**: `grib2_transformation_log`, `shapefile_integration_log`
+5. **Spatial Operations**: `spatial_join_results`, `crs_transformation_parameters`
+6. **Data Quality**: `data_quality_metrics`
+7. **Load Tracking**: `load_status`
+8. **Aggregations**: `weather_forecast_aggregations`
+
+```
+grib2_forecasts (forecast_id)
+    ├── spatial_join_results (forecast_id)
+    └── weather_forecast_aggregations (via boundary_id)
+
+shapefile_boundaries (boundary_id)
+    ├── spatial_join_results (boundary_id)
+    ├── weather_forecast_aggregations (boundary_id)
+    └── weather_stations (cwa_code)
+
+weather_observations (observation_id)
+    └── weather_stations (station_id)
+
+weather_stations (station_id)
+    └── weather_observations (station_id)
+```
+
+```mermaid
+erDiagram
+    grib2_forecasts {
+        varchar forecast_id PK "Primary key - unique forecast identifier"
+        varchar parameter_name "Forecast parameter (Temperature, Precipitation, etc.)"
+        timestamp forecast_time "Forecast valid time"
+        geography grid_cell_geom SPATIAL "Point geometry for grid cell center"
+        numeric parameter_value "Forecast parameter value"
+        varchar source_file "Source GRIB2 file name"
+        varchar transformation_status "Transformation status"
+    }
+
+    shapefile_boundaries {
+        varchar boundary_id PK "Primary key - unique boundary identifier"
+        varchar feature_type "Feature type (CWA, FireZone, MarineZone, etc.)"
+        varchar feature_name "Human-readable feature name"
+        varchar feature_identifier "Official feature identifier code"
+        geography boundary_geom SPATIAL "Polygon geometry for boundary"
+        varchar state_code "US state code (2-letter)"
+        varchar office_code "NWS office code (CWA identifier)"
+        varchar source_shapefile "Source shapefile name"
+        varchar transformation_status "Transformation status"
+    }
+
+    weather_observations {
+        varchar observation_id PK "Primary key - unique observation identifier"
+        varchar station_id FK "Weather station"
+        varchar station_name "Station name"
+        timestamp observation_time "Observation timestamp"
+        geography station_geom SPATIAL "Point geometry for station location"
+        numeric temperature "Temperature in degrees Fahrenheit"
+        numeric precipitation_amount "Precipitation amount in inches"
+        numeric wind_speed "Wind speed in knots"
+        varchar data_source "Data source identifier"
+    }
+
+    weather_stations {
+        varchar station_id PK "Primary key - unique station identifier"
+        varchar station_name "Station name"
+        geography station_geom SPATIAL "Point geometry for station location"
+        numeric elevation_meters "Station elevation in meters"
+        varchar state_code "US state code"
+        varchar county_name "County name"
+        varchar cwa_code "County Warning Area code"
+        varchar station_type "Station type (ASOS, AWOS, etc.)"
+        boolean active_status "Whether station is currently active"
+    }
+
+    spatial_join_results {
+        varchar join_id PK "Primary key"
+        varchar forecast_id FK "Forecast"
+        varchar boundary_id FK "Boundary"
+        varchar grib_file "GRIB2 file name"
+        varchar shapefile_name "Shapefile name"
+        varchar join_type "Join type (Point-in-Polygon, Raster-to-Vector, Clip)"
+        integer features_matched "Number of features matched"
+        integer features_total "Total features"
+        numeric match_percentage "Match percentage"
+        timestamp join_timestamp "Join timestamp"
+    }
+
+    weather_forecast_aggregations {
+        varchar aggregation_id PK "Primary key"
+        varchar parameter_name "Forecast parameter name"
+        timestamp forecast_time "Forecast valid time"
+        varchar boundary_id FK "Boundary"
+        varchar feature_type "Feature type"
+        varchar feature_name "Feature name"
+        numeric min_value "Minimum forecast value"
+        numeric max_value "Maximum forecast value"
+        numeric avg_value "Average forecast value"
+        numeric median_value "Median forecast value"
+        integer grid_cells_count "Number of grid cells aggregated"
+    }
+
+    grib2_transformation_log {
+        varchar log_id PK "Primary key"
+        varchar file_name "GRIB2 file name"
+        varchar parameter_name "Forecast parameter name"
+        varchar transformation_status "Status (Success, Failed, Pending)"
+        integer processing_duration_seconds "Processing duration"
+        integer records_processed "Number of records processed"
+        varchar error_message "Error message if failed"
+    }
+
+    shapefile_integration_log {
+        varchar log_id PK "Primary key"
+        varchar shapefile_name "Shapefile name"
+        varchar feature_type "Feature type"
+        varchar transformation_status "Status"
+        integer processing_duration_seconds "Processing duration"
+        varchar error_message "Error message"
+    }
+
+    crs_transformation_parameters {
+        varchar transformation_id PK "Primary key"
+        varchar source_crs "Source CRS identifier"
+        varchar target_crs "Target CRS identifier"
+        varchar transformation_method "Method (GDAL, PROJ, Custom)"
+        numeric accuracy_meters "Transformation accuracy"
+        integer usage_count "Number of times used"
+    }
+
+    data_quality_metrics {
+        varchar metric_id PK "Primary key"
+        date metric_date "Metric date"
+        varchar data_source "Data source (GRIB2, Shapefile, API)"
+        integer files_processed "Number of files processed"
+        integer files_successful "Number of successful files"
+        integer files_failed "Number of failed files"
+        numeric success_rate "Success rate percentage"
+        integer total_records "Total records processed"
+    }
+
+    load_status {
+        varchar load_id PK "Primary key"
+        varchar source_file "Source file name"
+        varchar target_table "Target table"
+        timestamp load_start_time "Load start time"
+        timestamp load_end_time "Load end time"
+        integer records_loaded "Number of records loaded"
+        varchar load_status "Status (Success, Failed, Partial)"
+    }
+
+    grib2_forecasts ||--o{ spatial_join_results : "forecast"
+    shapefile_boundaries ||--o{ spatial_join_results : "boundary"
+    shapefile_boundaries ||--o{ weather_forecast_aggregations : "aggregated_by"
+    weather_stations ||--o{ weather_observations : "observes"
+    grib2_forecasts }o--o{ shapefile_boundaries : "spatially_joins"
+```
+
+---
+
+Stores gridded forecast data from NDFD (National Digital Forecast Database). Each row represents a forecast value for a specific parameter at a grid cell location and time.
+
+| Column | Type | Nullable | Default | Description |
+|--------|------|----------|---------|-------------|
+| `forecast_id` | `VARCHAR(255)` | No | — | Primary key - unique forecast identifier |
+| `parameter_name` | `VARCHAR(100)` | No | — | Forecast parameter (Temperature, Precipitation, WindSpeed, etc.) |
+| `forecast_time` | `TIMESTAMP_NTZ` | No | — | Forecast valid time |
+| `grid_cell_latitude` | `NUMERIC(10, 7)` | No | — | Grid cell center latitude (WGS84) |
+| `grid_cell_longitude` | `NUMERIC(10, 7)` | No | — | Grid cell center longitude (WGS84) |
+| `grid_cell_geom` | `GEOGRAPHY` | Yes | `NULL` | Point geometry for grid cell center |
+| `parameter_value` | `NUMERIC(10, 2)` | Yes | `NULL` | Forecast parameter value |
+| `source_file` | `VARCHAR(500)` | Yes | `NULL` | Source GRIB2 file name |
+| `source_crs` | `VARCHAR(50)` | Yes | `NULL` | Source coordinate reference system |
+| `target_crs` | `VARCHAR(50)` | Yes | `NULL` | Target CRS (typically WGS84/EPSG:4326) |
+| `grid_resolution_x` | `NUMERIC(10, 6)` | Yes | `NULL` | Grid resolution in X direction (degrees) |
+| `grid_resolution_y` | `NUMERIC(10, 6)` | Yes | `NULL` | Grid resolution in Y direction (degrees) |
+| `spatial_extent_west` | `NUMERIC(10, 6)` | Yes | `NULL` | Western boundary of spatial extent |
+| `spatial_extent_south` | `NUMERIC(10, 6)` | Yes | `NULL` | Southern boundary of spatial extent |
+| `spatial_extent_east` | `NUMERIC(10, 6)` | Yes | `NULL` | Eastern boundary of spatial extent |
+| `spatial_extent_north` | `NUMERIC(10, 6)` | Yes | `NULL` | Northern boundary of spatial extent |
+| `load_timestamp` | `TIMESTAMP_NTZ` | No | `CURRENT_TIMESTAMP()` | When forecast was loaded |
+| `transformation_status` | `VARCHAR(50)` | Yes | `NULL` | Transformation status (Success, Failed, Pending) |
+
+**Indexes:**
+- Primary Key: `forecast_id`
+- Index: `(parameter_name, forecast_time)`
+- Spatial Index: `grid_cell_geom` (GIST index)
+- Index: `transformation_status`
+- Index: `forecast_time`
+
+**Spatial Data:**
+- Uses GEOGRAPHY type for WGS84 coordinates
+- Grid cells are represented as points
+- Supports spatial queries (ST_WITHIN, ST_DISTANCE, etc.)
+
+---
+
+Stores geographic boundaries from shapefiles including CWAs, Fire Zones, Marine Zones, River Basins, and Counties.
+
+| Column | Type | Nullable | Default | Description |
+|--------|------|----------|---------|-------------|
+| `boundary_id` | `VARCHAR(255)` | No | — | Primary key - unique boundary identifier |
+| `feature_type` | `VARCHAR(50)` | No | — | Feature type (CWA, FireZone, MarineZone, RiverBasin, County) |
+| `feature_name` | `VARCHAR(255)` | Yes | `NULL` | Human-readable feature name |
+| `feature_identifier` | `VARCHAR(100)` | Yes | `NULL` | Official feature identifier code |
+| `boundary_geom` | `GEOGRAPHY` | Yes | `NULL` | Polygon geometry for boundary |
+| `source_shapefile` | `VARCHAR(500)` | Yes | `NULL` | Source shapefile name |
+| `source_crs` | `VARCHAR(50)` | Yes | `NULL` | Source coordinate reference system |
+| `target_crs` | `VARCHAR(50)` | Yes | `NULL` | Target CRS (typically WGS84/EPSG:4326) |
+| `feature_count` | `INTEGER` | Yes | `NULL` | Number of features in original shapefile |
+| `spatial_extent_west` | `NUMERIC(10, 6)` | Yes | `NULL` | Western boundary of spatial extent |
+| `spatial_extent_south` | `NUMERIC(10, 6)` | Yes | `NULL` | Southern boundary of spatial extent |
+| `spatial_extent_east` | `NUMERIC(10, 6)` | Yes | `NULL` | Eastern boundary of spatial extent |
+| `spatial_extent_north` | `NUMERIC(10, 6)` | Yes | `NULL` | Northern boundary of spatial extent |
+| `load_timestamp` | `TIMESTAMP_NTZ` | No | `CURRENT_TIMESTAMP()` | When boundary was loaded |
+| `transformation_status` | `VARCHAR(50)` | Yes | `NULL` | Transformation status |
+| `state_code` | `VARCHAR(2)` | Yes | `NULL` | US state code (2-letter) |
+| `office_code` | `VARCHAR(10)` | Yes | `NULL` | NWS office code (CWA identifier) |
+
+**Indexes:**
+- Primary Key: `boundary_id`
+- Index: `feature_type`
+- Spatial Index: `boundary_geom` (GIST index)
+- Index: `state_code`
+- Index: `office_code`
+
+**Spatial Data:**
+- Uses GEOGRAPHY type for polygon boundaries
+- Supports spatial operations (ST_WITHIN, ST_INTERSECTS, ST_DISTANCE, etc.)
+
+---
+
+Stores real-time point observations from NWS API weather stations.
+
+| Column | Type | Nullable | Default | Description |
+|--------|------|----------|---------|-------------|
+| `observation_id` | `VARCHAR(255)` | No | — | Primary key - unique observation identifier |
+| `station_id` | `VARCHAR(50)` | No | — | Foreign key to `weather_stations.station_id` |
+| `station_name` | `VARCHAR(255)` | Yes | `NULL` | Station name |
+| `observation_time` | `TIMESTAMP_NTZ` | No | — | Observation timestamp |
+| `station_latitude` | `NUMERIC(10, 7)` | No | — | Station latitude (WGS84) |
+| `station_longitude` | `NUMERIC(10, 7)` | No | — | Station longitude (WGS84) |
+| `station_geom` | `GEOGRAPHY` | Yes | `NULL` | Point geometry for station location |
+| `temperature` | `NUMERIC(6, 2)` | Yes | `NULL` | Temperature in degrees Fahrenheit |
+| `dewpoint` | `NUMERIC(6, 2)` | Yes | `NULL` | Dewpoint in degrees Fahrenheit |
+| `humidity` | `NUMERIC(5, 2)` | Yes | `NULL` | Relative humidity percentage |
+| `wind_speed` | `NUMERIC(6, 2)` | Yes | `NULL` | Wind speed in knots |
+| `wind_direction` | `INTEGER` | Yes | `NULL` | Wind direction in degrees (0-359) |
+| `pressure` | `NUMERIC(8, 2)` | Yes | `NULL` | Barometric pressure in inches of mercury |
+| `visibility` | `NUMERIC(6, 2)` | Yes | `NULL` | Visibility in miles |
+| `sky_cover` | `VARCHAR(50)` | Yes | `NULL` | Sky cover description |
+| `precipitation_amount` | `NUMERIC(8, 2)` | Yes | `NULL` | Precipitation amount in inches |
+| `data_freshness_minutes` | `INTEGER` | Yes | `NULL` | Minutes since observation |
+| `load_timestamp` | `TIMESTAMP_NTZ` | No | `CURRENT_TIMESTAMP()` | When observation was loaded |
+| `data_source` | `VARCHAR(50)` | No | `'NWS_API'` | Data source identifier |
+
+**Indexes:**
+- Primary Key: `observation_id`
+- Foreign Key: `station_id` → `weather_stations.station_id`
+- Index: `(station_id, observation_time)`
+- Spatial Index: `station_geom` (GIST index)
+- Index: `observation_time`
+- Index: `data_source`
+
+---
+
+Stores metadata about weather observation stations.
+
+| Column | Type | Nullable | Default | Description |
+|--------|------|----------|---------|-------------|
+| `station_id` | `VARCHAR(50)` | No | — | Primary key - unique station identifier |
+| `station_name` | `VARCHAR(255)` | Yes | `NULL` | Station name |
+| `station_latitude` | `NUMERIC(10, 7)` | No | — | Station latitude (WGS84) |
+| `station_longitude` | `NUMERIC(10, 7)` | No | — | Station longitude (WGS84) |
+| `station_geom` | `GEOGRAPHY` | Yes | `NULL` | Point geometry for station location |
+| `elevation_meters` | `NUMERIC(8, 2)` | Yes | `NULL` | Station elevation in meters |
+| `state_code` | `VARCHAR(2)` | Yes | `NULL` | US state code |
+| `county_name` | `VARCHAR(100)` | Yes | `NULL` | County name |
+| `cwa_code` | `VARCHAR(10)` | Yes | `NULL` | County Warning Area code |
+| `station_type` | `VARCHAR(50)` | Yes | `NULL` | Station type (ASOS, AWOS, etc.) |
+| `active_status` | `BOOLEAN` | No | `TRUE` | Whether station is currently active |
+| `first_observation_date` | `DATE` | Yes | `NULL` | First observation date |
+| `last_observation_date` | `DATE` | Yes | `NULL` | Last observation date |
+| `update_frequency_minutes` | `INTEGER` | Yes | `NULL` | Update frequency in minutes |
+
+**Indexes:**
+- Primary Key: `station_id`
+- Spatial Index: `station_geom` (GIST index)
+- Index: `cwa_code`
+- Index: `active_status`
+- Index: `state_code`
+
+---
+
+Tracks GRIB2 file processing and transformation operations.
+
+| Column | Type | Nullable | Default | Description |
+|--------|------|----------|---------|-------------|
+| `log_id` | `VARCHAR(255)` | No | — | Primary key |
+| `file_name` | `VARCHAR(500)` | No | — | GRIB2 file name |
+| `source_path` | `VARCHAR(1000)` | Yes | `NULL` | Source file path |
+| `parameter_name` | `VARCHAR(100)` | No | — | Forecast parameter name |
+| `forecast_time` | `TIMESTAMP_NTZ` | Yes | `NULL` | Forecast valid time |
+| `source_crs` | `VARCHAR(50)` | Yes | `NULL` | Source CRS |
+| `target_crs` | `VARCHAR(50)` | Yes | `NULL` | Target CRS |
+| `gdal_command` | `VARCHAR(2000)` | Yes | `NULL` | GDAL command used for transformation |
+| `output_file` | `VARCHAR(1000)` | Yes | `NULL` | Output file path |
+| `grid_resolution_x` | `NUMERIC(10, 6)` | Yes | `NULL` | Grid resolution X |
+| `grid_resolution_y` | `NUMERIC(10, 6)` | Yes | `NULL` | Grid resolution Y |
+| `spatial_extent_west` | `NUMERIC(10, 6)` | Yes | `NULL` | Spatial extent west |
+| `spatial_extent_south` | `NUMERIC(10, 6)` | Yes | `NULL` | Spatial extent south |
+| `spatial_extent_east` | `NUMERIC(10, 6)` | Yes | `NULL` | Spatial extent east |
+| `spatial_extent_north` | `NUMERIC(10, 6)` | Yes | `NULL` | Spatial extent north |
+| `transformation_status` | `VARCHAR(50)` | Yes | `NULL` | Status (Success, Failed, Pending) |
+| `target_table` | `VARCHAR(255)` | Yes | `NULL` | Target table |
+| `load_timestamp` | `TIMESTAMP_NTZ` | Yes | `NULL` | Load timestamp |
+| `processing_duration_seconds` | `INTEGER` | Yes | `NULL` | Processing duration |
+| `records_processed` | `INTEGER` | Yes | `NULL` | Number of records processed |
+| `error_message` | `VARCHAR(2000)` | Yes | `NULL` | Error message if failed |
+
+**Indexes:**
+- Primary Key: `log_id`
+- Index: `file_name`
+- Index: `transformation_status`
+- Index: `load_timestamp`
+
+---
+
+Tracks shapefile processing and coordinate transformations.
+
+| Column | Type | Nullable | Default | Description |
+|--------|------|----------|---------|-------------|
+| `log_id` | `VARCHAR(255)` | No | — | Primary key |
+| `shapefile_name` | `VARCHAR(500)` | No | — | Shapefile name |
+| `source_path` | `VARCHAR(1000)` | Yes | `NULL` | Source file path |
+| `feature_type` | `VARCHAR(50)` | No | — | Feature type |
+| `feature_count` | `INTEGER` | Yes | `NULL` | Number of features |
+| `source_crs` | `VARCHAR(50)` | Yes | `NULL` | Source CRS |
+| `target_crs` | `VARCHAR(50)` | Yes | `NULL` | Target CRS |
+| `ogr2ogr_command` | `VARCHAR(2000)` | Yes | `NULL` | OGR2OGR command used |
+| `transformed_path` | `VARCHAR(1000)` | Yes | `NULL` | Transformed file path |
+| `spatial_extent_west` | `NUMERIC(10, 6)` | Yes | `NULL` | Spatial extent west |
+| `spatial_extent_south` | `NUMERIC(10, 6)` | Yes | `NULL` | Spatial extent south |
+| `spatial_extent_east` | `NUMERIC(10, 6)` | Yes | `NULL` | Spatial extent east |
+| `spatial_extent_north` | `NUMERIC(10, 6)` | Yes | `NULL` | Spatial extent north |
+| `transformation_status` | `VARCHAR(50)` | Yes | `NULL` | Status |
+| `target_table` | `VARCHAR(255)` | Yes | `NULL` | Target table |
+| `load_timestamp` | `TIMESTAMP_NTZ` | Yes | `NULL` | Load timestamp |
+| `processing_duration_seconds` | `INTEGER` | Yes | `NULL` | Processing duration |
+| `error_message` | `VARCHAR(2000)` | Yes | `NULL` | Error message |
+
+**Indexes:**
+- Primary Key: `log_id`
+- Index: `shapefile_name`
+- Index: `transformation_status`
+
+---
+
+Documents spatial join operations between GRIB2 grid cells and shapefile boundaries.
+
+| Column | Type | Nullable | Default | Description |
+|--------|------|----------|---------|-------------|
+| `join_id` | `VARCHAR(255)` | No | — | Primary key |
+| `grib_file` | `VARCHAR(500)` | Yes | `NULL` | GRIB2 file name |
+| `shapefile_name` | `VARCHAR(500)` | Yes | `NULL` | Shapefile name |
+| `join_type` | `VARCHAR(50)` | Yes | `NULL` | Join type (Point-in-Polygon, Raster-to-Vector, Clip) |
+| `gdal_command` | `VARCHAR(2000)` | Yes | `NULL` | GDAL command used |
+| `features_matched` | `INTEGER` | Yes | `NULL` | Number of features matched |
+| `features_total` | `INTEGER` | Yes | `NULL` | Total features |
+| `match_percentage` | `NUMERIC(5, 2)` | Yes | `NULL` | Match percentage |
+| `output_file` | `VARCHAR(1000)` | Yes | `NULL` | Output file path |
+| `join_timestamp` | `TIMESTAMP_NTZ` | No | `CURRENT_TIMESTAMP()` | Join timestamp |
+| `forecast_id` | `VARCHAR(255)` | Yes | `NULL` | Foreign key to `grib2_forecasts.forecast_id` |
+| `boundary_id` | `VARCHAR(255)` | Yes | `NULL` | Foreign key to `shapefile_boundaries.boundary_id` |
+
+**Indexes:**
+- Primary Key: `join_id`
+- Index: `(forecast_id, boundary_id)`
+- Index: `join_timestamp`
+
+---
+
+Documents coordinate reference system transformations and parameters.
+
+| Column | Type | Nullable | Default | Description |
+|--------|------|----------|---------|-------------|
+| `transformation_id` | `VARCHAR(255)` | No | — | Primary key |
+| `source_crs` | `VARCHAR(50)` | No | — | Source CRS identifier |
+| `target_crs` | `VARCHAR(50)` | No | — | Target CRS identifier |
+| `source_crs_name` | `VARCHAR(255)` | Yes | `NULL` | Source CRS name |
+| `target_crs_name` | `VARCHAR(255)` | Yes | `NULL` | Target CRS name |
+| `transformation_method` | `VARCHAR(50)` | Yes | `NULL` | Method (GDAL, PROJ, Custom) |
+| `central_meridian` | `NUMERIC(10, 6)` | Yes | `NULL` | Central meridian |
+| `false_easting` | `NUMERIC(12, 2)` | Yes | `NULL` | False easting |
+| `false_northing` | `NUMERIC(12, 2)` | Yes | `NULL` | False northing |
+| `scale_factor` | `NUMERIC(10, 8)` | Yes | `NULL` | Scale factor |
+| `latitude_of_origin` | `NUMERIC(10, 6)` | Yes | `NULL` | Latitude of origin |
+| `units` | `VARCHAR(50)` | Yes | `NULL` | Units (degrees, meters, feet) |
+| `accuracy_meters` | `NUMERIC(10, 2)` | Yes | `NULL` | Transformation accuracy |
+| `usage_count` | `INTEGER` | No | `0` | Number of times used |
+
+**Indexes:**
+- Primary Key: `transformation_id`
+- Index: `(source_crs, target_crs)`
+
+---
+
+Tracks data quality metrics for weather products.
+
+| Column | Type | Nullable | Default | Description |
+|--------|------|----------|---------|-------------|
+| `metric_id` | `VARCHAR(255)` | No | — | Primary key |
+| `metric_date` | `DATE` | No | — | Metric date |
+| `data_source` | `VARCHAR(50)` | No | — | Data source (GRIB2, Shapefile, API) |
+| `files_processed` | `INTEGER` | No | `0` | Number of files processed |
+| `files_successful` | `INTEGER` | No | `0` | Number of successful files |
+| `files_failed` | `INTEGER` | No | `0` | Number of failed files |
+| `success_rate` | `NUMERIC(5, 2)` | Yes | `NULL` | Success rate percentage |
+| `total_records` | `INTEGER` | No | `0` | Total records processed |
+| `records_with_errors` | `INTEGER` | No | `0` | Records with errors |
+| `error_rate` | `NUMERIC(5, 2)` | Yes | `NULL` | Error rate percentage |
+| `spatial_coverage_km2` | `NUMERIC(15, 2)` | Yes | `NULL` | Spatial coverage in square kilometers |
+| `temporal_coverage_hours` | `INTEGER` | Yes | `NULL` | Temporal coverage in hours |
+| `data_freshness_minutes` | `INTEGER` | Yes | `NULL` | Data freshness in minutes |
+| `calculation_timestamp` | `TIMESTAMP_NTZ` | No | `CURRENT_TIMESTAMP()` | Calculation timestamp |
+
+**Indexes:**
+- Primary Key: `metric_id`
+- Index: `(metric_date, data_source)`
+- Index: `metric_date`
+
+---
+
+Tracks data loading operations to Databricks.
+
+| Column | Type | Nullable | Default | Description |
+|--------|------|----------|---------|-------------|
+| `load_id` | `VARCHAR(255)` | No | — | Primary key |
+| `source_file` | `VARCHAR(1000)` | Yes | `NULL` | Source file name |
+| `target_table` | `VARCHAR(255)` | No | — | Target table |
+| `load_start_time` | `TIMESTAMP_NTZ` | No | — | Load start time |
+| `load_end_time` | `TIMESTAMP_NTZ` | Yes | `NULL` | Load end time |
+| `load_duration_seconds` | `INTEGER` | Yes | `NULL` | Load duration |
+| `records_loaded` | `INTEGER` | No | `0` | Number of records loaded |
+| `file_size_mb` | `NUMERIC(10, 2)` | Yes | `NULL` | File size in MB |
+| `load_rate_mb_per_sec` | `NUMERIC(10, 2)` | Yes | `NULL` | Load rate in MB/sec |
+| `load_status` | `VARCHAR(50)` | Yes | `NULL` | Status (Success, Failed, Partial) |
+| `error_message` | `VARCHAR(2000)` | Yes | `NULL` | Error message |
+| `warehouse` | `VARCHAR(255)` | Yes | `NULL` | Warehouse used |
+| `data_source_type` | `VARCHAR(50)` | Yes | `NULL` | Data source type |
+
+**Indexes:**
+- Primary Key: `load_id`
+- Index: `target_table`
+- Index: `load_status`
+- Index: `load_start_time`
+
+---
+
+Pre-aggregated forecast data for performance optimization.
+
+| Column | Type | Nullable | Default | Description |
+|--------|------|----------|---------|-------------|
+| `aggregation_id` | `VARCHAR(255)` | No | — | Primary key |
+| `parameter_name` | `VARCHAR(100)` | No | — | Forecast parameter name |
+| `forecast_time` | `TIMESTAMP_NTZ` | No | — | Forecast valid time |
+| `boundary_id` | `VARCHAR(255)` | Yes | `NULL` | Foreign key to `shapefile_boundaries.boundary_id` |
+| `feature_type` | `VARCHAR(50)` | Yes | `NULL` | Feature type |
+| `feature_name` | `VARCHAR(255)` | Yes | `NULL` | Feature name |
+| `min_value` | `NUMERIC(10, 2)` | Yes | `NULL` | Minimum forecast value |
+| `max_value` | `NUMERIC(10, 2)` | Yes | `NULL` | Maximum forecast value |
+| `avg_value` | `NUMERIC(10, 2)` | Yes | `NULL` | Average forecast value |
+| `median_value` | `NUMERIC(10, 2)` | Yes | `NULL` | Median forecast value |
+| `std_dev_value` | `NUMERIC(10, 2)` | Yes | `NULL` | Standard deviation |
+| `grid_cells_count` | `INTEGER` | Yes | `NULL` | Number of grid cells aggregated |
+| `aggregation_timestamp` | `TIMESTAMP_NTZ` | No | `CURRENT_TIMESTAMP()` | Aggregation timestamp |
+
+**Indexes:**
+- Primary Key: `aggregation_id`
+- Index: `(forecast_time, parameter_name)`
+- Index: `boundary_id`
+- Index: `feature_type`
+
+---
 
 ---
 
@@ -1892,6 +1718,8 @@ LIMIT 1000;
 
 **Purpose:** Analysis of how efficiently forecasts match to client-defined boundaries with optimization recommendations. Helps logistics companies optimize forecast-to-delivery-zone matching for faster route planning.
 
+**Business Value:** Optimizes forecast-to-boundary matching for faster client deliverables and improved operational efficiency.
+
 **Complexity:** Multiple CTEs (7+ levels), spatial join analysis, performance metrics, optimization scoring, window functions, correlated subqueries, UNION operations
 
 ```sql
@@ -2333,6 +2161,8 @@ LIMIT 200;
 **Business Value:** Provides quantitative evidence of forecast reliability for legal proceedings and insurance claim validation.
 
 **Purpose:** Trend analysis showing forecast accuracy over time with error pattern detection. Provides evidence of forecast reliability for insurance claim disputes and legal cases.
+
+**Business Value:** Provides quantitative evidence of forecast reliability for legal proceedings and insurance claim validation.
 
 **Complexity:** Multiple CTEs (7+ levels), temporal trend analysis, error pattern detection, seasonal analysis, window functions with multiple frame clauses, time-series decomposition
 
@@ -2799,6 +2629,8 @@ LIMIT 500;
 
 **Purpose:** Validation report comparing forecasts to actual observations with accuracy scoring. Legal cases require documentation that forecasts were accurate at specific times/locations.
 
+**Business Value:** Provides evidence of forecast accuracy for legal proceedings and insurance claim validation.
+
 **Complexity:** Multiple CTEs (8+ levels), observation-forecast matching, accuracy calculations, bias detection, validation scoring, window functions, statistical analysis
 
 ```sql
@@ -3224,6 +3056,8 @@ LIMIT 200;
 **Business Value:** Identifies normal vs. extreme weather patterns for risk assessment and insurance pricing.
 
 **Purpose:** Statistical distribution analysis of forecast parameters with percentile rankings. Insurance companies need statistical profiles of weather parameters for underwriting decisions.
+
+**Business Value:** Identifies normal vs. extreme weather patterns for risk assessment and insurance pricing.
 
 **Complexity:** Multiple CTEs (6+ levels), statistical distribution analysis, percentile calculations, outlier detection, distribution comparisons, window functions
 
@@ -3694,6 +3528,8 @@ LIMIT 1000;
 **Business Value:** Helps predict future weather patterns based on historical clusters for energy planning.
 
 **Purpose:** Identification of recurring weather patterns with clustering metrics. Energy companies can identify patterns that affect renewable energy generation.
+
+**Business Value:** Helps predict future weather patterns based on historical clusters for energy planning.
 
 **Complexity:** Multiple CTEs (8+ levels), clustering analysis, pattern detection, spatial-temporal analysis, similarity calculations, window functions
 
@@ -4166,6 +4002,8 @@ LIMIT 500;
 **Business Value:** Early warning system for extreme weather events enabling proactive risk management.
 
 **Purpose:** Identification of anomalous weather patterns within boundaries with outlier metrics. Emergency management needs anomaly detection for early warning systems.
+
+**Business Value:** Early warning system for extreme weather events enabling proactive risk management.
 
 **Complexity:** Multiple CTEs (8+ levels), anomaly detection algorithms, statistical outlier identification, pattern analysis, window functions, UNION operations
 
@@ -4743,6 +4581,8 @@ LIMIT 5000;
 
 **Purpose:** Complete rate table showing rates for each policy area, forecast day (7-14 days), and coverage type with risk-adjusted pricing.
 
+**Business Value:** Enables dynamic pricing based on forecasted weather risks, allowing insurance companies to adjust rates proactively and optimize profitability.
+
 **Complexity:** Multiple CTEs (9+ levels), rate calculations, risk factor integration, tier assignments, window functions, complex aggregations
 
 ```sql
@@ -5282,6 +5122,8 @@ LIMIT 5000;
 
 **Purpose:** Validation report showing forecast risk vs actual claims with accuracy metrics and improvement recommendations.
 
+**Business Value:** Enables insurance companies to validate and improve forecast-based rate models using historical data, improving underwriting accuracy over time.
+
 **Complexity:** Multiple CTEs (8+ levels), historical data joins, forecast accuracy calculations, error analysis, window functions, statistical comparisons
 
 ```sql
@@ -5750,6 +5592,8 @@ LIMIT 3000;
 
 **Purpose:** Risk ranking report showing policy areas ordered by risk level with comparative metrics.
 
+**Business Value:** Enables insurance companies to identify high-risk areas, allocate underwriting resources effectively, and optimize portfolio risk distribution.
+
 **Complexity:** Multiple CTEs (7+ levels), risk aggregation, ranking calculations, percentile analysis, window functions, comparative analysis
 
 ```sql
@@ -6155,6 +5999,8 @@ LIMIT 5000;
 **Business Value:** Provides more robust rate determination by combining multiple forecast days, reducing impact of individual forecast errors and improving pricing stability.
 
 **Purpose:** Ensemble rate analysis showing consensus rates across forecast days with confidence intervals.
+
+**Business Value:** Provides more robust rate determination by combining multiple forecast days, reducing impact of individual forecast errors and improving pricing stability.
 
 **Complexity:** Multiple CTEs (7+ levels), ensemble statistics, consensus calculations, confidence intervals, window functions, statistical aggregation
 
@@ -6567,6 +6413,8 @@ LIMIT 3000;
 **Business Value:** Provides insurance companies with single-source-of-truth dashboard for rate modeling decisions, improving efficiency and decision-making.
 
 **Purpose:** Comprehensive rate modeling summary dashboard with all key metrics and recommendations.
+
+**Business Value:** Provides insurance companies with single-source-of-truth dashboard for rate modeling decisions, improving efficiency and decision-making.
 
 **Complexity:** Multiple CTEs (9+ levels), comprehensive aggregation, summary statistics, dashboard metrics, window functions, multi-table joins
 
@@ -7041,6 +6889,8 @@ LIMIT 100000;
 **Business Value:** Enables severe weather prediction and warning systems by tracking storm development and movement patterns across radar networks.
 
 **Purpose:** Storm cell tracking report showing storm movement, intensity trends, and predicted paths across multiple radar sites.
+
+**Business Value:** Enables severe weather prediction and warning systems by tracking storm development and movement patterns across radar networks.
 
 **Complexity:** Multiple CTEs (9+ levels), temporal tracking, spatial matching, storm cell association, movement calculation, window functions, recursive patterns
 
@@ -7533,6 +7383,8 @@ LIMIT 50000;
 
 **Purpose:** Fused precipitation product combining NEXRAD and satellite data with improved accuracy and coverage.
 
+**Business Value:** Provides more accurate and comprehensive precipitation estimates by combining radar (high resolution) and satellite (wide coverage) data sources.
+
 **Complexity:** Multiple CTEs (8+ levels), multi-source data fusion, weighted combination, quality assessment, spatial matching, temporal alignment
 
 ```sql
@@ -7973,6 +7825,8 @@ LIMIT 5000;
 
 **Description:** Generates US-wide composite products combining NEXRAD radar and satellite imagery data. Creates seamless nationwide weather products with improved coverage and accuracy.
 
+**Purpose:** US-wide composite products combining radar and satellite data for comprehensive weather monitoring.
+
 **Purpose:** Provides comprehensive weather monitoring by combining strengths of radar (high resolution) and satellite (wide coverage) data sources.
 
 **Complexity:** Multiple CTEs (7+ levels), multi-source data fusion, composite generation, quality weighting, spatial interpolation
@@ -8060,3 +7914,98 @@ WHERE composite_precipitation_rate_mmh IS NOT NULL
 ORDER BY grid_latitude, grid_longitude
 LIMIT 50000;
 ```
+
+---
+
+## Usage Instructions
+
+1. **Database Access**: Ensure you have access to the database instance (PostgreSQL with PostGIS)
+2. **Credentials**: Obtain database connection credentials
+3. **Schema**: Ensure all tables are created and populated with data
+4. **Spatial Extensions**: For PostgreSQL, ensure PostGIS extension is installed:
+   ```sql
+   CREATE EXTENSION IF NOT EXISTS postgis;
+   ```
+
+1. **Open Query File**: Navigate to `queries/queries.md`
+2. **Select Query**: Choose the query number you want to execute
+3. **Review Business Case**: Understand the use case and expected output
+4. **Copy SQL**: Copy the SQL code from the code block
+5. **Execute**: Run the query in your database client:
+   - **PostgreSQL**: Use `psql` or pgAdmin (ensure PostGIS is enabled)
+
+- Each query includes a "Business Use Case" section explaining the real-world application
+- Review the "Client Deliverable" section to understand what the query produces
+- Check the "Expected Output" section for result set descriptions
+- Spatial queries return geographic data that can be visualized on maps
+
+
+1. Create a new notebook
+2. Set the language to SQL
+3. Copy the query SQL into a cell
+4. Add markdown cells above for context:
+   ```markdown
+   # Query 1: Spatial Weather Forecast Analysis
+
+   **Business Use Case:** Insurance Risk Modeling
+
+   This query analyzes forecast accuracy by geographic boundary...
+   ```
+5. Execute the cell to run the query
+6. Review results and add visualization cells:
+   - Use map visualizations for spatial results
+   - Create charts for time-series data
+   - Generate tables for aggregated metrics
+
+1. **Create Tables**: Execute the schema creation scripts from `data/schema.sql`
+2. **Enable Spatial Extensions**: For PostgreSQL:
+   ```sql
+   CREATE EXTENSION IF NOT EXISTS postgis;
+   ```
+3. **Create Indexes**: Ensure all indexes are created, especially spatial indexes (GIST)
+4. **Load Data**: Populate tables with weather data:
+   - GRIB2 forecast data
+   - Shapefile boundaries
+   - Weather observations
+5. **Verify**: Run validation queries to ensure data integrity
+
+- **Spatial Indexes**: Critical for spatial query performance (GIST indexes on GEOGRAPHY columns)
+- **Partitioning**: Consider partitioning large tables (`grib2_forecasts`, `weather_observations`) by date
+- **Aggregations**: Use `weather_forecast_aggregations` table for pre-computed aggregations
+- **Monitoring**: Monitor query execution times, especially for spatial joins
+- **Optimization**: Review spatial join strategies and consider spatial clustering
+
+- **Spatial Types**:
+  - PostgreSQL: Uses PostGIS GEOGRAPHY type
+  : Uses GEOMETRY type (compatible)
+  : Uses GEOGRAPHY type
+- **Spatial Functions**: Standard spatial functions (ST_WITHIN, ST_DISTANCE, ST_INTERSECTS) work across all platforms
+- **CRS Handling**: All spatial data uses WGS84 (EPSG:4326) for compatibility
+- Test queries on your target database before production use
+
+1. **GRIB2 Files**: Use transformation scripts to load GRIB2 data
+2. **Shapefiles**: Use OGR2OGR or similar tools to transform and load shapefiles
+3. **API Data**: Use ETL pipelines to load real-time observations from NWS API
+4. **Monitoring**: Track data quality metrics using `data_quality_metrics` table
+
+---
+
+---
+
+## Platform Compatibility
+
+All queries in this database are designed to work across multiple database platforms:
+
+- **PostgreSQL**: Full support with standard SQL features
+
+Queries use standard SQL syntax and avoid platform-specific features to ensure compatibility.
+
+---
+
+**Document Information:**
+
+- **Generated**: 20260210-0115
+- **Database**: db-6
+- **Type**: Weather Data Pipeline System
+- **Queries**: 30 production queries
+- **Status**: ✅ Complete Comprehensive Deliverable

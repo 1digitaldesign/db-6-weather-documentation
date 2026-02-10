@@ -1,21 +1,9 @@
--- PostgreSQL-specific schema file
--- Generated from schema_extensions.sql
--- Generated: 2026-02-05 19:10:03
--- Database: db-6
--- 
--- This file contains PostgreSQL-specific SQL syntax.
--- Use this file when setting up the database in PostgreSQL.
---
-
 -- Extended Schema for AWS Open Data, NWS API, and GeoPlatform.gov Integration
--- Compatible with PostgreSQL, Databricks, and Snowflake
+-- Compatible with PostgreSQL
 -- Production schema extensions for AWS Open Data, NWS API, and GeoPlatform.gov integration
 
 -- AWS Data Source Log Table
 -- Tracks data ingestion from AWS Open Data Registry
--- Enable PostGIS extension for spatial data
-CREATE EXTENSION IF NOT EXISTS postgis;
-
 CREATE TABLE IF NOT EXISTS aws_data_source_log (
     source_id VARCHAR(255) PRIMARY KEY,
     source_name VARCHAR(500) NOT NULL,
@@ -23,9 +11,9 @@ CREATE TABLE IF NOT EXISTS aws_data_source_log (
     bucket_name VARCHAR(255) NOT NULL,
     file_path VARCHAR(1000) NOT NULL,
     format VARCHAR(50),  -- 'grib2', 'netcdf', 'binary', etc.
-    ingestion_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
+    ingestion_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     status VARCHAR(50) DEFAULT 'Success',  -- 'Success', 'Failed', 'Pending'
-    metadata VARIANT,  -- JSON metadata (Snowflake) or JSONB (PostgreSQL) - Use OBJECT for cross-database compatibility
+    metadata VARIANT,  -- JSON metadata JSONB (PostgreSQL) - Use OBJECT for cross-database compatibility
     file_size_bytes BIGINT,
     forecast_date DATE,
     forecast_cycle VARCHAR(2),  -- '00', '06', '12', '18'
@@ -41,7 +29,7 @@ CREATE TABLE IF NOT EXISTS nws_api_observation_log (
     api_endpoint VARCHAR(500),
     response_status INTEGER,
     data_freshness_minutes INTEGER,
-    ingestion_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
+    ingestion_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     status VARCHAR(50) DEFAULT 'Success',
     error_message VARCHAR(2000)
 );
@@ -54,7 +42,7 @@ CREATE TABLE IF NOT EXISTS geoplatform_dataset_log (
     description VARCHAR(2000),
     url VARCHAR(1000),
     search_term VARCHAR(100),
-    ingestion_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
+    ingestion_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     status VARCHAR(50) DEFAULT 'Discovered',  -- 'Discovered', 'Ingested', 'Failed'
     dataset_type VARCHAR(100),  -- 'boundary', 'elevation', 'imagery', etc.
     spatial_extent_west NUMERIC(10, 6),
@@ -97,8 +85,8 @@ CREATE TABLE IF NOT EXISTS weather_alerts (
     state_code VARCHAR(2),
     county_code VARCHAR(5),
     cwa_code VARCHAR(10),
-    ingestion_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
-    alert_geometry GEOGRAPHY  -- Polygon geometry for alert area
+    ingestion_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    alert_geometry TEXT  -- Polygon geometry for alert area
 );
 
 -- Model Forecast Comparison Table
@@ -120,7 +108,7 @@ CREATE TABLE IF NOT EXISTS model_forecast_comparison (
     hrrr_error NUMERIC(10, 2),
     rap_error NUMERIC(10, 2),
     best_model VARCHAR(50),  -- Model with smallest error
-    comparison_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP()
+    comparison_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Data Source Statistics Table
@@ -137,7 +125,7 @@ CREATE TABLE IF NOT EXISTS data_source_statistics (
     success_rate NUMERIC(5, 2),
     avg_latency_seconds NUMERIC(10, 2),
     error_count INTEGER DEFAULT 0,
-    calculation_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP()
+    calculation_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Create indexes for performance

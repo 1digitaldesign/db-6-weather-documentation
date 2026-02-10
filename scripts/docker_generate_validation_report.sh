@@ -115,7 +115,7 @@ done
 cat > "$MD_REPORT" <<EOF
 # Docker Container Validation Report
 
-**Generated:** $(date)
+**Rebuilt:** $(date)
 **Total Databases:** ${#DATABASES[@]}
 
 ## Executive Summary
@@ -298,7 +298,7 @@ docker-compose -f docker/docker-compose.yml logs -f
 
 ---
 
-**Report Generated:** $(date)
+**Report Rebuilt:** $(date)
 **Report Version:** 1.0
 EOF
 

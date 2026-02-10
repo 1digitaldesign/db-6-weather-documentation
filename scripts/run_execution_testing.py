@@ -3,7 +3,7 @@
 Run Phase 3 execution testing using credentials from JSON files
 Loads credentials from:
 - results/postgresql_provision_all.json (PostgreSQL)
-- results/snowflake_credentials.json (Snowflake)
+- results/databricks_credentials.json 
 """
 
 import os
@@ -46,12 +46,12 @@ def load_postgresql_credentials(root_dir: Path, db_num: int) -> Optional[Dict]:
         print(f"✗ Error loading PostgreSQL credentials: {e}")
         return None
 
-def load_snowflake_credentials(root_dir: Path) -> Optional[Dict]:
-    """Load Snowflake credentials"""
-    creds_file = root_dir / 'results' / 'snowflake_credentials.json'
+def load_databricks_credentials(root_dir: Path) -> Optional[Dict]:
+    """Load Databricks credentials"""
+    creds_file = root_dir / 'results' / 'databricks_credentials.json'
 
     if not creds_file.exists():
-        print(f"⚠️  Snowflake credentials file not found: {creds_file}")
+        print(f"⚠️  Databricks credentials file not found: {creds_file}")
         return None
 
     try:
@@ -59,16 +59,16 @@ def load_snowflake_credentials(root_dir: Path) -> Optional[Dict]:
             creds_data = json.load(f)
 
         return {
-            'user': creds_data.get('snowflake_user'),
-            'password': creds_data.get('snowflake_token'),  # Using token instead of password
-            'account': creds_data.get('snowflake_account'),
+            'user': creds_data.get('databricks_user'),
+            'password': creds_data.get('databricks_token'),  # Using token instead of password
+            'account': creds_data.get('databricks_account'),
             'warehouse': os.environ.get('SNOWFLAKE_WAREHOUSE', 'COMPUTE_WH'),
             'schema': os.environ.get('SNOWFLAKE_SCHEMA', 'PUBLIC'),
             'database': os.environ.get('SNOWFLAKE_DATABASE', 'DB1'),
-            'role': creds_data.get('snowflake_role', 'ACCOUNTADMIN')
+            'role': creds_data.get('databricks_role', 'ACCOUNTADMIN')
         }
     except Exception as e:
-        print(f"✗ Error loading Snowflake credentials: {e}")
+        print(f"✗ Error loading Databricks credentials: {e}")
         return None
 
 def run_execution_testing(db_num: int, root_dir: Path, pg_creds: Optional[Dict], sf_creds: Optional[Dict]):
@@ -96,7 +96,7 @@ def run_execution_testing(db_num: int, root_dir: Path, pg_creds: Optional[Dict],
     else:
         print("⚠️  PostgreSQL credentials not available")
 
-    # Set environment variables for Snowflake
+    # Set environment variables for Databricks
     if sf_creds:
         env['SNOWFLAKE_USER'] = str(sf_creds['user'])
         env['SNOWFLAKE_PASSWORD'] = str(sf_creds['password'])
@@ -105,9 +105,9 @@ def run_execution_testing(db_num: int, root_dir: Path, pg_creds: Optional[Dict],
         env['SNOWFLAKE_SCHEMA'] = str(sf_creds.get('schema', 'PUBLIC'))
         env['SNOWFLAKE_DATABASE'] = str(sf_creds.get('database', 'DB1'))
         env['SNOWFLAKE_ROLE'] = str(sf_creds.get('role', 'ACCOUNTADMIN'))
-        print(f"✓ Snowflake credentials configured: {sf_creds['user']}@{sf_creds['account']}")
+        print(f"✓ Databricks credentials configured: {sf_creds['user']}@{sf_creds['account']}")
     else:
-        print("⚠️  Snowflake credentials not available")
+        print("⚠️  Databricks credentials not available")
 
     # Run execution tester
     try:
@@ -161,7 +161,7 @@ def main():
 
     # Load credentials
     print("\nLoading credentials...")
-    sf_creds = load_snowflake_credentials(root_dir)
+    sf_creds = load_databricks_credentials(root_dir)
 
     results = {}
 
@@ -171,7 +171,7 @@ def main():
         results[f'db-{db_num}'] = {
             'success': success,
             'postgresql_configured': pg_creds is not None,
-            'snowflake_configured': sf_creds is not None
+            'databricks_configured': sf_creds is not None
         }
 
     # Summary
@@ -181,8 +181,8 @@ def main():
     for db_name, result in results.items():
         status = "✓ PASS" if result['success'] else "✗ FAIL"
         pg_status = "✓" if result['postgresql_configured'] else "✗"
-        sf_status = "✓" if result['snowflake_configured'] else "✗"
-        print(f"{db_name}: {status} | PostgreSQL: {pg_status} | Snowflake: {sf_status}")
+        sf_status = "✓" if result['databricks_configured'] else "✗"
+        print(f"{db_name}: {status} | PostgreSQL: {pg_status} | Databricks: {sf_status}")
 
     print(f"{'='*70}\n")
 

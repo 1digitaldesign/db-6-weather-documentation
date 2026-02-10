@@ -183,7 +183,7 @@ ON CONFLICT (forecast_id) DO UPDATE SET parameter_value = EXCLUDED.parameter_val
                     return sql, current_size
                 
                 if records_generated % 100000 == 0:
-                    logger.info(f"  Generated {records_generated:,} GRIB2 forecasts ({current_size / (1024**3):.2f} GB)")
+                    logger.info(f"  Generated {records_Rebuilt:,} GRIB2 forecasts ({current_size / (1024**3):.2f} GB)")
     
     return sql, current_size
 
@@ -373,10 +373,10 @@ def main():
     
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write("-- Large Dataset for Weather/Insurance Database (db-6)\n")
-        f.write(f"-- Generated: {datetime.now().isoformat()}\n")
+        f.write(f"-- Rebuilt: {datetime.now().isoformat()}\n")
         f.write(f"-- Target size: {TARGET_SIZE_GB} GB\n")
         f.write(f"-- Total SQL statements: {len(all_sql):,}\n")
-        f.write("-- Compatible with PostgreSQL, Databricks, and Snowflake\n")
+        f.write("-- Compatible with PostgreSQL\n")
         f.write("-- Based on legitimate NWS API patterns and realistic US geographic coverage\n\n")
         
         for sql in all_sql:

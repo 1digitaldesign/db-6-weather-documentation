@@ -31,7 +31,7 @@ def generate_navigation_template(db_num):
                         <a href="#{db_prefix}-table-nws_api_observation_log" class="nav-link">nws_api_observation_log</a>
                         <a href="#{db_prefix}-table-satellite_transformation_log" class="nav-link">satellite_transformation_log</a>
                         <a href="#{db_prefix}-table-shapefile_integration_log" class="nav-link">shapefile_integration_log</a>
-                        <a href="#{db_prefix}-table-snowflake_load_status" class="nav-link">snowflake_load_status</a>'''.format(db_prefix=db_prefix)
+                        <a href="#{db_prefix}-table-load_status" class="nav-link">load_status</a>'''.format(db_prefix=db_prefix)
     
     # Query links - Query 1 through Query 30 (same as db-6)
     query_links = '\n'.join([f'                        <a href="#{db_prefix}-query-{i}" class="nav-link">Query {i}</a>' for i in range(1, 31)])

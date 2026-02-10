@@ -13,11 +13,11 @@ from typing import Dict, List, Optional
 import sys
 
 try:
-    import snowflake.connector
+    import databricks.connector
     SNOWFLAKE_AVAILABLE = True
 except ImportError:
     SNOWFLAKE_AVAILABLE = False
-    print("⚠️  snowflake-connector-python not available")
+    print("⚠️  databricks-connector-python not available")
 
 try:
     import psycopg2
@@ -98,7 +98,7 @@ class AWSDataIngester:
         }
     }
 
-    def __init__(self, db_type='snowflake'):
+    def __init__(self, db_type='databricks'):
         self.db_type = db_type
         self.s3_client = boto3.client('s3', region_name='us-east-1')
         self.script_dir = Path(__file__).parent
@@ -106,19 +106,19 @@ class AWSDataIngester:
 
     def get_db_connection(self):
         """Get database connection"""
-        if self.db_type == 'snowflake':
-            return self._get_snowflake_connection()
+        if self.db_type == 'databricks':
+            return self._get_databricks_connection()
         elif self.db_type == 'postgresql':
             return self._get_postgres_connection()
         else:
             raise ValueError(f"Unsupported database type: {self.db_type}")
 
-    def _get_snowflake_connection(self):
-        """Get Snowflake connection"""
+    def _get_databricks_connection(self):
+        """Get Databricks connection"""
         if not SNOWFLAKE_AVAILABLE:
             return None
 
-        creds_file = self.root_dir / 'results' / 'snowflake_credentials.json'
+        creds_file = self.root_dir / 'results' / 'databricks_credentials.json'
         if not creds_file.exists():
             print(f"❌ Credentials file not found: {creds_file}")
             return None
@@ -126,10 +126,10 @@ class AWSDataIngester:
         with open(creds_file, 'r') as f:
             creds = json.load(f)
 
-        account = creds.get('snowflake_account', '')
-        user = creds.get('snowflake_user', '')
-        role = creds.get('snowflake_role', 'ACCOUNTADMIN')
-        token = creds.get('snowflake_token', '')
+        account = creds.get('databricks_account', '')
+        user = creds.get('databricks_user', '')
+        role = creds.get('databricks_role', 'ACCOUNTADMIN')
+        token = creds.get('databricks_token', '')
 
         conn_params = {
             'account': account,
@@ -146,10 +146,10 @@ class AWSDataIngester:
             conn_params['password'] = os.getenv('SNOWFLAKE_PASSWORD', '')
 
         try:
-            conn = snowflake.connector.connect(**conn_params)
+            conn = databricks.connector.connect(**conn_params)
             return conn
         except Exception as e:
-            print(f"❌ Snowflake connection failed: {e}")
+            print(f"❌ Databricks connection failed: {e}")
             return None
 
     def _get_postgres_connection(self):
@@ -363,7 +363,7 @@ def main():
     print("AWS OPEN DATA REGISTRY INGESTION FOR DB-6")
     print("="*70)
 
-    ingester = AWSDataIngester(db_type='snowflake')
+    ingester = AWSDataIngester(db_type='databricks')
     conn = ingester.get_db_connection()
 
     if not conn:

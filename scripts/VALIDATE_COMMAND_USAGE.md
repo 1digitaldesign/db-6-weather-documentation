@@ -107,7 +107,7 @@ The command provides real-time progress updates:
 - **Per-database results**: `db-{N}/results/*.json`
   - `fix_verification.json`
   - `comprehensive_validation_report.json`
-  - `query_test_results_postgres_snowflake.json` (if Phase 3 runs)
+  - `query_test_results_postgres.json` (if Phase 3 runs)
   - `final_comprehensive_validation_report.json`
 
 - **Summary report**: `validation_summary.json` (in root directory)

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Update schema extensions for Snowflake compatibility
+Update schema extensions for Databricks compatibility
 Handles ALTER TABLE statements that may not work directly
 """
 
@@ -9,17 +9,17 @@ import os
 from pathlib import Path
 
 try:
-    import snowflake.connector
+    import databricks.connector
 except ImportError:
-    print("❌ snowflake-connector-python not installed")
+    print("❌ databricks-connector-python not installed")
     sys.exit(1)
 
 
-def get_snowflake_connection():
-    """Get Snowflake connection"""
+def get_databricks_connection():
+    """Get Databricks connection"""
     script_dir = Path(__file__).parent
     root_dir = script_dir.parent.parent.parent.parent
-    creds_file = root_dir / 'results' / 'snowflake_credentials.json'
+    creds_file = root_dir / 'results' / 'databricks_credentials.json'
 
     if not creds_file.exists():
         print(f"❌ Credentials file not found: {creds_file}")
@@ -28,10 +28,10 @@ def get_snowflake_connection():
     with open(creds_file, 'r') as f:
         creds = json.load(f)
 
-    account = creds.get('snowflake_account', '')
-    user = creds.get('snowflake_user', '')
-    role = creds.get('snowflake_role', 'ACCOUNTADMIN')
-    token = creds.get('snowflake_token', '')
+    account = creds.get('databricks_account', '')
+    user = creds.get('databricks_user', '')
+    role = creds.get('databricks_role', 'ACCOUNTADMIN')
+    token = creds.get('databricks_token', '')
 
     conn_params = {
         'account': account,
@@ -48,11 +48,11 @@ def get_snowflake_connection():
         conn_params['password'] = os.getenv('SNOWFLAKE_PASSWORD', '')
 
     try:
-        conn = snowflake.connector.connect(**conn_params)
-        print(f"✅ Connected to Snowflake: {account}")
+        conn = databricks.connector.connect(**conn_params)
+        print(f"✅ Connected to Databricks: {account}")
         return conn
     except Exception as e:
-        print(f"❌ Snowflake connection failed: {e}")
+        print(f"❌ Databricks connection failed: {e}")
         sys.exit(1)
 
 
@@ -96,7 +96,7 @@ def main():
     print("UPDATING SCHEMA EXTENSIONS FOR DB-6")
     print("="*70)
 
-    conn = get_snowflake_connection()
+    conn = get_databricks_connection()
 
     try:
         cursor = conn.cursor()

@@ -7,7 +7,7 @@
 
 ## Overview
 
-This database contains weather data from NOAA sources including GRIB2 gridded forecasts, shapefile boundaries (CWA, Fire Zones, Marine Zones), real-time observations, transformation logs, spatial joins, CRS transformations, data quality metrics, and Snowflake load status.
+This database contains weather data from NOAA sources including GRIB2 gridded forecasts, shapefile boundaries (CWA, Fire Zones, Marine Zones), real-time observations, transformation logs, spatial joins, CRS transformations, data quality metrics load status.
 
 ## Tables
 
@@ -35,7 +35,7 @@ Documents coordinate reference system transformations and parameters
 ### `data_quality_metrics`
 Tracks data quality metrics for weather products
 
-### `snowflake_load_status`
+### `load_status`
 Tracks data loading operations to Snowflake
 
 ### `weather_forecast_aggregations`
@@ -46,7 +46,7 @@ Metadata about weather observation stations
 
 ---
 
-This file contains 30 extremely complex SQL queries focused on business-oriented use cases for client deliverables. All queries are designed to work across PostgreSQL, Databricks, and Snowflake.
+This file contains 30 extremely complex SQL queries focused on business-oriented use cases for client deliverables. All queries are designed to work across PostgreSQL.
 
 ## Query 1: Production-Grade Spatial Weather Forecast Analysis with Multi-Level CTE Nesting and Geospatial Aggregations
 
@@ -7311,4 +7311,4 @@ LIMIT 50000;
 
 **End of Query Set**
 
-All 30 extremely complex SQL queries have been completed. Each query is unique, addresses different business-oriented aspects of the weather data pipeline system, and is designed to work across PostgreSQL, Databricks, and Snowflake.
+All 30 extremely complex SQL queries have been completed. Each query is unique, addresses different business-oriented aspects of the weather data pipeline system, and is designed to work across PostgreSQL.

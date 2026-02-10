@@ -75,7 +75,7 @@ The validation suite consists of six phases:
 
 0. **Phase 0: Query Abstraction** - **REQUIRED**: Extract queries.md to queries.json (must complete before all other phases)
 1. **Phase 1: Fix Verification** - Verifies that critical fixes have been applied correctly
-2. **Phase 2: Syntax Validation** - Validates SQL syntax on PostgreSQL and Databricks
+2. **Phase 2: Syntax Validation** - Validates SQL syntax on PostgreSQL
 3. **Phase 3: Execution Testing** - Executes queries on available databases and collects metrics
 4. **Phase 4: Comprehensive Evaluation** - Evaluates queries against all requirements
 5. **Phase 5: Report Generation** - Generates comprehensive validation reports
@@ -92,11 +92,11 @@ db-{N}/
 │   ├── execution_tester.py          # Phase 3: Execution testing
 │   ├── generate_final_report.py     # Phase 5: Final report generation
 │   ├── extract_queries_to_json.py   # Extract queries.md to queries.json
-│   └── test_queries_postgres_databricks.py  # Base testing infrastructure
+│   └── test_queries_postgres.py  # Base testing infrastructure
 ├── results/
 │   ├── fix_verification.json                    # Phase 1 results
 │   ├── comprehensive_validation_report.json     # Phase 2 & 4 results
-│   ├── query_test_results_postgres_databricks.json  # Phase 3 results
+│   ├── query_test_results_postgres.json  # Phase 3 results
 │   └── final_comprehensive_validation_report.json  # Phase 5 final report
 └── queries/
     ├── queries.md                    # SQL queries (source)
@@ -279,7 +279,7 @@ python3 scripts/verify_fixes.py
 
 ### Purpose
 
-Validates SQL syntax on PostgreSQL and Databricks using `EXPLAIN` statements to check parsing without executing queries.
+Validates SQL syntax on PostgreSQL using `EXPLAIN` statements to check parsing without executing queries.
 
 ### Script
 
@@ -305,13 +305,6 @@ export PG_PASSWORD=your_password
 export PG_DATABASE=db_1_validation
 ```
 
-
-**Databricks**:
-```bash
-export DATABRICKS_SERVER_HOSTNAME=your_hostname
-export DATABRICKS_HTTP_PATH=your_path
-export DATABRICKS_TOKEN=your_token
-```
 
 ### Validation Method
 
@@ -343,14 +336,13 @@ For each database:
         }
       ]
     },
-    "databricks": {...}
   }
 }
 ```
 
 ### Success Criteria
 
-- **REQUIRED**: At least one database (PostgreSQL or Databricks) must be available for syntax validation
+- **REQUIRED**: At least one database (PostgreSQL) must be available for syntax validation
 - All queries parse successfully on all available databases
 - No syntax errors reported
 - Cross-database compatibility confirmed
@@ -391,7 +383,7 @@ For each database:
 
 ### Output
 
-**File**: `db-{N}/results/query_test_results_postgres_databricks.json`
+**File**: `db-{N}/results/query_test_results_postgres.json`
 
 **Structure**:
 ```json
@@ -425,7 +417,7 @@ For each database:
 
 ### Success Criteria
 
-- **REQUIRED**: At least one database (PostgreSQL or Databricks) must be available for execution testing
+- **REQUIRED**: At least one database (PostgreSQL) must be available for execution testing
 - High success rate (>90%) on available databases
 - Execution times within acceptable limits (<5 seconds per query)
 - Consistent results across databases (when multiple available)
@@ -690,7 +682,7 @@ All queries in `queries.md` must meet these requirements:
 
 1. **Count**: Exactly 30 queries, numbered sequentially (Query 1 through Query 30)
 
-2. **Cross-Database Compatibility**: All queries must work on PostgreSQL and Databricks
+2. **Cross-Database Compatibility**: All queries must work on PostgreSQL
 
 3. **Unique SQL Expressions**: Each query must be a unique SQL expression - no duplicates or minor variations
 
@@ -769,7 +761,7 @@ jobs:
           python-version: '3.9'
       - name: Install dependencies
         run: |
-          pip install psycopg2-binary databricks-sql-connector
+          pip install psycopg2-binary
       - name: Phase 0 - Extract queries to JSON (REQUIRED)
         run: |
           cd db-1
@@ -805,14 +797,12 @@ jobs:
 Required packages (install via `pip install -r requirements.txt`):
 
 ```
-psycopg2-binary>=2.9.0      # PostgreSQL
-databricks-sql-connector>=2.0.0    # Databricks (optional)
+psycopg2-binary>=2.9.0  # PostgreSQL
 ```
 
 ### Database Access
 
 - **PostgreSQL**: Requires database server with schema loaded
-- **Databricks**: Requires server hostname, HTTP path, and token
 
 
 ## Best Practices

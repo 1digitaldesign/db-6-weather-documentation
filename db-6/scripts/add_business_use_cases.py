@@ -33,7 +33,7 @@ BUSINESS_USE_CASES = {
         "value": "Improves data pipeline reliability by identifying and resolving systematic data processing issues."
     },
     10: {
-        "title": "Snowflake Load Performance Analysis with Throughput Optimization Metrics",
+        "title": "Databricks Load Performance Analysis with Throughput Optimization Metrics",
         "use_case": "Internal Operations - Data Warehouse Performance Optimization",
         "deliverable": "Performance metrics for data loading operations with throughput analysis. Operations team can optimize data loading for faster client report generation.",
         "value": "Ensures timely data availability for client projects by optimizing data warehouse performance."

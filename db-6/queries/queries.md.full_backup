@@ -7,7 +7,7 @@
 
 ## Overview
 
-This database contains weather data from NOAA sources including GRIB2 gridded forecasts, shapefile boundaries (CWA, Fire Zones, Marine Zones), real-time observations, transformation logs, spatial joins, CRS transformations, data quality metrics, and Snowflake load status.
+This database contains weather data from NOAA sources including GRIB2 gridded forecasts, shapefile boundaries (CWA, Fire Zones, Marine Zones), real-time observations, transformation logs, spatial joins, CRS transformations, data quality metrics load status.
 
 ## Tables
 
@@ -35,8 +35,8 @@ Documents coordinate reference system transformations and parameters
 ### `data_quality_metrics`
 Tracks data quality metrics for weather products
 
-### `snowflake_load_status`
-Tracks data loading operations to Snowflake
+### `load_status`
+Tracks data loading operations to Databricks
 
 ### `weather_forecast_aggregations`
 Pre-aggregated forecast data for performance
@@ -46,7 +46,7 @@ Metadata about weather observation stations
 
 ---
 
-This file contains 30 extremely complex SQL queries for the weather data pipeline system. All queries are designed to work across PostgreSQL, Databricks, and Snowflake.
+This file contains 30 extremely complex SQL queries for the weather data pipeline system. All queries are designed to work across PostgreSQL.
 
 ## Query 1: Production-Grade Spatial Weather Forecast Analysis with Multi-Level CTE Nesting and Geospatial Aggregations
 
@@ -2403,11 +2403,11 @@ LIMIT 100;
 
 ---
 
-## Query 10: Snowflake Load Performance Analysis with Throughput Optimization Metrics
+## Query 10: Databricks Load Performance Analysis with Throughput Optimization Metrics
 
 **Business Use Case:** **Internal Operations - Data Warehouse Performance Optimization**
 
-**Description:** Enterprise-level Snowflake load performance analysis evaluating load throughput, performance bottlenecks, optimization opportunities, and warehouse utilization patterns. Implements production patterns for optimizing data warehouse load operations.
+**Description:** Enterprise-level Databricks load performance analysis evaluating load throughput, performance bottlenecks, optimization opportunities, and warehouse utilization patterns. Implements production patterns for optimizing data warehouse load operations.
 
 **Client Deliverable:** Performance metrics for data loading operations with throughput analysis. Operations team can optimize data loading for faster client report generation.
 
@@ -2421,7 +2421,7 @@ WITH load_performance_base AS (
     SELECT
         sls.load_id,
         sls.source_file,
-        sls.snowflake_table,
+        sls.target_table,
         sls.load_start_time,
         sls.load_end_time,
         sls.load_duration_seconds,
@@ -2430,7 +2430,7 @@ WITH load_performance_base AS (
         sls.load_rate_mb_per_sec,
         sls.load_status,
         sls.error_message,
-        sls.snowflake_warehouse,
+        sls.warehouse,
         sls.data_source_type,
         DATE_TRUNC('hour', sls.load_start_time) AS load_hour,
         DATE_TRUNC('day', sls.load_start_time) AS load_date,
@@ -2446,15 +2446,15 @@ WITH load_performance_base AS (
                 sls.records_loaded::NUMERIC / sls.load_duration_seconds
             ELSE NULL
         END AS records_per_second
-    FROM snowflake_load_status sls
+    FROM load_status sls
 ),
 load_performance_aggregation AS (
     -- Second CTE: Aggregate performance by various dimensions
     SELECT
         lpb.load_hour,
         lpb.load_date,
-        lpb.snowflake_table,
-        lpb.snowflake_warehouse,
+        lpb.target_table,
+        lpb.warehouse,
         lpb.data_source_type,
         COUNT(*) AS load_count,
         COUNT(CASE WHEN lpb.load_status = 'Success' THEN 1 END) AS success_count,
@@ -2472,8 +2472,8 @@ load_performance_aggregation AS (
     GROUP BY
         lpb.load_hour,
         lpb.load_date,
-        lpb.snowflake_table,
-        lpb.snowflake_warehouse,
+        lpb.target_table,
+        lpb.warehouse,
         lpb.data_source_type
 ),
 performance_trend_analysis AS (
@@ -2481,8 +2481,8 @@ performance_trend_analysis AS (
     SELECT
         lpa.load_hour,
         lpa.load_date,
-        lpa.snowflake_table,
-        lpa.snowflake_warehouse,
+        lpa.target_table,
+        lpa.warehouse,
         lpa.data_source_type,
         lpa.load_count,
         lpa.success_count,
@@ -2502,18 +2502,18 @@ performance_trend_analysis AS (
         END AS success_rate,
         -- Moving averages
         AVG(lpa.avg_load_rate) OVER (
-            PARTITION BY lpa.snowflake_table
+            PARTITION BY lpa.target_table
             ORDER BY lpa.load_hour
             ROWS BETWEEN 5 PRECEDING AND CURRENT ROW
         ) AS moving_avg_load_rate_6h,
         AVG(lpa.avg_duration) OVER (
-            PARTITION BY lpa.snowflake_warehouse
+            PARTITION BY lpa.warehouse
             ORDER BY lpa.load_hour
             ROWS BETWEEN 23 PRECEDING AND CURRENT ROW
         ) AS moving_avg_duration_24h,
         -- Lag for trend detection
         LAG(lpa.avg_load_rate, 1) OVER (
-            PARTITION BY lpa.snowflake_table
+            PARTITION BY lpa.target_table
             ORDER BY lpa.load_hour
         ) AS prev_load_rate
     FROM load_performance_aggregation lpa
@@ -2523,8 +2523,8 @@ bottleneck_detection AS (
     SELECT
         pta.load_hour,
         pta.load_date,
-        pta.snowflake_table,
-        pta.snowflake_warehouse,
+        pta.target_table,
+        pta.warehouse,
         pta.data_source_type,
         pta.avg_duration,
         pta.avg_load_rate,
@@ -2557,8 +2557,8 @@ optimization_scoring AS (
     SELECT
         bd.load_hour,
         bd.load_date,
-        bd.snowflake_table,
-        bd.snowflake_warehouse,
+        bd.target_table,
+        bd.warehouse,
         bd.data_source_type,
         bd.avg_duration,
         bd.avg_load_rate,
@@ -2590,8 +2590,8 @@ final_performance_report AS (
     SELECT
         os.load_hour,
         os.load_date,
-        os.snowflake_table,
-        os.snowflake_warehouse,
+        os.target_table,
+        os.warehouse,
         os.data_source_type,
         os.avg_duration,
         os.avg_load_rate,
@@ -2606,7 +2606,7 @@ final_performance_report AS (
             ORDER BY os.optimization_score DESC
         ) AS performance_rank,
         PERCENT_RANK() OVER (
-            PARTITION BY os.snowflake_table
+            PARTITION BY os.target_table
             ORDER BY os.avg_load_rate DESC
         ) AS load_rate_percentile,
         NTILE(5) OVER (
@@ -2617,8 +2617,8 @@ final_performance_report AS (
 SELECT
     load_hour,
     load_date,
-    snowflake_table,
-    snowflake_warehouse,
+    target_table,
+    warehouse,
     data_source_type,
     avg_duration,
     avg_load_rate,
@@ -2637,7 +2637,7 @@ ORDER BY optimization_score DESC
 LIMIT 200;
 ```
 
-**Expected Output:** Snowflake load performance metrics with bottleneck detection and optimization recommendations.
+**Expected Output:** Databricks load performance metrics with bottleneck detection and optimization recommendations.
 
 ---
 
@@ -7617,7 +7617,7 @@ LIMIT 1000;
 
 **End of Query Set**
 
-All 30 extremely complex SQL queries have been completed. Each query is unique, addresses different aspects of the weather data pipeline system, and is designed to work across PostgreSQL, Databricks, and Snowflake.
+All 30 extremely complex SQL queries have been completed. Each query is unique, addresses different aspects of the weather data pipeline system, and is designed to work across PostgreSQL.
 
 ---
 

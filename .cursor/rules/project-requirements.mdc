@@ -53,7 +53,7 @@ db-{N}/
 ### Directory Purposes
 
 - **`queries/`**: Contains SQL queries (queries.md) and query metadata (JSON files). Must have exactly 30 extremely complex queries per database.
-- **`results/`**: Stores test results, validation reports, and query execution results (JSON format preferred). Used for tracking query validation across PostgreSQL and Databricks.
+- **`results/`**: Stores test results, validation reports, and query execution results (JSON format preferred). Used for tracking query validation across PostgreSQL.
 - **`docs/`**: Database documentation, schema docs, data dictionaries, and analysis notebooks. Provides comprehensive documentation for each database.
 - **`data/`**: Database schema files (schema.sql), sample data (data.sql), and data dumps. Contains the actual database structure and data.
   - **Production-grade comments**: All SQL files must use production-grade comments describing purpose and functionality, not "Created:" dates
@@ -107,7 +107,7 @@ Each query must include:
 - **Distributed Systems Optimization**: Queries should leverage distributed system capabilities (partitioning, parallelization, columnar storage)
 - **Fully Runnable SQL**: Complete SQL statements with no placeholders
 - **Expected Output Description**: Sample results or output description
-- **Cross-Database Compatibility**: All queries must work correctly across PostgreSQL and Databricks
+- **Cross-Database Compatibility**: All queries must work correctly across PostgreSQL
 - **Independent Execution**: Each query must be independently executable (standalone, no dependencies)
 - **Linkability**: Queries can be linked/chained together to create complex workflows
 - **Redundancy Architecture**: The same queries can run on different database systems for redundancy and failover
@@ -132,15 +132,15 @@ Each query must include:
   - Pivoting with CASE statements
   - Running totals and cumulative calculations
   - Complex WHERE clauses with multiple conditions
-- All queries must use standard SQL syntax compatible with PostgreSQL and Databricks
+- All queries must use standard SQL syntax compatible with PostgreSQL
 
 **Distributed Systems Optimization Requirements**:
-- **All queries must be extremely complex SQL expressions optimized for distributed systems** (PostgreSQL, Databricks)
+- **All queries must be extremely complex SQL expressions optimized for distributed systems** (PostgreSQL)
 - **Leverage distributed system capabilities**:
   - Partition-aware queries that can benefit from data partitioning
   - Queries that can be parallelized across nodes/workers
   - Expressions that minimize data shuffling and network transfer
-  - Queries optimized for columnar storage (Databricks Delta Lake)
+  - Queries optimized for columnar storage
 - **Distributed system patterns**:
   - Complex aggregations across partitions
   - Window functions over partitioned data
@@ -156,7 +156,7 @@ Each query must include:
 **Redundancy Architecture and Independent Execution Requirements**:
 - **Independent Execution**: Each query must be independently executable:
   - Standalone queries with no dependencies on other queries or external state
-  - Can run in isolation on PostgreSQL or Databricks
+  - Can run in isolation on PostgreSQL
   - Produces complete, self-contained results
   - No assumptions about query execution order
 
@@ -167,7 +167,7 @@ Each query must include:
   - Support for creating complex workflows by linking multiple queries
 
 - **Redundancy Support**: The same queries must work identically across all three databases:
-  - Queries produce consistent results when run on PostgreSQL or Databricks
+  - Queries produce consistent results when run on PostgreSQL
   - Support for failover scenarios where queries can be redirected to different databases
   - Enable redundancy architecture where the same workload can run on multiple database systems
   - Queries should be database-agnostic in their logic while leveraging distributed system capabilities
@@ -216,7 +216,7 @@ Each query must include:
 
 ### 3. Notebook Context (if delivered as notebooks)
 
-If delivered as notebooks (e.g., Databricks), include:
+If delivered as notebooks (e.g.), include:
 - Sufficient context for an unfamiliar data scientist to understand and run the notebook end-to-end
 - Clear explanations of data sources, transformations, and business logic
 - Prerequisites and setup instructions
@@ -257,7 +257,7 @@ The `/deliverable` folder includes:
 - [ ] Database description
 - [ ] Detailed schema documentation
 - [ ] **Minimum 30 extremely complex SQL queries** (10-15+ with joins/aggregations, many with CTEs/recursive CTEs)
-- [ ] All queries compatible with PostgreSQL and Databricks
+- [ ] All queries compatible with PostgreSQL
 - [ ] Expected outputs for all queries
 - [ ] Notebook context (if applicable)
 - [ ] Validation checks passed
@@ -267,7 +267,7 @@ The `/deliverable` folder includes:
 - [ ] Database description
 - [ ] Detailed schema documentation
 - [ ] **Minimum 30 complex SQL queries** (10-15+ with joins/aggregations)
-- [ ] All queries compatible with PostgreSQL and Databricks
+- [ ] All queries compatible with PostgreSQL
 - [ ] Expected outputs for all queries
 - [ ] Notebook context (if applicable)
 - [ ] Validation checks passed
@@ -277,7 +277,7 @@ The `/deliverable` folder includes:
 - [ ] Database description
 - [ ] Detailed schema documentation
 - [ ] **Minimum 30 complex SQL queries** (10-15+ with joins/aggregations)
-- [ ] All queries compatible with PostgreSQL and Databricks
+- [ ] All queries compatible with PostgreSQL
 - [ ] Expected outputs for all queries
 - [ ] Notebook context (if applicable)
 - [ ] Validation checks passed
@@ -287,7 +287,7 @@ The `/deliverable` folder includes:
 - [ ] Database description
 - [ ] Detailed schema documentation
 - [ ] **Minimum 30 complex SQL queries** (10-15+ with joins/aggregations)
-- [ ] All queries compatible with PostgreSQL and Databricks
+- [ ] All queries compatible with PostgreSQL
 - [ ] Expected outputs for all queries
 - [ ] Notebook context (if applicable)
 - [ ] Validation checks passed
@@ -297,7 +297,7 @@ The `/deliverable` folder includes:
 - [ ] Database description
 - [ ] Detailed schema documentation
 - [ ] **Minimum 30 complex SQL queries** (10-15+ with joins/aggregations)
-- [ ] All queries compatible with PostgreSQL and Databricks
+- [ ] All queries compatible with PostgreSQL
 - [ ] Expected outputs for all queries
 - [ ] Notebook context (if applicable)
 - [ ] Validation checks passed
@@ -307,7 +307,7 @@ The `/deliverable` folder includes:
 - [ ] Database description
 - [ ] Detailed schema documentation
 - [ ] **Minimum 30 complex SQL queries** (10-15+ with joins/aggregations)
-- [ ] All queries compatible with PostgreSQL and Databricks
+- [ ] All queries compatible with PostgreSQL
 - [ ] Expected outputs for all queries
 - [ ] Notebook context (if applicable)
 - [ ] Validation checks passed
@@ -317,7 +317,7 @@ The `/deliverable` folder includes:
 - [ ] Database description
 - [ ] Detailed schema documentation
 - [ ] **Minimum 30 complex SQL queries** (10-15+ with joins/aggregations)
-- [ ] All queries compatible with PostgreSQL and Databricks
+- [ ] All queries compatible with PostgreSQL
 - [ ] Expected outputs for all queries
 - [ ] Notebook context (if applicable)
 - [ ] Validation checks passed
@@ -327,7 +327,7 @@ The `/deliverable` folder includes:
 - [ ] Database description
 - [ ] Detailed schema documentation
 - [ ] **Minimum 30 complex SQL queries** (10-15+ with joins/aggregations)
-- [ ] All queries compatible with PostgreSQL and Databricks
+- [ ] All queries compatible with PostgreSQL
 - [ ] Expected outputs for all queries
 - [ ] Notebook context (if applicable)
 - [ ] Validation checks passed
@@ -337,7 +337,7 @@ The `/deliverable` folder includes:
 - [ ] Database description
 - [ ] Detailed schema documentation
 - [ ] **Minimum 30 complex SQL queries** (10-15+ with joins/aggregations)
-- [ ] All queries compatible with PostgreSQL and Databricks
+- [ ] All queries compatible with PostgreSQL
 - [ ] Expected outputs for all queries
 - [ ] Notebook context (if applicable)
 - [ ] Validation checks passed
@@ -347,7 +347,7 @@ The `/deliverable` folder includes:
 - [ ] Database description
 - [ ] Detailed schema documentation
 - [ ] **Minimum 30 complex SQL queries** (10-15+ with joins/aggregations)
-- [ ] All queries compatible with PostgreSQL and Databricks
+- [ ] All queries compatible with PostgreSQL
 - [ ] Expected outputs for all queries
 - [ ] Notebook context (if applicable)
 - [ ] Validation checks passed
@@ -359,14 +359,14 @@ The `/deliverable` folder includes:
 - **Minimum 30 extremely complex queries per database** (required)
 - **All queries must be unique SQL expressions** - no duplicates, variations, or minor modifications
 - All queries must be production-ready and executable
-- All queries must work correctly across PostgreSQL and Databricks
+- All queries must work correctly across PostgreSQL
 - **All queries must be extremely complex SQL expressions optimized for distributed systems**
 - **All queries must run independently** and can be linked together across the three databases for redundancy architecture
 - **All queries must be modelable as an undirected graph** and reducible to the minimum number of independent complex queries using shortest path algorithms
 - **CTEs (Common Table Expressions) are strongly encouraged** - many queries should use CTEs, including recursive CTEs
 - Queries should demonstrate extremely complex real-world patterns (multiple CTEs, recursive CTEs, window functions with frame clauses, complex joins, nested subqueries, pivoting, running totals, etc.)
 - Queries should leverage distributed system capabilities (partitioning, parallelization, columnar storage optimization)
-- Queries must support redundancy architecture - the same queries can run on PostgreSQL or Databricks for failover and redundancy
+- Queries must support redundancy architecture - the same queries can run on PostgreSQL for failover and redundancy
 - Queries must support graph-based modeling where relationships between queries form an undirected graph structure
 - Documentation must be clear and comprehensive
 - No synthetic or generated data allowed

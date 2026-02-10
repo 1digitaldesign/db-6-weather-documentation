@@ -93,12 +93,12 @@ Tracks data quality metrics for weather products.
 - `files_processed`, `files_successful`, `files_failed` (INTEGER)
 - `success_rate` (NUMERIC)
 
-### snowflake_load_status
-Tracks data loading operations to Snowflake.
+### load_status
+Tracks data loading operations to Databricks.
 
 **Key Columns:**
 - `load_id` (VARCHAR, PK)
-- `snowflake_table` (VARCHAR)
+- `target_table` (VARCHAR)
 - `load_start_time`, `load_end_time` (TIMESTAMP_NTZ)
 - `records_loaded` (INTEGER)
 - `load_status` (VARCHAR)
@@ -129,7 +129,7 @@ Metadata about weather observation stations.
 The database uses GEOGRAPHY type for spatial data:
 - **PostgreSQL**: PostGIS GEOGRAPHY type
 - **Databricks**: GEOMETRY type (compatible)
-- **Snowflake**: GEOGRAPHY type
+- **Databricks**: GEOGRAPHY type
 
 ## Indexes
 

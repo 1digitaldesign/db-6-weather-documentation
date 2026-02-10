@@ -1,5 +1,5 @@
 ---
-description: Complex queries must be compatible with PostgreSQL and Databricks
+description: Complex queries must be compatible with PostgreSQL
 alwaysApply: true
 ---
 
@@ -102,19 +102,19 @@ See `.cursor/rules/research-metadata-directories.mdc` for detailed usage of `/re
 
 1. **Minimum 30 Extremely Complex Queries**: Each database must have exactly **30 extremely complex queries** (no more, no less). All queries must be numbered sequentially (Query 1, Query 2, ..., Query 30).
 
-2. **Cross-Database Compatibility Requirement**: **ALL extremely complex queries MUST work correctly across PostgreSQL and Databricks**. This is a hard requirement - queries that don't work on both databases fail validation.
+2. **Cross-Database Compatibility Requirement**: **ALL extremely complex queries MUST work correctly across PostgreSQL**. This is a hard requirement - queries that don't work on both databases fail validation.
 
 3. **Unique SQL Expressions**: All queries must be **unique SQL expressions** - no duplicates, variations, or minor modifications. Each query must solve a different problem or use a fundamentally different approach.
 
 4. **CTEs and Extreme Complexity**: Queries must use CTEs (Common Table Expressions) and demonstrate **extremely complex** patterns found in production systems (as seen in GitHub repositories like Advanced_SQL, Complex-SQL-Exercise, and Kaggle notebooks).
 
-5. **Distributed Systems Optimization**: All queries must be **extremely complex SQL expressions optimized for distributed systems** (PostgreSQL, Databricks).
+5. **Distributed Systems Optimization**: All queries must be **extremely complex SQL expressions optimized for distributed systems** (PostgreSQL).
 
 6. **Graph Theory Modeling**: SQL queries must be able to model the data and be reduced to the number of independent complex queries by shortest path algorithm and undirected graph theory.
 
 7. **Independent Execution with Redundancy Architecture**: Queries must run independently and can be linked together on three databases due to redundancy architecture.
 
-**Redundancy Architecture Requirement**: All queries must be designed to run independently and can be linked together across PostgreSQL and Databricks for redundancy architecture. This means:
+**Redundancy Architecture Requirement**: All queries must be designed to run independently and can be linked together across PostgreSQL for redundancy architecture. This means:
 - Each query must be independently executable (standalone, no dependencies on other queries)
 - Queries can be chained/linked together to create complex workflows
 - The same queries can run on different database systems for redundancy and failover
@@ -131,25 +131,13 @@ When writing extremely complex SQL queries (especially those involving joins, ag
 - Can be configured for distributed/parallel execution
 - Supports partitioning for distributed query optimization
 
-### Databricks
-
-- Built on Delta Lake and Spark SQL (inherently distributed)
-- Supports most standard SQL features including CTEs and recursive CTEs
-- Optimized for distributed execution across clusters
-- Uses Delta Lake partitioning for distributed performance
-- May have differences in transaction handling (scoped to individual tables)
-- Uses Delta Lake-specific features for time travel and versioning
-- Supports semi-structured data (JSON, Avro, ProtoBuff)
-- Columnar storage format optimized for distributed analytics
-
-
 ## Compatibility Guidelines
 
 1. **Use Standard SQL Syntax**: Prefer ANSI SQL standard syntax over database-specific extensions
-2. **Test Across Platforms**: Verify queries work on all three systems before finalizing
+2. **Test Across Platforms**: Verify queries work on PostgreSQL before finalizing
 3. **Avoid Database-Specific Features**: When possible, avoid features unique to one database
 4. **Handle Differences**: Document any necessary variations for specific databases
-5. **Window Functions**: Use standard window function syntax compatible with all three (ROW_NUMBER, RANK, DENSE_RANK, LEAD, LAG, FIRST_VALUE, LAST_VALUE, NTILE)
+5. **Window Functions**: Use standard window function syntax (ROW_NUMBER, RANK, DENSE_RANK, LEAD, LAG, FIRST_VALUE, LAST_VALUE, NTILE)
 6. **CTEs**: Use standard WITH clause syntax - strongly encourage CTEs for complex queries:
    - Multiple CTEs: `WITH cte1 AS (...), cte2 AS (...), cte3 AS (...) SELECT ...`
    - Recursive CTEs: `WITH RECURSIVE cte AS (anchor UNION ALL recursive) SELECT ...`
@@ -180,13 +168,13 @@ When writing extremely complex SQL queries (especially those involving joins, ag
 
 ## Distributed Systems Optimization Requirements
 
-**All queries must be extremely complex SQL expressions optimized for distributed systems** (PostgreSQL, Databricks):
+**All queries must be extremely complex SQL expressions optimized for distributed systems** (PostgreSQL):
 
 - **Leverage distributed system capabilities**:
   - Partition-aware queries that can benefit from data partitioning
   - Queries that can be parallelized across nodes/workers
   - Expressions that minimize data shuffling and network transfer
-  - Queries optimized for columnar storage (Databricks Delta Lake)
+  - Queries optimized for columnar storage
 
 - **Distributed system patterns**:
   - Complex aggregations across partitions
@@ -205,11 +193,11 @@ When writing extremely complex SQL queries (especially those involving joins, ag
 
 ## Redundancy Architecture and Independent Execution
 
-**All queries must support redundancy architecture across PostgreSQL and Databricks:**
+**All queries must support redundancy architecture across PostgreSQL:**
 
 - **Independent Execution**: Each query must be independently executable and standalone:
   - No dependencies on other queries or external state
-  - Can run in isolation on PostgreSQL or Databricks
+  - Can run in isolation on PostgreSQL
   - Produces complete, self-contained results
   - No assumptions about query execution order
 
@@ -220,7 +208,7 @@ When writing extremely complex SQL queries (especially those involving joins, ag
   - Support for creating complex workflows by linking multiple queries
 
 - **Redundancy Support**: The same queries must work identically across all three databases:
-  - Queries produce consistent results when run on PostgreSQL or Databricks
+  - Queries produce consistent results when run on PostgreSQL
   - Support for failover scenarios where queries can be redirected to different databases
   - Enable redundancy architecture where the same workload can run on multiple database systems
   - Queries should be database-agnostic in their logic while leveraging distributed system capabilities

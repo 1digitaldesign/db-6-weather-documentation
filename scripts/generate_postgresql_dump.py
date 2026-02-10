@@ -102,7 +102,7 @@ def generate_postgresql_dump(db_num, root_dir=None):
             # Write PostgreSQL dump header
             out.write("--\n")
             out.write(f"-- PostgreSQL database dump for {db_name}\n")
-            out.write(f"-- Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+            out.write(f"-- Rebuilt: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
             out.write(f"-- Database: db-{db_num}\n")
             out.write("--\n\n")
             

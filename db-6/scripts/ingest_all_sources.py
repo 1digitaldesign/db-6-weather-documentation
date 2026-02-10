@@ -29,7 +29,7 @@ def main():
     print("  3. GeoPlatform.gov")
     print("="*70)
 
-    db_type = 'snowflake'  # or 'postgresql'
+    db_type = 'databricks'  # or 'postgresql'
 
     # 1. AWS Open Data
     print("\n[1/3] Ingesting AWS Open Data Registry...")

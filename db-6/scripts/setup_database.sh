@@ -1,6 +1,6 @@
 #!/bin/bash
 # Setup script for db-6 weather data pipeline database
-# Compatible with PostgreSQL, Databricks, and Snowflake
+# Compatible with PostgreSQL
 
 set -e
 

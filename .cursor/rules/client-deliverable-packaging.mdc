@@ -40,7 +40,7 @@ The `/deliverable` folder must contain the following files and folders:
 - **queries/queries.md**: Complete SQL query collection (minimum 30 queries)
   - Each query must be extremely complex (complexity score ≥ 12.5/13)
   - Includes natural language descriptions
-  - Cross-database compatible (PostgreSQL and Databricks)
+  - Cross-database compatible (PostgreSQL)
   - Fully executable SQL statements
 
 - **queries/queries.json**: JSON representation of queries (optional but recommended)
@@ -78,7 +78,7 @@ The `/deliverable` folder must contain the following files and folders:
 - **results/comprehensive_validation_report.json**: Comprehensive validation report
 - **results/execution_test_results.json**: Query execution test results
 - **results/final_comprehensive_validation_report.json**: Final validation summary
-- **results/query_test_results_postgres_databricks.json**: Cross-database test results
+- **results/query_test_results_postgres.json**: Execution test results
 
 **Note**: All result files must use the `"Pass"` key with binary values (1 or 0) and `"notes"` for warnings. See `.cursor/rules/json-status-format.mdc`.
 
@@ -114,7 +114,7 @@ db-{N}/deliverable/
     ├── comprehensive_validation_report.json
     ├── execution_test_results.json
     ├── final_comprehensive_validation_report.json
-    └── query_test_results_postgres_databricks.json
+    └── query_test_results_postgres.json
 ```
 
 ## Packaging Rules

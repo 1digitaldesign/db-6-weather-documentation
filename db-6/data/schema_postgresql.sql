@@ -1,5 +1,5 @@
 -- Weather Data Pipeline Database Schema
--- Compatible with PostgreSQL, Databricks, and Snowflake
+-- Compatible with PostgreSQL
 -- Production schema for weather data pipeline system
 
 -- GRIB2 Forecasts Table
@@ -10,7 +10,7 @@ CREATE TABLE grib2_forecasts (
     forecast_time TIMESTAMP NOT NULL,
     grid_cell_latitude NUMERIC(10, 7) NOT NULL,
     grid_cell_longitude NUMERIC(10, 7) NOT NULL,
-    grid_cell_geom TEXT,  -- Point geometry for grid cell center (PostgreSQL/Snowflake)
+    grid_cell_geom TEXT,  -- Point geometry for grid cell center (PostgreSQL/Databricks)
     parameter_value NUMERIC(10, 2),
     source_file VARCHAR(500),
     source_crs VARCHAR(50),
@@ -90,7 +90,7 @@ CREATE TABLE grib2_transformation_log (
     spatial_extent_east NUMERIC(10, 6),
     spatial_extent_north NUMERIC(10, 6),
     transformation_status VARCHAR(50),
-    snowflake_table VARCHAR(255),
+    target_table VARCHAR(255),
     load_timestamp TIMESTAMP,
     processing_duration_seconds INTEGER,
     records_processed INTEGER,
@@ -114,7 +114,7 @@ CREATE TABLE shapefile_integration_log (
     spatial_extent_east NUMERIC(10, 6),
     spatial_extent_north NUMERIC(10, 6),
     transformation_status VARCHAR(50),
-    snowflake_table VARCHAR(255),
+    target_table VARCHAR(255),
     load_timestamp TIMESTAMP,
     processing_duration_seconds INTEGER,
     error_message VARCHAR(2000)
@@ -175,12 +175,12 @@ CREATE TABLE data_quality_metrics (
     calculation_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Snowflake Load Status Table
--- Tracks data loading operations to Snowflake
-CREATE TABLE snowflake_load_status (
+-- Load Status Table
+-- Tracks data loading operations to Databricks
+CREATE TABLE load_status (
     load_id VARCHAR(255) PRIMARY KEY,
     source_file VARCHAR(1000),
-    snowflake_table VARCHAR(255) NOT NULL,
+    target_table VARCHAR(255) NOT NULL,
     load_start_time TIMESTAMP NOT NULL,
     load_end_time TIMESTAMP,
     load_duration_seconds INTEGER,
@@ -189,7 +189,7 @@ CREATE TABLE snowflake_load_status (
     load_rate_mb_per_sec NUMERIC(10, 2),
     load_status VARCHAR(50),  -- 'Success', 'Failed', 'Partial'
     error_message VARCHAR(2000),
-    snowflake_warehouse VARCHAR(255),
+    warehouse VARCHAR(255),
     data_source_type VARCHAR(50)
 );
 

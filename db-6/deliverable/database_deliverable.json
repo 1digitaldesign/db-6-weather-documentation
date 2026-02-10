@@ -2,7 +2,7 @@
   "database": {
     "name": "db-6",
     "title": "Weather Data Pipeline Database",
-    "description": "Weather data pipeline database containing weather data from NOAA sources including GRIB2 gridded forecasts, shapefile boundaries (CWA, Fire Zones, Marine Zones), real-time observations, transformation logs, spatial joins, CRS transformations, data quality metrics, Snowflake load status, insurance rate modeling extensions, and NEXRAD/satellite imagery data.",
+    "description": "Weather data pipeline database containing weather data from NOAA sources including GRIB2 gridded forecasts, shapefile boundaries (CWA, Fire Zones, Marine Zones), real-time observations, transformation logs, spatial joins, CRS transformations, data quality metrics load status, insurance rate modeling extensions, and NEXRAD/satellite imagery data.",
     "version": "1.0",
     "created_date": "2026-02-03",
     "last_updated": "2026-02-04",
@@ -691,7 +691,7 @@
             "default": null
           },
           {
-            "name": "snowflake_table",
+            "name": "target_table",
             "type": "VARCHAR(255)",
             "nullable": true,
             "default": null
@@ -3067,7 +3067,7 @@
             "default": null
           },
           {
-            "name": "snowflake_table",
+            "name": "target_table",
             "type": "VARCHAR(255)",
             "nullable": true,
             "default": null
@@ -3093,7 +3093,7 @@
         ]
       },
       {
-        "name": "snowflake_load_status",
+        "name": "load_status",
         "description": "Snowflake Load Status Table",
         "columns": [
           {
@@ -3103,7 +3103,7 @@
             "default": null
           },
           {
-            "name": "snowflake_table",
+            "name": "target_table",
             "type": "VARCHAR(255) NOT NULL",
             "nullable": false,
             "default": null
@@ -3157,7 +3157,7 @@
             "default": null
           },
           {
-            "name": "snowflake_warehouse",
+            "name": "warehouse",
             "type": "VARCHAR(255)",
             "nullable": true,
             "default": null

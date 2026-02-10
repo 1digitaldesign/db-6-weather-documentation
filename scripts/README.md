@@ -77,32 +77,6 @@ python3 scripts/download_and_update_from_drive.py --update-only --download-dir /
 - `gdown`: `pip install gdown` (for Google Drive download)
 - `rclone`: `brew install rclone` (alternative method)
 
-## Synchronization Scripts
-
-### `sync_notebooks_and_dashboards_to_client.py`
-
-Synchronize notebooks and dashboards to client/db while preserving customizations.
-
-**Usage:**
-```bash
-python3 scripts/sync_notebooks_and_dashboards_to_client.py
-```
-
-**Preserves:**
-- Custom data files (`data_large*.sql`, `schema_postgresql.sql`, etc.)
-- Configuration files (`vercel.json`, `.gitignore`)
-- HTML documentation files
-- All other customizations
-
-### `sync_to_client.py`
-
-Synchronize test results and documentation updates to client/db.
-
-**Usage:**
-```bash
-python3 scripts/sync_to_client.py
-```
-
 ## Dashboard Scripts
 
 ### `create_streamlit_dashboards.py`
@@ -154,6 +128,44 @@ Execute notebooks in Docker containers.
 bash scripts/docker_execute_notebooks.sh
 ```
 
+## Consistency and ACID Testing
+
+### `test_all_databases_consistency_acid.py`
+
+Test all databases (db-1 through db-16) for consistency, ACID transactions, and query execution using a dedicated PostgreSQL instance.
+
+**Prerequisites:**
+- Docker
+- `psycopg2-binary`: `pip install psycopg2-binary`
+
+**Usage:**
+```bash
+# Start PostgreSQL test instance (port 5433)
+docker compose -f docker/docker-compose.test-postgresql.yml up -d
+
+# Run full test (all 16 databases)
+python3 scripts/test_all_databases_consistency_acid.py
+
+# Test subset (e.g. db-1 through db-5)
+DB_RANGE=1-5 python3 scripts/test_all_databases_consistency_acid.py
+
+# Or use the shell script (starts container + runs tests)
+bash scripts/run_consistency_acid_tests.sh
+```
+
+**Environment variables:**
+- `PG_TEST_HOST` - PostgreSQL host (default: 127.0.0.1)
+- `PG_TEST_PORT` - PostgreSQL port (default: 5433)
+- `PG_TEST_USER` / `PG_TEST_PASSWORD` - Credentials
+- `DB_RANGE` - Subset, e.g. `1-5` or `1,3,6`
+
+**Output:** `results/consistency_acid_query_test_results.json`
+
+**Tests performed:**
+- Schema and data load consistency
+- ACID: Atomicity (ROLLBACK), Consistency (NOT NULL), Isolation, Durability (COMMIT)
+- Query execution (from queries.json)
+
 ## Validation Scripts
 
 ### `extract_queries_to_json.py`
@@ -182,10 +194,7 @@ python3 scripts/qc_additional_checks.py
 # 1. Download and update
 python3 scripts/download_and_update_from_drive.py
 
-# 2. Sync to client/db
-python3 scripts/sync_notebooks_and_dashboards_to_client.py
-
-# 3. Test notebooks
+# 2. Test notebooks
 python3 scripts/run_notebooks.py --all-methods
 ```
 
@@ -195,12 +204,8 @@ python3 scripts/run_notebooks.py --all-methods
 # 1. Update root notebooks
 python3 scripts/update_notebooks_failsafe.py
 
-# 2. Update client notebooks
-python3 scripts/update_notebooks_failsafe.py --client-only
-
-# 3. Verify failsafe added
-grep -r "FAILSAFE" db-*/db-*.ipynb client/db/db-*/db*/db-*.ipynb | wc -l
-# Expected: 20 (10 root + 10 client)
+# 2. Verify failsafe added
+grep -r "FAILSAFE" db-*/db-*.ipynb | wc -l
 ```
 
 ### Run All Notebooks

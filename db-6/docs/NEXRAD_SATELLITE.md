@@ -291,8 +291,8 @@ ORDER BY composite_time DESC, grid_latitude, grid_longitude;
 
 All NEXRAD and satellite queries are designed to work across:
 - PostgreSQL (with PostGIS)
-- Databricks (Delta Lake)
-- Snowflake
+ (Delta Lake)
+
 
 ## Data Requirements
 

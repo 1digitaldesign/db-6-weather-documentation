@@ -175,9 +175,7 @@ def main():
             print("\n✅ Notebooks updated successfully!")
             print(f"\nNext steps:")
             print(f"1. Review updated notebooks in: {download_dir}")
-            print(f"2. Sync to client/db:")
-            print(f"   python3 scripts/sync_notebooks_and_dashboards_to_client.py")
-            print(f"3. Test notebooks:")
+            print(f"2. Test notebooks:")
             print(f"   python3 scripts/run_notebooks.py --root-dir {download_dir}")
         else:
             print("\n⚠️  Update completed with warnings")

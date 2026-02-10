@@ -5,7 +5,7 @@
 
 ## Overview
 
-This database contains weather data from NOAA sources including GRIB2 gridded forecasts, shapefile boundaries (CWA, Fire Zones, Marine Zones), real-time observations, transformation logs, spatial joins, CRS transformations, data quality metrics, and Snowflake load status.
+This database contains weather data from NOAA sources including GRIB2 gridded forecasts, shapefile boundaries (CWA, Fire Zones, Marine Zones), real-time observations, transformation logs, spatial joins, CRS transformations, data quality metrics load status.
 
 ## Database Schema
 
@@ -21,7 +21,7 @@ See `../data/schema.sql` for the complete database schema.
 - **spatial_join_results** - Spatial join operations documentation
 - **crs_transformation_parameters** - CRS transformation parameters
 - **data_quality_metrics** - Data quality tracking
-- **snowflake_load_status** - Snowflake load operations tracking
+- **load_status**  load operations tracking
 - **weather_forecast_aggregations** - Pre-aggregated forecast data
 - **weather_stations** - Weather station metadata
 
@@ -31,8 +31,8 @@ See `../queries/queries.md` for 30 extremely complex SQL queries.
 
 All queries are designed to work across:
 - PostgreSQL (with PostGIS)
-- Databricks (Delta Lake)
-- Snowflake
+ (Delta Lake)
+
 
 ## Data Sources
 

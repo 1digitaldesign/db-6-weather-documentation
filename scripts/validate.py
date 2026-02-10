@@ -262,9 +262,9 @@ class ValidationRunner:
                         os.environ['PG_PASSWORD'] = 'postgres'
                     print(f"  ℹ️  Using default PostgreSQL connection (localhost:5432, user=postgres, database={os.environ.get('PG_DATABASE')})")
 
-                has_snowflake = bool(os.getenv('SNOWFLAKE_USER') or os.getenv('SNOWFLAKE_ACCOUNT'))
+                has_databricks = bool(os.getenv('SNOWFLAKE_USER') or os.getenv('SNOWFLAKE_ACCOUNT'))
 
-                if has_pg or has_snowflake:
+                if has_pg or has_databricks:
                     proc = subprocess.run(
                         [sys.executable, str(exec_script)],
                         cwd=str(db_dir),

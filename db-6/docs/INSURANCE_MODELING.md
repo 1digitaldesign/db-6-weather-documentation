@@ -229,8 +229,8 @@ All insurance queries are designed for:
 
 All insurance queries are designed to work across:
 - PostgreSQL (with PostGIS)
-- Databricks (Delta Lake)
-- Snowflake
+ (Delta Lake)
+
 
 ## Data Requirements
 
