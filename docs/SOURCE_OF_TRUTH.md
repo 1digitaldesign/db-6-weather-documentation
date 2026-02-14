@@ -31,8 +31,13 @@ client/db_drive_ready.zip (ZIP EXPORT)
 ## Workflow
 
 1. **Edit only in source** – All changes to schema, data, or queries go in `db-N/`.
-2. **Sync to client** – `python3 scripts/resync_client_db.py`
-3. **Create zip (optional)** – `python3 scripts/prepare_client_db_for_drive.py` then `python3 scripts/create_drive_upload_package.py`
+2. **Unify** – `python3 scripts/unify_from_source.py` (resync + verify)
+3. **Create zip (optional)** – `python3 scripts/unify_from_source.py --zip`
+
+Or step-by-step:
+- `python3 scripts/resync_client_db.py` – Sync source -> client
+- `python3 scripts/reconcile_and_verify_queries.py` – Verify byte-for-byte
+- `python3 scripts/prepare_client_db_for_drive.py` then `python3 scripts/create_drive_upload_package.py` – Zip for distribution
 
 ## Verification
 
